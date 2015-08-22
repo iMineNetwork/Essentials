@@ -1,0 +1,8 @@
+name: HUB_Essemtials
+main: nl.MakerTim.HubEssentials.BukkitStarter
+version: 1.0.1
+
+commands:
+  hub:
+    description: Go to the hub server
+    usage: /hub  to go to the hub
