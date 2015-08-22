@@ -14,7 +14,6 @@ public class BukkitStarter extends JavaPlugin {
 			UUID.fromString("b524c508-9f1e-4cef-965a-4a7b9017055c"), // Sansko1337
 			UUID.fromString("9bbc05fa-f36c-401a-8c23-c57f5ba5c5ee"), // Sansko1338
 			UUID.fromString("4697c45f-e9fe-4a0a-abeb-8783d6ac7ca6"), // Beauseant
-			UUID.fromString("1cde5906-8482-4b6d-adb9-f307210f5fbe"), // muffinman222
 	};
 
 	public boolean devMode = false;
