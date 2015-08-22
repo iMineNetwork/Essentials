@@ -1,0 +1,12 @@
+*
+
+!.gitlab-ci.yml
+!pom.xml
+!.gitignore
+!src/
+!/src/**
+
+!libs/
+!/libs/**
+
+*.ini
