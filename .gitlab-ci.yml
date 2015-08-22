@@ -1,0 +1,17 @@
+staging:
+  type: deploy
+  script:
+  - rm -rf build
+  - mkdir build
+  - shopt -s globstar
+  - javac -cp ./libs/spigot-1.8.6.jar -d ./build ./src/**/*.java
+  - cd ./build
+  - cp ../src/plugin.yml plugin.yml
+  - jar cvf hubessentials.jar *
+  - echo $gitcipass|sudo -S cp hubessentials.jar /home/minecraft/multicraft/servers/server3/plugins/hubessentials.jar
+  - echo $gitcipass|sudo -S cp hubessentials.jar /home/minecraft/multicraft/servers/server4/plugins/hubessentials.jar
+  - echo $gitcipass|sudo -S cp hubessentials.jar /home/minecraft/multicraft/servers/server5/plugins/hubessentials.jar
+  - echo $gitcipass|sudo -S cp hubessentials.jar /home/minecraft/multicraft/servers/server10/plugins/hubessentials.jar
+  - echo $gitcipass|sudo -S cp hubessentials.jar /home/minecraft/multicraft/servers/server14/plugins/hubessentials.jar
+  only:
+  - master
