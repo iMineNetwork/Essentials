@@ -1,6 +1,6 @@
 name: HUB_Essemtials
 main: nl.MakerTim.HubEssentials.BukkitStarter
-version: 1.0.1
+version: 1.$CI_BUILD_ID $CI_BUILD_REF
 
 commands:
   hub:
