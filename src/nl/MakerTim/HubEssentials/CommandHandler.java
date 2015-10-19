@@ -1,9 +1,13 @@
 package nl.MakerTim.HubEssentials;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
 public class CommandHandler {
 
@@ -25,6 +29,22 @@ public class CommandHandler {
 						if (!BukkitStarter.isDev(pl.getUniqueId())) {
 							MktUtils.sendPlayerToServer(BukkitStarter.plugin, pl, "hub");
 						}
+					}
+				}
+			}
+		} else if (command.equalsIgnoreCase("git")) {
+			if (sender.isOp() || sender.hasPermission("iMine.dev")) {
+				for (Plugin pl : Bukkit.getPluginManager().getPlugins()) {
+					String version = pl.getDescription().getVersion();
+					Pattern p = Pattern.compile("\\b([0-9a-f]{5,40})\\b");
+					Matcher match = p.matcher(version);
+					if (match.find()) {
+						if (match.hitEnd()) {
+							// Alleen short
+						} else {
+							// Short en long!
+						}
+						sender.sendMessage(pl.getName() + " - " + match.group(0));
 					}
 				}
 			}

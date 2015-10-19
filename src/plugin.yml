@@ -6,3 +6,9 @@ commands:
   hub:
     description: Go to the hub server
     usage: /hub  to go to the hub
+  git:
+    description: Git checker - are you up to date?
+    usage: /git to see if everything is up to date
+  dev:
+    description: DEVMODE = kick everyone now!
+    usage: /dev
