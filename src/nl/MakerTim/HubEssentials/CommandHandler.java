@@ -32,6 +32,7 @@ public class CommandHandler {
 					}
 				}
 			}
+			return true;
 		} else if (command.equalsIgnoreCase("git")) {
 			if (sender.isOp() || sender.hasPermission("iMine.dev")) {
 				for (Plugin pl : Bukkit.getPluginManager().getPlugins()) {
@@ -56,6 +57,7 @@ public class CommandHandler {
 					}
 				}
 			}
+			return true;
 		}
 		return false;
 	}

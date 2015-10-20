@@ -77,7 +77,9 @@ public class GitLabAPI {
 		String file;
 		if (this.projects.containsKey(pluginName)) {
 			file = pluginName;
+			System.out.println(pluginName + " -");
 		} else {
+			System.out.println(pluginName + " +");
 			try {
 				file = Bukkit.getPluginManager().getPlugin(pluginName).getClass().getProtectionDomain().getCodeSource()
 						.getLocation().getFile().replace(".jar", "");
