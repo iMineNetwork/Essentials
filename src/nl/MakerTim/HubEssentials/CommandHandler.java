@@ -94,13 +94,15 @@ public class CommandHandler {
 						extra = new TextComponent(String.format("%snewest version: ", ChatColor.RESET));
 						message.addExtra(extra);
 						// %git short this version%
-						extra = new TextComponent(String.format("%s%s%s versions behind: [%d]%s ", ChatColor.GOLD,
-								ChatColor.UNDERLINE, git.getCommits()[0].getTitle(), index, ChatColor.RESET));
-						extra.setUnderlined(true);
+						extra = new TextComponent(String.format("%s%s%s%s ", ChatColor.GOLD, ChatColor.UNDERLINE,
+								git.getCommits()[0].getTitle(), ChatColor.RESET));
 						extra.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, git.getWebUrl() + "/compare/"
 								+ (current == null ? "master" : current.getShortId()) + "...master"));
 						extra.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
 								new ComponentBuilder(git.getCommits()[0].getShortId() + "\n").create()));
+						message.addExtra(extra);
+						// versions behind [#]:
+						extra = new TextComponent(String.format("versions behind: [%d]%s ", index, ChatColor.RESET));
 						message.addExtra(extra);
 						// REBOOT
 						extra = new TextComponent(String.format("%s%s[%s%sREBOOT SERVER%s%s]%s ", ChatColor.RESET,
