@@ -1,17 +1,37 @@
-staging:
-  type: deploy
+# This file is made by MakerTim, a modded version of Sansko1337
+# Last Changed 25-9-2015 11:15
+buildfase:
+  stage: build
   script:
-  - rm -rf build
-  - mkdir build
-  - shopt -s globstar
-  - javac -cp ./libs/spigot-1.8.6.jar -d ./build ./src/**/*.java
-  - cd ./build
-  - cp ../src/plugin.yml plugin.yml
-  - jar cvf hubessentials.jar *
-  - echo $gitcipass|sudo -S cp hubessentials.jar /home/minecraft/multicraft/servers/server3/plugins/hubessentials.jar
-  - echo $gitcipass|sudo -S cp hubessentials.jar /home/minecraft/multicraft/servers/server4/plugins/hubessentials.jar
-  - echo $gitcipass|sudo -S cp hubessentials.jar /home/minecraft/multicraft/servers/server5/plugins/hubessentials.jar
-  - echo $gitcipass|sudo -S cp hubessentials.jar /home/minecraft/multicraft/servers/server10/plugins/hubessentials.jar
-  - echo $gitcipass|sudo -S cp hubessentials.jar /home/minecraft/multicraft/servers/server14/plugins/hubessentials.jar
+# allow use of **
+    - shopt -s globstar
+# remove old build directory
+    - rm -rf build
+# create build and dist directory
+    - mkdir build
+    - mkdir -p ../dist
+# set plugin version inside plugin.yml
+    - "sed -e 's/^version.*$/version: '$(git rev-parse --short HEAD)';'$(git rev-parse HEAD)'/g' ./src/plugin.yml > ./src/plugin.yml.temp"
+    - mv ./src/plugin.yml.temp ./src/plugin.yml
+# compile all java files with as classpath everything inside libs directory
+    - javac -cp $(find ./libs -regex '.*\.jar' -printf '%p:') -d ./build ./src/**/*.java
+# copy all non java files to the build directory
+    - (cd ./src; find . -type f ! -regex '.*\.java$' -exec cp '--parents' '{}' '../build' ';') 
+# create a .jar file from everything inside the build directory AND put it in the ../dist directory
+    - jar cvf ../dist/$(git remote show -n origin | grep Fetch | sed 's%^.*/\([^/]*\)\.git$%\1%g').jar -C ./build/ .
   only:
   - master
+distributefase:
+  stage: deploy
+  script:
+# Copy files to there locations
+    - echo $gitcipass|sudo -S cp ../dist/$(git remote show -n origin | grep Fetch | sed 's%^.*/\([^/]*\)\.git$%\1%g').jar /home/minecraft/multicraft/servers/server3/plugins/$(git remote show -n origin | grep Fetch | sed 's%^.*/\([^/]*\)\.git$%\1%g').jar
+    - echo $gitcipass|sudo -S cp ../dist/$(git remote show -n origin | grep Fetch | sed 's%^.*/\([^/]*\)\.git$%\1%g').jar /home/minecraft/multicraft/servers/server4/plugins/$(git remote show -n origin | grep Fetch | sed 's%^.*/\([^/]*\)\.git$%\1%g').jar
+    - echo $gitcipass|sudo -S cp ../dist/$(git remote show -n origin | grep Fetch | sed 's%^.*/\([^/]*\)\.git$%\1%g').jar /home/minecraft/multicraft/servers/server5/plugins/$(git remote show -n origin | grep Fetch | sed 's%^.*/\([^/]*\)\.git$%\1%g').jar
+    - echo $gitcipass|sudo -S cp ../dist/$(git remote show -n origin | grep Fetch | sed 's%^.*/\([^/]*\)\.git$%\1%g').jar /home/minecraft/multicraft/servers/server9/plugins/$(git remote show -n origin | grep Fetch | sed 's%^.*/\([^/]*\)\.git$%\1%g').jar
+    - echo $gitcipass|sudo -S cp ../dist/$(git remote show -n origin | grep Fetch | sed 's%^.*/\([^/]*\)\.git$%\1%g').jar /home/minecraft/multicraft/servers/server10/plugins/$(git remote show -n origin | grep Fetch | sed 's%^.*/\([^/]*\)\.git$%\1%g').jar
+    - echo $gitcipass|sudo -S cp ../dist/$(git remote show -n origin | grep Fetch | sed 's%^.*/\([^/]*\)\.git$%\1%g').jar /home/minecraft/multicraft/servers/server14/plugins/$(git remote show -n origin | grep Fetch | sed 's%^.*/\([^/]*\)\.git$%\1%g').jar
+
+stages:
+  - build
+  - deploy
