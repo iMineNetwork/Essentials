@@ -60,6 +60,7 @@ public class GitLabAPI {
 					if (!ids.contains(projectId)) {
 						if (projects.get(project.get("name")) != null && isNewerProject(
 								projects.get(project.get("name"))[0], project.get("last_activity_at").getAsString())) {
+							System.out.println(projects.get(project.get("name"))[0] + " > " + project.get("last_activity_at").getAsString());
 							continue;
 						}
 						projects.put(project.get("name").getAsString(),
