@@ -39,12 +39,15 @@ public class CommandHandler {
 					Pattern p = Pattern.compile("\\b([0-9a-f]{5,40})\\b");
 					Matcher match = p.matcher(version);
 					if (match.find()) {
+						sender.sendMessage(pl.getName() + " - " + match.group(0));
 						if (match.hitEnd()) {
 							// Alleen short
 						} else {
 							// Short en long!
+							for (String str : BukkitStarter.API.getProjectData(pl.getName())) {
+								sender.sendMessage(ChatColor.GOLD + str);
+							}
 						}
-						sender.sendMessage(pl.getName() + " - " + match.group(0));
 					}
 				}
 			}

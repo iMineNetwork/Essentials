@@ -55,7 +55,7 @@ public class GitLabAPI {
 					int projectId = project.get("id").getAsInt();
 					if (!ids.contains(projectId)) {
 						projects.put(project.get("name").getAsString(),
-								new String[] { project.get("web_url").getAsString(),
+								new String[] { Integer.toString(projectId), project.get("web_url").getAsString(),
 										project.get("description").getAsString(),
 										project.get("last_activity_at").getAsString() });
 						// DateFormat format = new
@@ -103,12 +103,5 @@ public class GitLabAPI {
 			ex.printStackTrace();
 		}
 		return ret;
-	}
-
-	public static void main(String[] args) {
-		GitLabAPI api = new GitLabAPI();
-		for (String str : api.getProjectData("HubTweaks")) {
-			System.out.println(str);
-		}
 	}
 }
