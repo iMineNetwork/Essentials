@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.Scanner;
 
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -81,12 +83,18 @@ public class GitLabAPI {
 			try {
 				file = Bukkit.getPluginManager().getPlugin(pluginName).getClass().getProtectionDomain().getCodeSource()
 						.getLocation().getFile().replace(".jar", "").replace("/plugins/", "");
-				System.out.println(pluginName + " " + file);
 			} catch (Exception ex) {
 				ex.printStackTrace();
 				return null;
 			}
 		}
+		System.out.println(pluginName + " " + file);
+		for (String str : projects.keySet()) {
+			for (OfflinePlayer pl : Bukkit.getOperators()) {
+				((Player) pl).sendMessage(str);
+			}
+		}
+		System.out.println();
 		return projects.get(file);
 	}
 
