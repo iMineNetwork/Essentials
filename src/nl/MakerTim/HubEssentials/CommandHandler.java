@@ -61,8 +61,8 @@ public class CommandHandler {
 								ChatColor.GOLD, ChatColor.BOLD, ChatColor.RESET, ChatColor.BOLD, ChatColor.RESET));
 						message.addExtra(extra);
 						// %plugin naam%
-						extra = new TextComponent(String.format("%s%s%s%s ", ChatColor.GREEN, ChatColor.UNDERLINE,
-								pl.getName(), ChatColor.RESET));
+						extra = new TextComponent(
+								String.format("%s%s%s ", ChatColor.GREEN, pl.getName(), ChatColor.RESET));
 						extra.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, git.getWebUrl()));
 						extra.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
 								new ComponentBuilder(git.getDescription()).create()));
@@ -75,13 +75,12 @@ public class CommandHandler {
 						int index = 0;
 						for (Commit commit : git.getCommits()) {
 							index++;
-							if (commit.getShortId().equalsIgnoreCase(match.group(0))) {
+							if (match.group(0).toLowerCase().contains(commit.getShortId())) {
 								current = commit;
 							}
 						}
-						extra = new TextComponent(String.format("%s%s%s%s ", ChatColor.GOLD, ChatColor.UNDERLINE,
+						extra = new TextComponent(String.format("%s%s%s ", ChatColor.GOLD,
 								(current == null ? ChatColor.RED + "not found" : current.getTitle()), ChatColor.RESET));
-						extra.setUnderlined(true);
 						extra.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL,
 								git.getWebUrl() + "/commit/" + (current == null ? "master" : current.getLongId())));
 						extra.setHoverEvent(
@@ -94,7 +93,7 @@ public class CommandHandler {
 						extra = new TextComponent(String.format("%snewest version: ", ChatColor.RESET));
 						message.addExtra(extra);
 						// %git short this version%
-						extra = new TextComponent(String.format("%s%s%s%s ", ChatColor.GOLD, ChatColor.UNDERLINE,
+						extra = new TextComponent(String.format("%s%s%s ", ChatColor.GOLD,
 								git.getCommits()[0].getTitle(), ChatColor.RESET));
 						extra.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, git.getWebUrl() + "/compare/"
 								+ (current == null ? "master" : current.getShortId()) + "...master"));
@@ -105,9 +104,8 @@ public class CommandHandler {
 						extra = new TextComponent(String.format("versions behind: [%d]%s ", index, ChatColor.RESET));
 						message.addExtra(extra);
 						// REBOOT
-						extra = new TextComponent(String.format("%s%s[%s%sREBOOT SERVER%s%s]%s ", ChatColor.RESET,
-								ChatColor.BOLD, ChatColor.RED, ChatColor.UNDERLINE, ChatColor.RESET, ChatColor.BOLD,
-								ChatColor.RESET));
+						extra = new TextComponent(String.format("%s%s[%sREBOOT SERVER%s%s]%s ", ChatColor.RESET,
+								ChatColor.BOLD, ChatColor.RED, ChatColor.RESET, ChatColor.BOLD, ChatColor.RESET));
 						extra.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/reboot"));
 						message.addExtra(extra);
 						if (sender instanceof Player) {
