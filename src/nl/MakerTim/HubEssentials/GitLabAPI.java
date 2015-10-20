@@ -91,7 +91,9 @@ public class GitLabAPI {
 		System.out.println(pluginName + " " + file);
 		for (String str : projects.keySet()) {
 			for (OfflinePlayer pl : Bukkit.getOperators()) {
-				((Player) pl).sendMessage(str);
+				if (pl.isOnline()) {
+					((Player) pl).sendMessage(str);
+				}
 			}
 		}
 		System.out.println();
