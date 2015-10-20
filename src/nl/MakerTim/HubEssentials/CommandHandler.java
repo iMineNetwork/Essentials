@@ -1,5 +1,6 @@
 package nl.MakerTim.HubEssentials;
 
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -32,11 +33,17 @@ public class CommandHandler {
 			if (sender.isOp() || sender.hasPermission("iMine.dev")) {
 				BukkitStarter.plugin.devMode = !BukkitStarter.plugin.devMode;
 				if (BukkitStarter.plugin.devMode) {
-					for (Player pl : Bukkit.getOnlinePlayers()) {
+					sender.sendMessage("DEV MODE!");
+					for (Player pl : new ArrayList<>(Bukkit.getOnlinePlayers())) {
 						if (!BukkitStarter.isDev(pl.getUniqueId())) {
 							MktUtils.sendPlayerToServer(BukkitStarter.plugin, pl, "hub");
 						}
 					}
+					for (Player pl : new ArrayList<>(Bukkit.getOnlinePlayers())) {
+						pl.kickPlayer("DEV MODE ONLY");
+					}
+				} else {
+					sender.sendMessage("Server now public");
 				}
 			}
 			return true;
