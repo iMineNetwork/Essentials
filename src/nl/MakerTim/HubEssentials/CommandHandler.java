@@ -53,8 +53,6 @@ public class CommandHandler {
 					if (match.find()) {
 						GitProject git = BukkitStarter.API.getProjectData(pl.getName());
 						if (git == null) {
-							sender.sendMessage(String.format("%s%s [%s] - not in our git", ChatColor.RED.toString(),
-									pl.getName(), match.group(0)));
 							continue;
 						}
 						/**
