@@ -82,7 +82,7 @@ public class CommandHandler {
 							index++;
 						}
 						extra = new TextComponent(String.format("%s%s%s ", ChatColor.GOLD,
-								(current == null ? ChatColor.RED + "not found" : current.getTitle()), ChatColor.RESET));
+								(current == null ? ChatColor.RED + "not found" : current.getTitle().replaceAll(" ", ChatColor.GOLD + " ")), ChatColor.RESET));
 						extra.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL,
 								git.getWebUrl() + "/commit/" + (current == null ? "master" : current.getLongId())));
 						extra.setHoverEvent(
@@ -98,7 +98,7 @@ public class CommandHandler {
 							message.addExtra(extra);
 							// %git short new version%
 							extra = new TextComponent(String.format("%s%s%s ", ChatColor.GOLD,
-									git.getCommits()[0].getTitle(), ChatColor.RESET));
+									git.getCommits()[0].getTitle().replaceAll(" ", ChatColor.GOLD + " "), ChatColor.RESET));
 							extra.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, git.getWebUrl() + "/compare/"
 									+ (current == null ? "master" : current.getShortId()) + "...master"));
 							extra.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
