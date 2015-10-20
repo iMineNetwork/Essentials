@@ -134,7 +134,7 @@ public class CommandHandler {
 							message.addExtra(extra);
 							// versions behind [#]:
 							extra = new TextComponent(
-									String.format("versions behind: [%d]%s ", index, ChatColor.RESET));
+									String.format("%s[%d]%s ", ChatColor.RESET, index, ChatColor.RESET));
 							message.addExtra(extra);
 						}
 						if (sender instanceof Player) {
