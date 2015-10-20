@@ -86,12 +86,12 @@ public class GitLabAPI {
 				return null;
 			}
 		}
-		System.out.println(pluginName + " " + file);
-		for (String str : projects.keySet()) {
-			System.out.println("\t" + str);
+		for (String project : projects.keySet()) {
+			if (project.equalsIgnoreCase(file)) {
+				return projects.get(project);
+			}
 		}
-		System.out.println();
-		return projects.get(file);
+		return null;
 	}
 
 	private String getResponseFromURL(URL url) {
