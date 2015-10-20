@@ -2,7 +2,10 @@ package nl.MakerTim.HubEssentials;
 
 import java.io.InputStream;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,20 +58,32 @@ public class GitLabAPI {
 					JsonObject project = projectsFromUser.get(j).getAsJsonObject();
 					int projectId = project.get("id").getAsInt();
 					if (!ids.contains(projectId)) {
+						if (projects.get(project.get("name")) != null && isNewerProject(
+								projects.get(project.get("name"))[0], project.get("last_activity_at").getAsString())) {
+							continue;
+						}
 						projects.put(project.get("name").getAsString(),
 								new String[] { Integer.toString(projectId), project.get("web_url").getAsString(),
 										project.get("description").getAsString(),
 										project.get("last_activity_at").getAsString() });
-						// DateFormat format = new
-						// SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX",
-						// Locale.ENGLISH);
-						// Date date = format.parse(string);
 						ids.add(projectId);
 					}
 				}
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
+		}
+	}
+
+	private boolean isNewerProject(String projectADate, String projectBDate) {
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+		try {
+			Date dateA = format.parse(projectADate);
+			Date dateB = format.parse(projectBDate);
+			return dateA.after(dateB);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return false;
 		}
 	}
 
