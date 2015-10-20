@@ -57,7 +57,14 @@ public class CommandHandler {
 									pl.getName(), match.group(0)));
 							continue;
 						}
-						// [GIT] %pluginNaam% currentverion: %gitshort%
+						/**
+						 * Lief dagboek,
+						 * 
+						 * Een mooie message maakt lelijke code. Mocht je hier
+						 * onder nog iets nuttigs mee willen doen, im sorry
+						 * 
+						 * groetjes Tim
+						 */
 						// newestversion: %gitshort% [RELOAD SERVER]
 						TextComponent extra, message = new TextComponent("");
 						// [GIT]
@@ -111,14 +118,11 @@ public class CommandHandler {
 							extra.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
 									new ComponentBuilder(git.getCommits()[0].getShortId()).create()));
 							message.addExtra(extra);
-
 							// versions behind [#]:
 							extra = new TextComponent(
 									String.format("versions behind: [%d]%s ", index, ChatColor.RESET));
 							message.addExtra(extra);
 						}
-						// REBOOT
-
 						if (sender instanceof Player) {
 							((Player) sender).spigot().sendMessage(message);
 						} else {
@@ -127,11 +131,17 @@ public class CommandHandler {
 					}
 				}
 				if (isUpdate && sender instanceof Player) {
-					TextComponent extra = new TextComponent(
-							String.format("%s%s[%sREBOOT SERVER%s%s]%s ", ChatColor.RESET, ChatColor.BOLD,
-									ChatColor.RED, ChatColor.RESET, ChatColor.BOLD, ChatColor.RESET));
-					extra.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/reboot"));
-					((Player) sender).spigot().sendMessage(extra);
+					TextComponent extra, message = new TextComponent("");
+					extra = new TextComponent(String.format("%s%s[%sRELOAD SERVER%s%s]%s ", ChatColor.RESET,
+							ChatColor.BOLD, ChatColor.DARK_GREEN, ChatColor.RESET, ChatColor.BOLD, ChatColor.RESET));
+					extra.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/reload"));
+					message.addExtra(extra);
+
+					extra = new TextComponent(String.format("%s%s[%sREBOOT SERVER%s%s]%s ", ChatColor.RESET,
+							ChatColor.BOLD, ChatColor.RED, ChatColor.RESET, ChatColor.BOLD, ChatColor.RESET));
+					extra.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/restart"));
+					message.addExtra(extra);
+					((Player) sender).spigot().sendMessage(message);
 				}
 			}
 			return true;
