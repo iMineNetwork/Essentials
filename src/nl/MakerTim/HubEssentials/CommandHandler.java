@@ -44,8 +44,11 @@ public class CommandHandler {
 							// Alleen short
 						} else {
 							// Short en long!
-							for (String str : BukkitStarter.API.getProjectData(pl.getName())) {
-								sender.sendMessage(ChatColor.GOLD + str);
+							String[] data = BukkitStarter.API.getProjectData(pl.getName());
+							if (data != null) {
+								for (String str : data) {
+									sender.sendMessage(ChatColor.GOLD + str);
+								}
 							}
 						}
 					}
