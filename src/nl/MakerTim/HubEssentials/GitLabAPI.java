@@ -60,6 +60,8 @@ public class GitLabAPI {
 					if (!ids.contains(projectId)) {
 						String[] oldDtls = projects.get(project.get("name").getAsString());
 						if (oldDtls != null) {
+							System.out.println(project.get("name").getAsString());
+							System.out.println(oldDtls[1] +" - " + project.get("web_url").getAsString());
 							System.out.println(oldDtls[3] + " o>n " + project.get("last_activity_at").getAsString());
 							System.out.println(isNewerProject(oldDtls[3], project.get("last_activity_at").getAsString()));
 							continue;
