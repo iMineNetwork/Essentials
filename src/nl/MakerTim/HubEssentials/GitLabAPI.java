@@ -115,8 +115,8 @@ public class GitLabAPI {
 		try {
 			InputStream is = url.openStream();
 			Scanner in = new Scanner(is);
-			while (in.hasNext()) {
-				ret += in.next();
+			while (in.hasNextLine()) {
+				ret += in.nextLine();
 			}
 
 			in.close();
