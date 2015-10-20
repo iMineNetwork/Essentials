@@ -42,6 +42,7 @@ public class CommandHandler {
 			return true;
 		} else if (command.equalsIgnoreCase("git")) {
 			if (sender.isOp() || sender.hasPermission("iMine.dev")) {
+				boolean isUpdate = false;
 				for (Plugin pl : Bukkit.getPluginManager().getPlugins()) {
 					String version = pl.getDescription().getVersion();
 					Pattern p = Pattern.compile("\\b([0-9a-f]{5,40})\\b");
@@ -91,6 +92,7 @@ public class CommandHandler {
 												: current.getShortId())).create()));
 						message.addExtra(extra);
 						if (index != 0) {
+							isUpdate = true;
 							// newest verion:
 							extra = new TextComponent(String.format("%snewest version: ", ChatColor.RESET));
 							message.addExtra(extra);
@@ -109,16 +111,20 @@ public class CommandHandler {
 							message.addExtra(extra);
 						}
 						// REBOOT
-						extra = new TextComponent(String.format("%s%s[%sREBOOT SERVER%s%s]%s ", ChatColor.RESET,
-								ChatColor.BOLD, ChatColor.RED, ChatColor.RESET, ChatColor.BOLD, ChatColor.RESET));
-						extra.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/reboot"));
-						message.addExtra(extra);
+
 						if (sender instanceof Player) {
 							((Player) sender).spigot().sendMessage(message);
 						} else {
 							sender.sendMessage(message.toPlainText());
 						}
 					}
+				}
+				if (isUpdate && sender instanceof Player) {
+					TextComponent extra = new TextComponent(
+							String.format("%s%s[%sREBOOT SERVER%s%s]%s ", ChatColor.RESET, ChatColor.BOLD,
+									ChatColor.RED, ChatColor.RESET, ChatColor.BOLD, ChatColor.RESET));
+					extra.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/reboot"));
+					((Player) sender).spigot().sendMessage(extra);
 				}
 			}
 			return true;
