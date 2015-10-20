@@ -74,10 +74,11 @@ public class CommandHandler {
 						Commit current = null;
 						int index = 0;
 						for (Commit commit : git.getCommits()) {
-							index++;
 							if (commit.getShortId().toLowerCase().contains(match.group(0).toLowerCase())) {
 								current = commit;
+								break;
 							}
+							index++;
 						}
 						extra = new TextComponent(String.format("%s%s%s ", ChatColor.GOLD,
 								(current == null ? ChatColor.RED + "not found" : current.getTitle()), ChatColor.RESET));
@@ -89,20 +90,24 @@ public class CommandHandler {
 												? ChatColor.RED + match.group(0) + " - commit not found!"
 												: current.getShortId())).create()));
 						message.addExtra(extra);
-						// newest verion:
-						extra = new TextComponent(String.format("%snewest version: ", ChatColor.RESET));
-						message.addExtra(extra);
-						// %git short this version%
-						extra = new TextComponent(String.format("%s%s%s ", ChatColor.GOLD,
-								git.getCommits()[0].getTitle(), ChatColor.RESET));
-						extra.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, git.getWebUrl() + "/compare/"
-								+ (current == null ? "master" : current.getShortId()) + "...master"));
-						extra.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-								new ComponentBuilder(git.getCommits()[0].getShortId()).create()));
-						message.addExtra(extra);
-						// versions behind [#]:
-						extra = new TextComponent(String.format("versions behind: [%d]%s ", index, ChatColor.RESET));
-						message.addExtra(extra);
+						if (index != 0) {
+							// newest verion:
+							extra = new TextComponent(String.format("%snewest version: ", ChatColor.RESET));
+							message.addExtra(extra);
+							// %git short new version%
+							extra = new TextComponent(String.format("%s%s%s ", ChatColor.GOLD,
+									git.getCommits()[0].getTitle(), ChatColor.RESET));
+							extra.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, git.getWebUrl() + "/compare/"
+									+ (current == null ? "master" : current.getShortId()) + "...master"));
+							extra.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+									new ComponentBuilder(git.getCommits()[0].getShortId()).create()));
+							message.addExtra(extra);
+
+							// versions behind [#]:
+							extra = new TextComponent(
+									String.format("versions behind: [%d]%s ", index, ChatColor.RESET));
+							message.addExtra(extra);
+						}
 						// REBOOT
 						extra = new TextComponent(String.format("%s%s[%sREBOOT SERVER%s%s]%s ", ChatColor.RESET,
 								ChatColor.BOLD, ChatColor.RED, ChatColor.RESET, ChatColor.BOLD, ChatColor.RESET));
