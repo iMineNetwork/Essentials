@@ -42,6 +42,9 @@ public class CommandHandler {
 			return true;
 		} else if (command.equalsIgnoreCase("git")) {
 			if (sender.isOp() || sender.hasPermission("iMine.dev")) {
+				sender.sendMessage(
+						String.format("%s%s[%s%sGIT%s%s]%s Checking all git repos...", ChatColor.RESET, ChatColor.BOLD,
+								ChatColor.GOLD, ChatColor.BOLD, ChatColor.RESET, ChatColor.BOLD, ChatColor.RESET));
 				boolean isUpdate = false;
 				for (Plugin pl : Bukkit.getPluginManager().getPlugins()) {
 					String version = pl.getDescription().getVersion();
@@ -81,8 +84,11 @@ public class CommandHandler {
 							}
 							index++;
 						}
-						extra = new TextComponent(String.format("%s%s%s ", ChatColor.GOLD,
-								(current == null ? ChatColor.RED + "not found" : current.getTitle().replaceAll(" ", ChatColor.GOLD + " ")), ChatColor.RESET));
+						extra = new TextComponent(
+								String.format("%s%s%s ", ChatColor.GOLD,
+										(current == null ? ChatColor.RED + "not found"
+												: current.getTitle().replaceAll(" ", ChatColor.GOLD + " ")),
+										ChatColor.RESET));
 						extra.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL,
 								git.getWebUrl() + "/commit/" + (current == null ? "master" : current.getLongId())));
 						extra.setHoverEvent(
@@ -98,7 +104,8 @@ public class CommandHandler {
 							message.addExtra(extra);
 							// %git short new version%
 							extra = new TextComponent(String.format("%s%s%s ", ChatColor.GOLD,
-									git.getCommits()[0].getTitle().replaceAll(" ", ChatColor.GOLD + " "), ChatColor.RESET));
+									git.getCommits()[0].getTitle().replaceAll(" ", ChatColor.GOLD + " "),
+									ChatColor.RESET));
 							extra.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, git.getWebUrl() + "/compare/"
 									+ (current == null ? "master" : current.getShortId()) + "...master"));
 							extra.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
