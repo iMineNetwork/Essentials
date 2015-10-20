@@ -80,7 +80,7 @@ public class GitLabAPI {
 		} else {
 			try {
 				file = Bukkit.getPluginManager().getPlugin(pluginName).getClass().getProtectionDomain().getCodeSource()
-						.getLocation().getFile().replace(".jar", "");
+						.getLocation().getFile().replace(".jar", "").replace("/plugins/", "");
 				System.out.println(pluginName + " " + file);
 			} catch (Exception ex) {
 				ex.printStackTrace();
