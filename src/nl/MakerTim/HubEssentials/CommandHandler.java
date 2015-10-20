@@ -49,6 +49,8 @@ public class CommandHandler {
 								for (String str : data) {
 									sender.sendMessage(ChatColor.GOLD + str);
 								}
+							} else {
+								sender.sendMessage(ChatColor.GOLD + "null");
 							}
 						}
 					}
