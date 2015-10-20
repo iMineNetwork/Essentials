@@ -83,7 +83,7 @@ public class CommandHandler {
 						extra.setHoverEvent(
 								new HoverEvent(HoverEvent.Action.SHOW_TEXT,
 										new ComponentBuilder(git.getDescription())
-												.append("\nCreated at: "
+												.append("\n\nCreated at: "
 														+ GitLabAPI.NL_DATE_FORMAT.format(git.getCreateDate()))
 												.create()));
 						message.addExtra(extra);
@@ -112,7 +112,7 @@ public class CommandHandler {
 										new ComponentBuilder((current == null
 												? ChatColor.RED + match.group(0) + " - commit not found!"
 												: current.getShortId()))
-														.append("\nCreated at: " + (current == null ? "~"
+														.append("\n\nPushed at: " + (current == null ? "~"
 																: GitLabAPI.NL_DATE_FORMAT.format(current.getWhen())))
 														.create()));
 						message.addExtra(extra);
@@ -128,7 +128,7 @@ public class CommandHandler {
 							extra.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, git.getWebUrl() + "/compare/"
 									+ (current == null ? "master" : current.getShortId()) + "...master"));
 							extra.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-									new ComponentBuilder(git.getCommits()[0].getShortId()).append("\nCreated at: "
+									new ComponentBuilder(git.getCommits()[0].getShortId()).append("\n\nPushed at: "
 											+ GitLabAPI.NL_DATE_FORMAT.format(git.getCommits()[0].getWhen()))
 											.create()));
 							message.addExtra(extra);
