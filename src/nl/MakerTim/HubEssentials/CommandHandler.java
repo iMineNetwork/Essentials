@@ -75,7 +75,7 @@ public class CommandHandler {
 						int index = 0;
 						for (Commit commit : git.getCommits()) {
 							index++;
-							if (match.group(0).toLowerCase().contains(commit.getShortId())) {
+							if (commit.getShortId().toLowerCase().contains(match.group(0).toLowerCase())) {
 								current = commit;
 							}
 						}
@@ -87,7 +87,7 @@ public class CommandHandler {
 								new HoverEvent(HoverEvent.Action.SHOW_TEXT,
 										new ComponentBuilder((current == null
 												? ChatColor.RED + match.group(0) + " - commit not found!"
-												: current.getShortId()) + "\n").create()));
+												: current.getShortId())).create()));
 						message.addExtra(extra);
 						// newest verion:
 						extra = new TextComponent(String.format("%snewest version: ", ChatColor.RESET));
@@ -98,7 +98,7 @@ public class CommandHandler {
 						extra.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, git.getWebUrl() + "/compare/"
 								+ (current == null ? "master" : current.getShortId()) + "...master"));
 						extra.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-								new ComponentBuilder(git.getCommits()[0].getShortId() + "\n").create()));
+								new ComponentBuilder(git.getCommits()[0].getShortId()).create()));
 						message.addExtra(extra);
 						// versions behind [#]:
 						extra = new TextComponent(String.format("versions behind: [%d]%s ", index, ChatColor.RESET));
