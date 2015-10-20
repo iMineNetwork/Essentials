@@ -25,7 +25,7 @@ public class GitLabAPI {
 	/**
 	 * Lief dagboek,
 	 * 
-	 * vandaag is sander me aan het grammernaziën, ik weet niet hoe je dit spelt
+	 * vandaag is sander me aan het grammernazien, ik weet niet hoe je dit spelt
 	 * maakt niet uit. verder probeer ik /git wat meer usefull te maken. waarom
 	 * weet ik nog niet maar ik had tijd over om niet aan outlaws te werken
 	 * 
