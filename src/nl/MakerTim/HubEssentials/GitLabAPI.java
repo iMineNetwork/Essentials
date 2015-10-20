@@ -58,8 +58,10 @@ public class GitLabAPI {
 					JsonObject project = projectsFromUser.get(j).getAsJsonObject();
 					int projectId = project.get("id").getAsInt();
 					if (!ids.contains(projectId)) {
-						if (projects.get(project.get("name").getAsString()) != null) {
-							System.out.println(projects.get(project.get("name"))[0] + " > " + project.get("last_activity_at").getAsString());
+						String[] oldDtls = projects.get(project.get("name").getAsString());
+						if (oldDtls != null) {
+							System.out.println(oldDtls[3] + " o>n " + project.get("last_activity_at").getAsString());
+							System.out.println(isNewerProject(oldDtls[3], project.get("last_activity_at").getAsString()));
 							continue;
 						}
 						projects.put(project.get("name").getAsString(),
