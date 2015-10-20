@@ -80,8 +80,12 @@ public class CommandHandler {
 						extra = new TextComponent(
 								String.format("%s%s%s ", ChatColor.GREEN, pl.getName(), ChatColor.RESET));
 						extra.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, git.getWebUrl()));
-						extra.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-								new ComponentBuilder(git.getDescription()).create()));
+						extra.setHoverEvent(
+								new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+										new ComponentBuilder(git.getDescription())
+												.append("\nCreated at: "
+														+ GitLabAPI.NL_DATE_FORMAT.format(git.getCreateDate()))
+												.create()));
 						message.addExtra(extra);
 						// current verion:
 						extra = new TextComponent(String.format("%scurrent version: ", ChatColor.RESET));
@@ -107,7 +111,10 @@ public class CommandHandler {
 								new HoverEvent(HoverEvent.Action.SHOW_TEXT,
 										new ComponentBuilder((current == null
 												? ChatColor.RED + match.group(0) + " - commit not found!"
-												: current.getShortId())).create()));
+												: current.getShortId()))
+														.append("\nCreated at: " + (current == null ? "~"
+																: GitLabAPI.NL_DATE_FORMAT.format(current.getWhen())))
+														.create()));
 						message.addExtra(extra);
 						if (index != 0) {
 							isUpdate = true;
@@ -121,7 +128,9 @@ public class CommandHandler {
 							extra.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, git.getWebUrl() + "/compare/"
 									+ (current == null ? "master" : current.getShortId()) + "...master"));
 							extra.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-									new ComponentBuilder(git.getCommits()[0].getShortId()).create()));
+									new ComponentBuilder(git.getCommits()[0].getShortId()).append("\nCreated at: "
+											+ GitLabAPI.NL_DATE_FORMAT.format(git.getCommits()[0].getWhen()))
+											.create()));
 							message.addExtra(extra);
 							// versions behind [#]:
 							extra = new TextComponent(

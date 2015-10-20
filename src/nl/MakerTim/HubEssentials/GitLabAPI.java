@@ -23,7 +23,8 @@ public class GitLabAPI {
 	private static final String URL_PROJECTS = "http://git.imine.nl/api/v3/projects?private_token=%s&sudo=%s";
 	private static final String URL_USERS = "http://git.imine.nl/api/v3/users?private_token=%s";
 	private static final String URL_COMMITS = "http://git.imine.nl/api/v3/projects/%d/repository/commits?private_token=%s";
-	private static final DateFormat FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+	private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+	public static final DateFormat NL_DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy HH:mm");
 
 	private Map<String, GitProject> projects;
 	private List<Integer> ids;
@@ -62,10 +63,10 @@ public class GitLabAPI {
 					if (!ids.contains(projectId)) {
 						GitProject oldDtls = projects.get(project.get("name").getAsString());
 						if (oldDtls != null && isNewerProject(oldDtls.getLastActivity(),
-								FORMAT.parse(project.get("last_activity_at").getAsString()))) {
+								DATE_FORMAT.parse(project.get("last_activity_at").getAsString()))) {
 							continue;
 						}
-						
+
 						JsonArray commitsJson = new JsonParser()
 								.parse(getResponseFromURL(
 										new URL(String.format(URL_COMMITS, projectId, PRIVATE_TOKEN))))
@@ -75,13 +76,15 @@ public class GitLabAPI {
 							JsonObject commitJson = commitsJson.get(k).getAsJsonObject();
 							commits[k] = new Commit(commitJson.get("short_id").getAsString(),
 									commitJson.get("id").getAsString(), commitJson.get("title").getAsString(),
-									commitJson.get("message").getAsString());
+									commitJson.get("message").getAsString(),
+									DATE_FORMAT.parse(commitJson.get("created_at").getAsString()));
 						}
 
 						projects.put(project.get("name").getAsString(),
 								new GitProject(projectId, project.get("web_url").getAsString(),
 										project.get("description").getAsString(),
-										FORMAT.parse(project.get("last_activity_at").getAsString()), commits));
+										DATE_FORMAT.parse(project.get("last_activity_at").getAsString()), commits,
+										DATE_FORMAT.parse(project.get("created_at").getAsString())));
 						ids.add(projectId);
 					}
 				}
@@ -145,12 +148,18 @@ public class GitLabAPI {
 		private String longId;
 		private String title;
 		private String message;
+		private Date when;
 
-		public Commit(String shortId, String longId, String title, String message) {
+		public Commit(String shortId, String longId, String title, String message, Date when) {
 			this.shortId = shortId;
 			this.longId = longId;
 			this.title = title;
 			this.message = message;
+			this.when = when;
+		}
+
+		public Date getWhen() {
+			return when;
 		}
 
 		public String getLongId() {
@@ -176,13 +185,16 @@ public class GitLabAPI {
 		private String description;
 		private Date lastActivity;
 		private Commit[] commits;
+		private Date createDate;
 
-		public GitProject(int projectId, String webUrl, String description, Date lastActivity, Commit[] commits) {
+		public GitProject(int projectId, String webUrl, String description, Date lastActivity, Commit[] commits,
+				Date createDate) {
 			this.projectId = projectId;
 			this.webUrl = webUrl;
 			this.description = description;
 			this.lastActivity = lastActivity;
 			this.commits = commits;
+			this.createDate = createDate;
 		}
 
 		public Commit[] getCommits() {
@@ -203,6 +215,10 @@ public class GitLabAPI {
 
 		public String getWebUrl() {
 			return webUrl;
+		}
+
+		public Date getCreateDate() {
+			return createDate;
 		}
 	}
 }
