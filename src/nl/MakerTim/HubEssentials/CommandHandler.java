@@ -33,7 +33,7 @@ public class CommandHandler {
 			if (sender.isOp() || sender.hasPermission("iMine.dev")) {
 				BukkitStarter.plugin.devMode = !BukkitStarter.plugin.devMode;
 				if (BukkitStarter.plugin.devMode) {
-					sender.sendMessage("DEV MODE!");
+					sender.sendMessage("Devolpermodus is now enabled!");
 					for (Player pl : new ArrayList<>(Bukkit.getOnlinePlayers())) {
 						if (!BukkitStarter.isDev(pl.getUniqueId())) {
 							MktUtils.sendPlayerToServer(BukkitStarter.plugin, pl, "hub");
@@ -128,8 +128,9 @@ public class CommandHandler {
 							extra.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, git.getWebUrl() + "/compare/"
 									+ (current == null ? "master" : current.getShortId()) + "...master"));
 							extra.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-									new ComponentBuilder(git.getCommits()[0].getShortId()).append("\n\nPushed at: "
-											+ GitLabAPI.NL_DATE_FORMAT.format(git.getCommits()[0].getWhen()))
+									new ComponentBuilder(git.getCommits()[0].getShortId())
+											.append("\n\nPushed at: "
+													+ GitLabAPI.NL_DATE_FORMAT.format(git.getCommits()[0].getWhen()))
 											.create()));
 							message.addExtra(extra);
 							// versions behind [#]:
