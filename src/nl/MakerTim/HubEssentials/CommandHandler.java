@@ -163,7 +163,7 @@ public class CommandHandler {
 				}
 				if (isUpdate && sender instanceof Player) {
 					TextComponent extra, message = new TextComponent("");
-					extra = new TextComponent(String.format("%s%s[%sRELOAD SERVER%s%s]%s ", ChatColor.RESET,
+					extra = new TextComponent(String.format("  %s%s[%sRELOAD SERVER%s%s]%s ", ChatColor.RESET,
 							ChatColor.BOLD, ChatColor.DARK_GREEN, ChatColor.RESET, ChatColor.BOLD, ChatColor.RESET));
 					extra.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/reload"));
 					extra.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
