@@ -2,6 +2,7 @@ package nl.MakerTim.HubEssentials;
 
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -23,6 +24,7 @@ public class BukkitStarter extends JavaPlugin {
 	public void onEnable() {
 		plugin = this;
 		getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+		Bukkit.getPluginManager().registerEvents(new BukkitListener(), this);
 	}
 
 	@Override
