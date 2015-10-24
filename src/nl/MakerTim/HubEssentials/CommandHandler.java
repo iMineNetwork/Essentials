@@ -48,130 +48,138 @@ public class CommandHandler {
 			}
 			return true;
 		} else if (command.equalsIgnoreCase("git")) {
-			new Thread(new Runnable() {
-				public void run() {
-					if (sender.isOp() || sender.hasPermission("iMine.dev")) {
-						sender.sendMessage(String.format("%s%s[%s%sGIT%s%s]%s Checking all git repos...",
-								ChatColor.RESET, ChatColor.BOLD, ChatColor.GOLD, ChatColor.BOLD, ChatColor.RESET,
-								ChatColor.BOLD, ChatColor.RESET));
-						boolean isUpdate = false;
-						for (Plugin pl : Bukkit.getPluginManager().getPlugins()) {
-							String version = pl.getDescription().getVersion();
-							Pattern p = Pattern.compile("\\b([0-9a-f]{5,40})\\b");
-							Matcher match = p.matcher(version);
-							if (match.find()) {
-								GitProject git = BukkitStarter.API.getProjectData(pl.getName());
-								if (git == null) {
-									continue;
-								}
-								/**
-								 * Lief dagboek,
-								 * 
-								 * Een mooie message maakt lelijke code. Mocht
-								 * je hier onder nog iets nuttigs mee willen
-								 * doen, im sorry
-								 * 
-								 * groetjes Tim
-								 */
-								// newestversion: %gitshort% [RELOAD SERVER]
-								TextComponent extra, message = new TextComponent("");
-								// [GIT]
-								extra = new TextComponent(String.format("%s%s[%s%sGIT%s%s]%s ", ChatColor.RESET,
-										ChatColor.BOLD, ChatColor.GOLD, ChatColor.BOLD, ChatColor.RESET, ChatColor.BOLD,
-										ChatColor.RESET));
-								message.addExtra(extra);
-								// %plugin naam%
-								extra = new TextComponent(
-										String.format("%s%s%s ", ChatColor.GREEN, pl.getName(), ChatColor.RESET));
-								extra.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, git.getWebUrl()));
-								extra.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+			new Thread(new GitCheckRunnalbe(sender)).start();
+			return true;
+		}
+		return false;
+	}
+
+	private static class GitCheckRunnalbe implements Runnable {
+
+		private final CommandSender sender;
+
+		public GitCheckRunnalbe(CommandSender sender) {
+			this.sender = sender;
+		}
+
+		@Override
+		public void run() {
+			if (sender.isOp() || sender.hasPermission("iMine.dev")) {
+				sender.sendMessage(
+						String.format("%s%s[%s%sGIT%s%s]%s Checking all git repos...", ChatColor.RESET, ChatColor.BOLD,
+								ChatColor.GOLD, ChatColor.BOLD, ChatColor.RESET, ChatColor.BOLD, ChatColor.RESET));
+				boolean isUpdate = false;
+				for (Plugin pl : Bukkit.getPluginManager().getPlugins()) {
+					String version = pl.getDescription().getVersion();
+					Pattern p = Pattern.compile("\\b([0-9a-f]{5,40})\\b");
+					Matcher match = p.matcher(version);
+					if (match.find()) {
+						GitProject git = BukkitStarter.API.getProjectData(pl.getName());
+						if (git == null) {
+							continue;
+						}
+						/**
+						 * Lief dagboek,
+						 * 
+						 * Een mooie message maakt lelijke code. Mocht je hier
+						 * onder nog iets nuttigs mee willen doen, im sorry
+						 * 
+						 * groetjes Tim
+						 */
+						// newestversion: %gitshort% [RELOAD SERVER]
+						TextComponent extra, message = new TextComponent("");
+						// [GIT]
+						extra = new TextComponent(String.format("%s%s[%s%sGIT%s%s]%s ", ChatColor.RESET, ChatColor.BOLD,
+								ChatColor.GOLD, ChatColor.BOLD, ChatColor.RESET, ChatColor.BOLD, ChatColor.RESET));
+						message.addExtra(extra);
+						// %plugin naam%
+						extra = new TextComponent(
+								String.format("%s%s%s ", ChatColor.GREEN, pl.getName(), ChatColor.RESET));
+						extra.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, git.getWebUrl()));
+						extra.setHoverEvent(
+								new HoverEvent(HoverEvent.Action.SHOW_TEXT,
 										new ComponentBuilder(git.getDescription())
 												.append("\n\nCreated at: "
 														+ GitLabAPI.NL_DATE_FORMAT.format(git.getCreateDate()))
 												.create()));
-								message.addExtra(extra);
-								// current verion:
-								extra = new TextComponent(String.format("%scurrent version: ", ChatColor.RESET));
-								message.addExtra(extra);
-								// %git short this version%
-								Commit current = null;
-								int index = 0;
-								for (Commit commit : git.getCommits()) {
-									if (commit.getShortId().toLowerCase().contains(match.group(0).toLowerCase())) {
-										current = commit;
-										break;
-									}
-									index++;
-								}
-								extra = new TextComponent(String.format("%s%s%s ", ChatColor.GOLD,
+						message.addExtra(extra);
+						// current verion:
+						extra = new TextComponent(String.format("%scurrent version: ", ChatColor.RESET));
+						message.addExtra(extra);
+						// %git short this version%
+						Commit current = null;
+						int index = 0;
+						for (Commit commit : git.getCommits()) {
+							if (commit.getShortId().toLowerCase().contains(match.group(0).toLowerCase())) {
+								current = commit;
+								break;
+							}
+							index++;
+						}
+						extra = new TextComponent(
+								String.format("%s%s%s ", ChatColor.GOLD,
 										(current == null ? ChatColor.RED + "not found"
 												: current.getTitle().replaceAll(" ", " " + ChatColor.GOLD)),
 										ChatColor.RESET));
-								extra.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, git.getWebUrl()
-										+ "/commit/" + (current == null ? "master" : current.getLongId())));
-								extra.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+						extra.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL,
+								git.getWebUrl() + "/commit/" + (current == null ? "master" : current.getLongId())));
+						extra.setHoverEvent(
+								new HoverEvent(HoverEvent.Action.SHOW_TEXT,
 										new ComponentBuilder((current == null
 												? ChatColor.RED + match.group(0) + " - commit not found!"
 												: current.getShortId()))
 														.append("\n\nPushed at: " + (current == null ? "~"
 																: GitLabAPI.NL_DATE_FORMAT.format(current.getWhen())))
 														.create()));
-								message.addExtra(extra);
-								if (index != 0) {
-									isUpdate = true;
-									// newest verion:
-									extra = new TextComponent(String.format("%snewest version: ", ChatColor.RESET));
-									message.addExtra(extra);
-									// %git short new version%
-									extra = new TextComponent(String.format("%s%s%s ", ChatColor.GOLD,
-											git.getCommits()[0].getTitle().replaceAll(" ", " " + ChatColor.GOLD),
-											ChatColor.RESET));
-									extra.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL,
-											git.getWebUrl() + "/compare/"
-													+ (current == null ? "master" : current.getShortId())
-													+ "...master"));
-									extra.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-											new ComponentBuilder(git.getCommits()[0].getShortId())
-													.append("\n\nPushed at: " + GitLabAPI.NL_DATE_FORMAT
-															.format(git.getCommits()[0].getWhen()))
-													.create()));
-									message.addExtra(extra);
-									// versions behind [#]:
-									extra = new TextComponent(
-											String.format("%s[%d]%s ", ChatColor.RESET, index, ChatColor.RESET));
-									message.addExtra(extra);
-								}
-								if (sender instanceof Player) {
-									((Player) sender).spigot().sendMessage(message);
-								} else {
-									sender.sendMessage(message.toPlainText());
-								}
-							}
-						}
-						if (isUpdate && sender instanceof Player) {
-							TextComponent extra, message = new TextComponent("");
+						message.addExtra(extra);
+						if (index != 0) {
+							isUpdate = true;
+							// newest verion:
+							extra = new TextComponent(String.format("%snewest version: ", ChatColor.RESET));
+							message.addExtra(extra);
+							// %git short new version%
+							extra = new TextComponent(String.format("%s%s%s ", ChatColor.GOLD,
+									git.getCommits()[0].getTitle().replaceAll(" ", " " + ChatColor.GOLD),
+									ChatColor.RESET));
+							extra.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, git.getWebUrl() + "/compare/"
+									+ (current == null ? "master" : current.getShortId()) + "...master"));
+							extra.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+									new ComponentBuilder(git.getCommits()[0].getShortId())
+											.append("\n\nPushed at: "
+													+ GitLabAPI.NL_DATE_FORMAT.format(git.getCommits()[0].getWhen()))
+											.create()));
+							message.addExtra(extra);
+							// versions behind [#]:
 							extra = new TextComponent(
-									String.format("%s%s[%sRELOAD SERVER%s%s]%s ", ChatColor.RESET, ChatColor.BOLD,
-											ChatColor.DARK_GREEN, ChatColor.RESET, ChatColor.BOLD, ChatColor.RESET));
-							extra.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/reload"));
-							extra.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-									new ComponentBuilder("Click to reload server").create()));
+									String.format("%s[%d]%s ", ChatColor.RESET, index, ChatColor.RESET));
 							message.addExtra(extra);
-
-							extra = new TextComponent(String.format("%s%s[%sREBOOT SERVER%s%s]%s ", ChatColor.RESET,
-									ChatColor.BOLD, ChatColor.RED, ChatColor.RESET, ChatColor.BOLD, ChatColor.RESET));
-							extra.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/restart"));
-							extra.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-									new ComponentBuilder(ChatColor.RED + "WARNING, will shutdown server!\n"
-											+ ChatColor.RESET + "Click to reboot server").create()));
-							message.addExtra(extra);
+						}
+						if (sender instanceof Player) {
 							((Player) sender).spigot().sendMessage(message);
+						} else {
+							sender.sendMessage(message.toPlainText());
 						}
 					}
 				}
-			}).start();
-			return true;
+				if (isUpdate && sender instanceof Player) {
+					TextComponent extra, message = new TextComponent("");
+					extra = new TextComponent(String.format("%s%s[%sRELOAD SERVER%s%s]%s ", ChatColor.RESET,
+							ChatColor.BOLD, ChatColor.DARK_GREEN, ChatColor.RESET, ChatColor.BOLD, ChatColor.RESET));
+					extra.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/reload"));
+					extra.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+							new ComponentBuilder("Click to reload server").create()));
+					message.addExtra(extra);
+
+					extra = new TextComponent(String.format("%s%s[%sREBOOT SERVER%s%s]%s ", ChatColor.RESET,
+							ChatColor.BOLD, ChatColor.RED, ChatColor.RESET, ChatColor.BOLD, ChatColor.RESET));
+					extra.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/restart"));
+					extra.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+							new ComponentBuilder(ChatColor.RED + "WARNING, will shutdown server!\n" + ChatColor.RESET
+									+ "Click to reboot server").create()));
+					message.addExtra(extra);
+					((Player) sender).spigot().sendMessage(message);
+				}
+			}
 		}
-		return false;
 	}
 }
