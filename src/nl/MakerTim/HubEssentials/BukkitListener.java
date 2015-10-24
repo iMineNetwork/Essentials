@@ -17,7 +17,6 @@ public class BukkitListener implements Listener {
 
 	@EventHandler
 	public void onJoining(PlayerJoinEvent pje) {
-		pje.getPlayer().sendMessage("Welkom");
 		if (pje.getPlayer().isOp() || BukkitStarter.isDev(pje.getPlayer().getUniqueId())) {
 			pje.getPlayer().performCommand("git");
 		}
