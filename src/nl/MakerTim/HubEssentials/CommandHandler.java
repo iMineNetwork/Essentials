@@ -144,7 +144,7 @@ public class CommandHandler {
 									ChatColor.RESET));
 							extra.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, git.getWebUrl() + "/compare/"
 									+ (current == null ? "master" : current.getShortId()) + "...master"));
-							ComponentBuilder hoverBuilder = new ComponentBuilder(git.getCommits()[0].getShortId());
+							ComponentBuilder hoverBuilder = new ComponentBuilder("version id: " + git.getCommits()[0].getShortId());
 							for (Commit commit : commits) {
 								hoverBuilder.append("\n" + ChatColor.GOLD + " " + commit.getTitle() + "  ["
 										+ GitLabAPI.NL_DATE_FORMAT.format(commit.getWhen()) + "]");
