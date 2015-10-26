@@ -128,7 +128,7 @@ public class CommandHandler {
 								new HoverEvent(HoverEvent.Action.SHOW_TEXT,
 										new ComponentBuilder((current == null
 												? ChatColor.RED + match.group(0) + " - commit not found!"
-												: current.getShortId()))
+												: "version id: " + current.getShortId()))
 														.append("\n\nPushed at: " + (current == null ? "~"
 																: GitLabAPI.NL_DATE_FORMAT.format(current.getWhen())))
 														.create()));
@@ -144,10 +144,12 @@ public class CommandHandler {
 									ChatColor.RESET));
 							extra.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, git.getWebUrl() + "/compare/"
 									+ (current == null ? "master" : current.getShortId()) + "...master"));
-							ComponentBuilder hoverBuilder = new ComponentBuilder("version id: " + git.getCommits()[0].getShortId());
+							ComponentBuilder hoverBuilder = new ComponentBuilder(
+									"version id: " + git.getCommits()[0].getShortId());
+							hoverBuilder.append("\nMission Versions:");
 							for (Commit commit : commits) {
-								hoverBuilder.append("\n" + ChatColor.GOLD + " " + commit.getTitle() + "  ["
-										+ GitLabAPI.NL_DATE_FORMAT.format(commit.getWhen()) + "]");
+								hoverBuilder.append("\n" + ChatColor.GOLD + " " + ChatColor.GRAY + commit.getTitle()
+										+ "  [" + GitLabAPI.NL_DATE_FORMAT.format(commit.getWhen()) + "]");
 							}
 							hoverBuilder.append(
 									"\n\nPushed at: " + GitLabAPI.NL_DATE_FORMAT.format(git.getCommits()[0].getWhen()));
