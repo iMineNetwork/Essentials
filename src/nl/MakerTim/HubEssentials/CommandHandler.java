@@ -1,6 +1,7 @@
 package nl.MakerTim.HubEssentials;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -108,13 +109,13 @@ public class CommandHandler {
 						message.addExtra(extra);
 						// %git short this version%
 						Commit current = null;
-						int index = 0;
+						List<Commit> commits = new ArrayList<>();
 						for (Commit commit : git.getCommits()) {
 							if (commit.getShortId().toLowerCase().contains(match.group(0).toLowerCase())) {
 								current = commit;
 								break;
 							}
-							index++;
+							commits.add(commit);
 						}
 						extra = new TextComponent(
 								String.format("%s%s%s ", ChatColor.GOLD,
@@ -132,7 +133,7 @@ public class CommandHandler {
 																: GitLabAPI.NL_DATE_FORMAT.format(current.getWhen())))
 														.create()));
 						message.addExtra(extra);
-						if (index != 0) {
+						if (!commits.isEmpty()) {
 							isUpdate = true;
 							// newest verion:
 							extra = new TextComponent(String.format("%snewest version: ", ChatColor.RESET));
@@ -143,15 +144,18 @@ public class CommandHandler {
 									ChatColor.RESET));
 							extra.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, git.getWebUrl() + "/compare/"
 									+ (current == null ? "master" : current.getShortId()) + "...master"));
-							extra.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-									new ComponentBuilder(git.getCommits()[0].getShortId())
-											.append("\n\nPushed at: "
-													+ GitLabAPI.NL_DATE_FORMAT.format(git.getCommits()[0].getWhen()))
-											.create()));
+							ComponentBuilder hoverBuilder = new ComponentBuilder(git.getCommits()[0].getShortId());
+							for (Commit commit : commits) {
+								hoverBuilder.append("\n" + ChatColor.GOLD + " " + commit.getTitle() + "  ["
+										+ GitLabAPI.NL_DATE_FORMAT.format(commit.getWhen()) + "]");
+							}
+							hoverBuilder.append(
+									"\n\nPushed at: " + GitLabAPI.NL_DATE_FORMAT.format(git.getCommits()[0].getWhen()));
+							extra.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverBuilder.create()));
 							message.addExtra(extra);
 							// versions behind [#]:
 							extra = new TextComponent(
-									String.format("%s[%d]%s ", ChatColor.RESET, index, ChatColor.RESET));
+									String.format("%s[%d]%s ", ChatColor.RESET, commits.size(), ChatColor.RESET));
 							message.addExtra(extra);
 						}
 						if (sender instanceof Player) {
