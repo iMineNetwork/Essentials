@@ -51,8 +51,17 @@ public class CommandHandler {
 		} else if (command.equalsIgnoreCase("git")) {
 			new Thread(new GitCheckRunnalbe(sender)).start();
 			return true;
+		} else if (command.equalsIgnoreCase("report")) {
+
 		}
 		return false;
+	}
+
+	private static class ServerReporter implements Runnable {
+		@Override
+		public void run() {
+
+		}
 	}
 
 	private static class GitCheckRunnalbe implements Runnable {

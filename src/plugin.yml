@@ -12,3 +12,11 @@ commands:
   dev:
     description: DEVMODE = kick everyone now!
     usage: /dev
+  report:
+    description: Report to all admins a issue
+    usage: /report <issue>
+    aliases: [r, rep, repo, abuse, meld]
+  admin:
+    description: Admin Chat
+    usage: /Admin <chat>
+    aliases: [a, intern, internal, internally]
