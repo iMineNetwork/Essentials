@@ -77,7 +77,7 @@ public class CommandHandler {
 			ResultSet rs = db.doQuery("SELECT * FROM AdminRegister");
 			try {
 				while (rs.next()) {
-					sender.sendMessage(rs.getString(0));
+					sender.sendMessage(rs.getString(1));
 
 				}
 			} catch (Exception ex) {
