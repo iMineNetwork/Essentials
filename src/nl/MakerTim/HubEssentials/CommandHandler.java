@@ -83,7 +83,7 @@ public class CommandHandler {
 
 		private static final String FORMAT_MESSAGE = String.format("%s%s[%s%sREPORT%s%s] %s%s%s %s\u00BB%s %s",
 				ChatColor.RESET, ChatColor.BOLD, ChatColor.RED, ChatColor.BOLD, ChatColor.RESET, ChatColor.BOLD,
-				ChatColor.RESET, ChatColor.GRAY, "%s", ChatColor.BOLD, ChatColor.RESET, "%s");
+				ChatColor.RESET, ChatColor.GRAY, "%s", ChatColor.BOLD, ChatColor.RED, "%s");
 
 		private final Player sender;
 		private final String[] args;
