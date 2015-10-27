@@ -56,48 +56,59 @@ public class CommandHandler {
 			new Thread(new GitCheckRunnalbe(sender)).start();
 			return true;
 		} else if (command.equalsIgnoreCase("report")) {
-			new Thread(new ServerReporter(sender)).start();
+			new Thread(new ServerReporter(sender, args)).start();
 			return true;
 		}
 		return false;
 	}
 
+	public static void globalAdminMessage(Player sender, String message) {
+		DatabaseManager db = BukkitStarter.plugin.getDB();
+		ResultSet rs = db.doQuery("SELECT UUID_Table.LastName FROM AdminRegister JOIN UUID_Table "
+				+ "ON UUID_Table.UUID = AdminRegister.UUID;");
+		try {
+			System.out.println("test c");
+			while (rs.next()) {
+				ByteArrayDataOutput out = ByteStreams.newDataOutput();
+				out.writeUTF("Message");
+				out.writeUTF(rs.getString(1));
+				out.writeUTF(message);
+				sender.sendPluginMessage(BukkitStarter.plugin, "BungeeCord", out.toByteArray());
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+
 	private static class ServerReporter implements Runnable {
 
-		private final Player sender;
+		private static final String FORMAT_MESSAGE = String.format("%s%s[%s%sREPORT%s%s]%s %s", ChatColor.RESET,
+				ChatColor.BOLD, ChatColor.RESET, ChatColor.RED, ChatColor.RESET, ChatColor.BOLD, ChatColor.RESET, "%s");
 
-		public ServerReporter(CommandSender sender) {
+		private final Player sender;
+		private final String[] args;
+
+		public ServerReporter(CommandSender sender, String[] args) {
 			if (sender instanceof Player) {
 				this.sender = (Player) sender;
 			} else {
 				sender.sendMessage("Player-only");
 				this.sender = null;
 			}
+			this.args = args;
 		}
 
 		@Override
 		public void run() {
-			DatabaseManager db = BukkitStarter.plugin.getDB();
-			if (!sender.isOp()) {
-				sender.sendMessage("not implmented yet.");
-				return;
+			if (args.length == 0) {
+				sender.sendMessage(ChatColor.RED + "/Report [Message]");
 			}
-			System.out.println("test A");
-			ResultSet rs = db.doQuery("SELECT UUID_Table.LastName FROM AdminRegister JOIN UUID_Table "
-					+ "ON UUID_Table.UUID = AdminRegister.UUID;");
-			System.out.println("test b");
-			try {
-				System.out.println("test c");
-				while (rs.next()) {
-					ByteArrayDataOutput out = ByteStreams.newDataOutput();
-					out.writeUTF("Message");
-					out.writeUTF(rs.getString(1));
-					out.writeUTF("The Message");
-					sender.sendPluginMessage(BukkitStarter.plugin, "BungeeCord", out.toByteArray());
-				}
-			} catch (Exception ex) {
-				sender.sendMessage(ex.getMessage());
+			String message = "";
+			for (String str : args) {
+				message += str + "";
 			}
+			sender.sendMessage(ChatColor.GOLD + "Message reported!");
+			CommandHandler.globalAdminMessage(sender, String.format(FORMAT_MESSAGE, message));
 		}
 	}
 
