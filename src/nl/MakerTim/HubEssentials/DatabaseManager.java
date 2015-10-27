@@ -115,7 +115,7 @@ public class DatabaseManager {
 	}
 
 	private boolean openIfNotClosed() throws SQLException {
-		if (connection.isClosed()) {
+		if (connection == null || connection.isClosed()) {
 			return this.openConnection();
 		}
 		return true;
