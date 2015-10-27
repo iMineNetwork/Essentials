@@ -64,14 +64,13 @@ public class CommandHandler {
 			return true;
 		} else if (command.equalsIgnoreCase("update")) {
 			File dir = new File("plugins/update/");
-			System.out.println(dir.getAbsolutePath());
-			System.out.println(dir.exists());
 			File[] directoryListing = dir.listFiles();
-			System.out.print(directoryListing);
 			if (directoryListing != null) {
-				System.out.println("  " + directoryListing.length);
 				for (File child : directoryListing) {
-					System.out.println(child);
+					File newFile = new File("plugins/" + child.getName());
+					System.out.println(newFile);
+					System.out.println(newFile.delete());
+					System.out.println(child.renameTo(newFile));
 				}
 			} else {
 				dir.mkdirs();
