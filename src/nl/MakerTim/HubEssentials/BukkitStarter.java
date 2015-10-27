@@ -34,7 +34,20 @@ public class BukkitStarter extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		plugin = null;
-		
+		File dir = new File("plugins/update/");
+		File[] directoryListing = dir.listFiles();
+		if (directoryListing != null) {
+			for (File child : directoryListing) {
+				File newFile = new File("plugins/" + child.getName());
+				if (newFile.delete() && child.renameTo(newFile)) {
+					System.out.println(child.getName() + " updated!");
+				} else {
+					System.out.println(child.getName() + " failed to update");
+				}
+			}
+		} else {
+			dir.mkdirs();
+		}
 	}
 
 	@Override
