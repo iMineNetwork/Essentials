@@ -1,5 +1,6 @@
 package nl.MakerTim.HubEssentials;
 
+import java.io.File;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
@@ -62,12 +63,22 @@ public class CommandHandler {
 			new Thread(new AdminChat(sender, args)).start();
 			return true;
 		} else if (command.equalsIgnoreCase("update")) {
+			File dir = new File("/plugins/update");
+			File[] directoryListing = dir.listFiles();
+			if (directoryListing != null) {
+				for (File child : directoryListing) {
+					System.out.println(child);
+				}
+			} else {
+				dir.mkdirs();
+			}
+			return true;/*
 			if (sender instanceof Player) {
 				((Player) sender).performCommand("reload");
 			} else {
 				Bukkit.reload();
 			}
-			return true;
+			return true;*/
 		}
 		return false;
 	}

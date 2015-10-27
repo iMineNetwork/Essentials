@@ -1,5 +1,6 @@
 package nl.MakerTim.HubEssentials;
 
+import java.io.File;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -33,6 +34,7 @@ public class BukkitStarter extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		plugin = null;
+		
 	}
 
 	@Override
