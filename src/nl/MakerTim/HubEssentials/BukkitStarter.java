@@ -40,9 +40,9 @@ public class BukkitStarter extends JavaPlugin {
 			for (File child : directoryListing) {
 				File newFile = new File("plugins/" + child.getName());
 				if (newFile.delete() && child.renameTo(newFile)) {
-					System.out.println(child.getName() + " updated!");
+					System.out.println("[UPDATELOG] +" + child.getName());
 				} else {
-					System.out.println(child.getName() + " failed to update");
+					System.out.println("[UPDATELOG] !" + child.getName() + " failed to update");
 				}
 			}
 		} else {
