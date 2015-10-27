@@ -63,10 +63,13 @@ public class CommandHandler {
 			new Thread(new AdminChat(sender, args)).start();
 			return true;
 		} else if (command.equalsIgnoreCase("update")) {
-			File dir = new File("./plugins/update");
+			File dir = new File("plugins/update/");
 			System.out.println(dir.getAbsolutePath());
+			System.out.println(dir.exists());
 			File[] directoryListing = dir.listFiles();
+			System.out.print(directoryListing);
 			if (directoryListing != null) {
+				System.out.println("  " + directoryListing.length);
 				for (File child : directoryListing) {
 					System.out.println(child);
 				}
@@ -74,12 +77,10 @@ public class CommandHandler {
 				dir.mkdirs();
 			}
 			return true;/*
-			if (sender instanceof Player) {
-				((Player) sender).performCommand("reload");
-			} else {
-				Bukkit.reload();
-			}
-			return true;*/
+						 * if (sender instanceof Player) { ((Player)
+						 * sender).performCommand("reload"); } else {
+						 * Bukkit.reload(); } return true;
+						 */
 		}
 		return false;
 	}
