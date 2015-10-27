@@ -1,5 +1,5 @@
 # This file is made by MakerTim, a modded version of Sansko1337
-# Last Changed 27-10-2015 21:25
+# Last Changed 27-10-2015 22:55
 buildfase:
   stage: build
   script:
@@ -24,22 +24,16 @@ buildfase:
 distributefase:
   stage: deploy
   script:
-# Copy files to there locations
+# Set variable $1 as the jar name
     - set $(git remote show -n origin | grep Fetch | sed 's%^.*/\([^/]*\)\.git$%\1%g').jar
+# Copy files to there locations
     - "echo $gitcipass|sudo -S cp ../dist/$1 /home/minecraft/multicraft/servers/server3/plugins/update"
-    #- "echo $gitcipass|sudo -S chmod 777 /home/minecraft/multicraft/servers/server3/plugins/update/$1"
-    #- echo $gitcipass|sudo -S cp ../dist/$1 /home/minecraft/multicraft/servers/server4/plugins/update
-    #- echo $gitcipass|sudo -S chown "mc4:mc4" /home/minecraft/multicraft/servers/server4/plugins/update/&1
-    #- echo $gitcipass|sudo -S cp ../dist/$1 /home/minecraft/multicraft/servers/server5/plugins/update
-    #- echo $gitcipass|sudo -S chown "mc5:mc5" /home/minecraft/multicraft/servers/server5/plugins/update/&1
-    #- echo $gitcipass|sudo -S cp ../dist/$1 /home/minecraft/multicraft/servers/server8/plugins/update
-    #- echo $gitcipass|sudo -S chown "mc8:mc8" /home/minecraft/multicraft/servers/server8/plugins/update/&1
-    #- echo $gitcipass|sudo -S cp ../dist/$1 /home/minecraft/multicraft/servers/server9/plugins/update
-    #- echo $gitcipass|sudo -S chown "mc9:mc9" /home/minecraft/multicraft/servers/server9/plugins/update/&1
-    #- echo $gitcipass|sudo -S cp ../dist/$1 /home/minecraft/multicraft/servers/server10/plugins/update
-    #- echo $gitcipass|sudo -S chown "mc10:mc10" /home/minecraft/multicraft/servers/server10/plugins/update/&1
-    #- echo $gitcipass|sudo -S cp ../dist/$1 /home/minecraft/multicraft/servers/server14/plugins/update
-    #- echo $gitcipass|sudo -S chown "mc14:mc14" /home/minecraft/multicraft/servers/server14/plugins/update/&1
+    - "echo $gitcipass|sudo -S cp ../dist/$1 /home/minecraft/multicraft/servers/server4/plugins/update"
+    - "echo $gitcipass|sudo -S cp ../dist/$1 /home/minecraft/multicraft/servers/server5/plugins/update"
+    - "echo $gitcipass|sudo -S cp ../dist/$1 /home/minecraft/multicraft/servers/server8/plugins/update"
+    - "echo $gitcipass|sudo -S cp ../dist/$1 /home/minecraft/multicraft/servers/server9/plugins/update"
+    - "echo $gitcipass|sudo -S cp ../dist/$1 /home/minecraft/multicraft/servers/server10/plugins/update"
+    - "echo $gitcipass|sudo -S cp ../dist/$1 /home/minecraft/multicraft/servers/server14/plugins/update"
 stages:
   - build
   - deploy
