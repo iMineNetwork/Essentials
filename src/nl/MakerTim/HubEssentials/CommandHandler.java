@@ -12,6 +12,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
+
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -74,11 +77,14 @@ public class CommandHandler {
 				sender.sendMessage("not implmented yet.");
 				return;
 			}
-			ResultSet rs = db.doQuery("SELECT * FROM AdminRegister");
+			ResultSet rs = db.doQuery("SELECT UUID_Table.LastName FROM AdminRegister JOIN UUID_Table "
+					+ "ON UUID_Table.UUID = AdminRegister.UUID;");
 			try {
+				ByteArrayDataOutput out = ByteStreams.newDataOutput();
 				while (rs.next()) {
-					sender.sendMessage(rs.getString(1));
-
+					out.writeUTF("Message");
+					out.writeUTF(rs.getString(1));
+					out.writeUTF("The Message");
 				}
 			} catch (Exception ex) {
 				sender.sendMessage(ex.getMessage());
