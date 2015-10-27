@@ -77,11 +77,15 @@ public class CommandHandler {
 				sender.sendMessage("not implmented yet.");
 				return;
 			}
+			System.out.println("test A");
 			ResultSet rs = db.doQuery("SELECT UUID_Table.LastName FROM AdminRegister JOIN UUID_Table "
 					+ "ON UUID_Table.UUID = AdminRegister.UUID;");
+			System.out.println("test b");
 			try {
+				System.out.println("test c");
 				ByteArrayDataOutput out = ByteStreams.newDataOutput();
 				while (rs.next()) {
+					System.out.println("test " + rs.getString(1));
 					out.writeUTF("Message");
 					out.writeUTF(rs.getString(1));
 					out.writeUTF("The Message");
