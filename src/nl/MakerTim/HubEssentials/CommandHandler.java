@@ -82,8 +82,9 @@ public class CommandHandler {
 
 	private static class ServerReporter implements Runnable {
 
-		private static final String FORMAT_MESSAGE = String.format("%s%s[%s%sREPORT%s%s]%s %s", ChatColor.RESET,
-				ChatColor.BOLD, ChatColor.RESET, ChatColor.RED, ChatColor.RESET, ChatColor.BOLD, ChatColor.RESET, "%s");
+		private static final String FORMAT_MESSAGE = String.format("%s%s[%s%sREPORT%s%s] %s%s%s%s%s", ChatColor.RESET,
+				ChatColor.BOLD, ChatColor.RESET, ChatColor.RED, ChatColor.RESET, ChatColor.BOLD, ChatColor.RESET,
+				ChatColor.GRAY, "%s", ChatColor.RESET, "%s");
 
 		private final Player sender;
 		private final String[] args;
@@ -108,7 +109,7 @@ public class CommandHandler {
 				message += str + "";
 			}
 			sender.sendMessage(ChatColor.GOLD + "Message reported!");
-			CommandHandler.globalAdminMessage(sender, String.format(FORMAT_MESSAGE, message));
+			CommandHandler.globalAdminMessage(sender, String.format(FORMAT_MESSAGE, sender.getName(), message));
 		}
 	}
 
