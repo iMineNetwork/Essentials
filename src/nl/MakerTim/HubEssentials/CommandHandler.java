@@ -68,7 +68,6 @@ public class CommandHandler {
 				Bukkit.reload();
 			}
 			return true;
-
 		}
 		return false;
 	}

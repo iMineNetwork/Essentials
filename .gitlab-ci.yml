@@ -27,7 +27,7 @@ distributefase:
 # Copy files to there locations
     - set $(git remote show -n origin | grep Fetch | sed 's%^.*/\([^/]*\)\.git$%\1%g').jar
     - "echo $gitcipass|sudo -S cp ../dist/$1 /home/minecraft/multicraft/servers/server3/plugins/update"
-    - "echo $gitcipass|sudo -S chmod 777 /home/minecraft/multicraft/servers/server3/plugins/update/$1"
+    #- "echo $gitcipass|sudo -S chmod 777 /home/minecraft/multicraft/servers/server3/plugins/update/$1"
     #- echo $gitcipass|sudo -S cp ../dist/$1 /home/minecraft/multicraft/servers/server4/plugins/update
     #- echo $gitcipass|sudo -S chown "mc4:mc4" /home/minecraft/multicraft/servers/server4/plugins/update/&1
     #- echo $gitcipass|sudo -S cp ../dist/$1 /home/minecraft/multicraft/servers/server5/plugins/update
