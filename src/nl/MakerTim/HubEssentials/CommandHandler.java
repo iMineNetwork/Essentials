@@ -82,9 +82,9 @@ public class CommandHandler {
 
 	private static class ServerReporter implements Runnable {
 
-		private static final String FORMAT_MESSAGE = String.format("%s%s[%s%sREPORT%s%s] %s%s%s %s\u00BB %s", ChatColor.RESET,
+		private static final String FORMAT_MESSAGE = String.format("%s%s[%s%sREPORT%s%s] %s%s%s %s\u00BB%s %s", ChatColor.RESET,
 				ChatColor.BOLD, ChatColor.RED, ChatColor.BOLD, ChatColor.RESET, ChatColor.BOLD, ChatColor.RESET,
-				ChatColor.GRAY, "%s", ChatColor.RESET, "%s");
+				ChatColor.GRAY, "%s", ChatColor.BOLD, ChatColor.RESET, "%s");
 
 		private final Player sender;
 		private final String[] args;
