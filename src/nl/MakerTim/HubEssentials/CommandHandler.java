@@ -62,7 +62,9 @@ public class CommandHandler {
 			new Thread(new AdminChat(sender, args)).start();
 			return true;
 		} else if (command.equalsIgnoreCase("update")) {
-			if (sender.isOp()) {
+			if (sender instanceof Player) {
+				((Player) sender).performCommand("reload");
+			} else {
 				Bukkit.reload();
 			}
 			return true;
