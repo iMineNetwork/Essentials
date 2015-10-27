@@ -177,7 +177,7 @@ public class CommandHandler {
 									+ (current == null ? "master" : current.getShortId()) + "...master"));
 							ComponentBuilder hoverBuilder = new ComponentBuilder(
 									"version id: " + git.getCommits()[0].getShortId());
-							hoverBuilder.append("\nMission Versions:");
+							hoverBuilder.append("\nMissing Versions:");
 							for (Commit commit : commits) {
 								hoverBuilder.append("\n" + ChatColor.GOLD + " " + ChatColor.GRAY + commit.getTitle()
 										+ "  [" + GitLabAPI.NL_DATE_FORMAT.format(commit.getWhen()) + "]");
