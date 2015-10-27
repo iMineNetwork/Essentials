@@ -51,6 +51,9 @@ public class BukkitStarter extends JavaPlugin {
 				ret = true;
 			}
 		}
+		if (!ret && Bukkit.getPlayer(check).hasPermission("iMine.helper")) {
+			ret = true;
+		}
 		return ret;
 	}
 }
