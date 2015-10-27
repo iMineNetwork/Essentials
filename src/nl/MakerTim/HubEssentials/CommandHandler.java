@@ -64,10 +64,15 @@ public class CommandHandler {
 
 	private static class ServerReporter implements Runnable {
 
-		private final CommandSender sender;
+		private final Player sender;
 
 		public ServerReporter(CommandSender sender) {
-			this.sender = sender;
+			if (sender instanceof Player) {
+				this.sender = (Player) sender;
+			} else {
+				sender.sendMessage("Player-only");
+				this.sender = null;
+			}
 		}
 
 		@Override
@@ -83,12 +88,12 @@ public class CommandHandler {
 			System.out.println("test b");
 			try {
 				System.out.println("test c");
-				ByteArrayDataOutput out = ByteStreams.newDataOutput();
 				while (rs.next()) {
-					System.out.println("test " + rs.getString(1));
+					ByteArrayDataOutput out = ByteStreams.newDataOutput();
 					out.writeUTF("Message");
 					out.writeUTF(rs.getString(1));
 					out.writeUTF("The Message");
+					sender.sendPluginMessage(BukkitStarter.plugin, "BungeeCord", out.toByteArray());
 				}
 			} catch (Exception ex) {
 				sender.sendMessage(ex.getMessage());
