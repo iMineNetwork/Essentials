@@ -1,5 +1,6 @@
 package nl.MakerTim.HubEssentials;
 
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -68,7 +69,20 @@ public class CommandHandler {
 
 		@Override
 		public void run() {
-			sender.sendMessage("not implmented yet.");
+			DatabaseManager db = BukkitStarter.plugin.getDB();
+			if (!sender.isOp()) {
+				sender.sendMessage("not implmented yet.");
+				return;
+			}
+			ResultSet rs = db.doQuery("SELECT * FROM AdminRegister");
+			try {
+				while (rs.next()) {
+					sender.sendMessage(rs.getString(0));
+
+				}
+			} catch (Exception ex) {
+				sender.sendMessage(ex.getMessage());
+			}
 		}
 	}
 

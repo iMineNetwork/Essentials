@@ -45,7 +45,7 @@ public class DatabaseManager {
 
 	public static String prepaireString(String raw) {
 		return raw.replaceAll(
-				"\\{ | \\} | \\\\ | \\, | \\& | \\? |" + " \\( | \\) | \\[ | \\] | \\- | \\; | \\~ | \\| | \\ $ |"
+				"\\{ | \\} | \\\\ | \\, | \\& | \\? | \\( | \\) | \\[ | \\] | \\- | \\; | \\~ | \\| | \\ $ |"
 						+ " \\! | \\< | \\> | \\* | \\% | \\_ | \\' | \\\"",
 				"\\\\$0");
 	}
