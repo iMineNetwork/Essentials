@@ -63,7 +63,8 @@ public class CommandHandler {
 			new Thread(new AdminChat(sender, args)).start();
 			return true;
 		} else if (command.equalsIgnoreCase("update")) {
-			File dir = new File("/plugins/update");
+			File dir = new File("./plugins/update");
+			System.out.println(dir.getAbsolutePath());
 			File[] directoryListing = dir.listFiles();
 			if (directoryListing != null) {
 				for (File child : directoryListing) {
