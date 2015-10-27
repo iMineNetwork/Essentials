@@ -25,13 +25,13 @@ distributefase:
   stage: deploy
   script:
 # Copy files to there locations
-    - echo $gitcipass|sudo -S cp --parents ../dist/$(git remote show -n origin | grep Fetch | sed 's%^.*/\([^/]*\)\.git$%\1%g').jar /home/minecraft/multicraft/servers/server3/plugins/update
-    - echo $gitcipass|sudo -S cp --parents ../dist/$(git remote show -n origin | grep Fetch | sed 's%^.*/\([^/]*\)\.git$%\1%g').jar /home/minecraft/multicraft/servers/server4/plugins/update
-    - echo $gitcipass|sudo -S cp --parents ../dist/$(git remote show -n origin | grep Fetch | sed 's%^.*/\([^/]*\)\.git$%\1%g').jar /home/minecraft/multicraft/servers/server5/plugins/update
-    - echo $gitcipass|sudo -S cp --parents ../dist/$(git remote show -n origin | grep Fetch | sed 's%^.*/\([^/]*\)\.git$%\1%g').jar /home/minecraft/multicraft/servers/server8/plugins/update
-    - echo $gitcipass|sudo -S cp --parents ../dist/$(git remote show -n origin | grep Fetch | sed 's%^.*/\([^/]*\)\.git$%\1%g').jar /home/minecraft/multicraft/servers/server9/plugins/update
-    - echo $gitcipass|sudo -S cp --parents ../dist/$(git remote show -n origin | grep Fetch | sed 's%^.*/\([^/]*\)\.git$%\1%g').jar /home/minecraft/multicraft/servers/server10/plugins/update
-    - echo $gitcipass|sudo -S cp --parents ../dist/$(git remote show -n origin | grep Fetch | sed 's%^.*/\([^/]*\)\.git$%\1%g').jar /home/minecraft/multicraft/servers/server14/plugins/update
+    - echo $gitcipass|sudo -S cp ../dist/$(git remote show -n origin | grep Fetch | sed 's%^.*/\([^/]*\)\.git$%\1%g').jar /home/minecraft/multicraft/servers/server3/plugins/update
+    - echo $gitcipass|sudo -S cp ../dist/$(git remote show -n origin | grep Fetch | sed 's%^.*/\([^/]*\)\.git$%\1%g').jar /home/minecraft/multicraft/servers/server4/plugins/update
+    - echo $gitcipass|sudo -S cp ../dist/$(git remote show -n origin | grep Fetch | sed 's%^.*/\([^/]*\)\.git$%\1%g').jar /home/minecraft/multicraft/servers/server5/plugins/update
+    - echo $gitcipass|sudo -S cp ../dist/$(git remote show -n origin | grep Fetch | sed 's%^.*/\([^/]*\)\.git$%\1%g').jar /home/minecraft/multicraft/servers/server8/plugins/update
+    - echo $gitcipass|sudo -S cp ../dist/$(git remote show -n origin | grep Fetch | sed 's%^.*/\([^/]*\)\.git$%\1%g').jar /home/minecraft/multicraft/servers/server9/plugins/update
+    - echo $gitcipass|sudo -S cp ../dist/$(git remote show -n origin | grep Fetch | sed 's%^.*/\([^/]*\)\.git$%\1%g').jar /home/minecraft/multicraft/servers/server10/plugins/update
+    - echo $gitcipass|sudo -S cp ../dist/$(git remote show -n origin | grep Fetch | sed 's%^.*/\([^/]*\)\.git$%\1%g').jar /home/minecraft/multicraft/servers/server14/plugins/update
 
 stages:
   - build
