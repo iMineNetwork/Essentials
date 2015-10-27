@@ -67,7 +67,6 @@ public class CommandHandler {
 		ResultSet rs = db.doQuery("SELECT UUID_Table.LastName FROM AdminRegister JOIN UUID_Table "
 				+ "ON UUID_Table.UUID = AdminRegister.UUID;");
 		try {
-			System.out.println("test c");
 			while (rs.next()) {
 				ByteArrayDataOutput out = ByteStreams.newDataOutput();
 				out.writeUTF("Message");
@@ -107,7 +106,7 @@ public class CommandHandler {
 			}
 			String message = "";
 			for (String str : args) {
-				message += str + "";
+				message += str + " ";
 			}
 			if (message.matches("^\\s*$")) {
 				sender.sendMessage(ChatColor.RED + "/Report [Message]");
