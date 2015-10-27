@@ -40,7 +40,7 @@ public class BukkitStarter extends JavaPlugin {
 		return CommandHandler.onCommand(sender, command.getName(), args);
 	}
 
-	public DatabaseManager getDm() {
+	public DatabaseManager getDB() {
 		return dm;
 	}
 

@@ -17,8 +17,13 @@ public class BukkitListener implements Listener {
 
 	@EventHandler
 	public void onJoining(PlayerJoinEvent pje) {
+		DatabaseManager db = BukkitStarter.plugin.getDB();
+		db.insertQuery("DELETE FROM `iMine_Bans`.`AdminRegister` WHERE `AdminRegister`.`UUID` = '"
+				+ pje.getPlayer().getUniqueId() + "';");
 		if (pje.getPlayer().isOp() || BukkitStarter.isDev(pje.getPlayer().getUniqueId())) {
 			pje.getPlayer().performCommand("git");
+			db.insertQuery("INSERT INTO `iMine_Bans`.`AdminRegister` (`UUID`, `isAdmin`) VALUES ('"
+					+ pje.getPlayer().getUniqueId() + "', '1');");
 		}
 	}
 }

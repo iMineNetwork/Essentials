@@ -52,15 +52,23 @@ public class CommandHandler {
 			new Thread(new GitCheckRunnalbe(sender)).start();
 			return true;
 		} else if (command.equalsIgnoreCase("report")) {
-
+			new Thread(new ServerReporter(sender)).start();
+			return true;
 		}
 		return false;
 	}
 
 	private static class ServerReporter implements Runnable {
+
+		private final CommandSender sender;
+
+		public ServerReporter(CommandSender sender) {
+			this.sender = sender;
+		}
+
 		@Override
 		public void run() {
-
+			sender.sendMessage("not implmented yet.");
 		}
 	}
 
