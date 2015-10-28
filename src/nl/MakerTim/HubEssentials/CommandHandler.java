@@ -118,6 +118,7 @@ public class CommandHandler {
 			for (String str : args) {
 				message += str + " ";
 			}
+			message = MktUtils.replaceColors(message);
 			if (message.matches("^\\s*$")) {
 				sender.sendMessage(ChatColor.RED + "/Report [Message]");
 				return;
@@ -156,6 +157,7 @@ public class CommandHandler {
 			for (String str : args) {
 				message += str + " ";
 			}
+			message = MktUtils.replaceColors(message);
 			if (message.matches("^\\s*$")) {
 				sender.sendMessage(ChatColor.RED + "/Admin [Message]");
 				return;
