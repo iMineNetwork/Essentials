@@ -232,7 +232,7 @@ public class CommandHandler {
 												: current.getTitle().replaceAll(" ", " " + ChatColor.GOLD)),
 										ChatColor.RESET));
 						extra.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL,
-								git.getWebUrl() + "/commit/" + (current == null ? "master" : current.getLongId())));
+								git.getWebUrl() + "/commit/" + (current == null ? "master" : current.getLongId()) + "?view=parallel"));
 						extra.setHoverEvent(
 								new HoverEvent(HoverEvent.Action.SHOW_TEXT,
 										new ComponentBuilder((current == null
@@ -252,7 +252,7 @@ public class CommandHandler {
 									git.getCommits()[0].getTitle().replaceAll(" ", " " + ChatColor.GOLD),
 									ChatColor.RESET));
 							extra.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, git.getWebUrl() + "/compare/"
-									+ (current == null ? "master" : current.getShortId()) + "...master"));
+									+ (current == null ? "master" : current.getShortId()) + "...master?view=parallel"));
 							ComponentBuilder hoverBuilder = new ComponentBuilder(
 									"version id: " + git.getCommits()[0].getShortId());
 							hoverBuilder.append("\nMissing Versions:");
