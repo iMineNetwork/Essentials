@@ -175,6 +175,9 @@ public class CommandHandler {
 		@Override
 		public void run() {
 			if (sender.isOp() || sender.hasPermission("iMine.dev")) {
+				if (!BukkitStarter.API.canWork()) {
+					sender.sendMessage("This server is outdated -> cant check on GitRepo's");
+				}
 				sender.sendMessage(
 						String.format("%s%s[%s%sGIT%s%s]%s Checking all git repos...", ChatColor.RESET, ChatColor.BOLD,
 								ChatColor.GOLD, ChatColor.BOLD, ChatColor.RESET, ChatColor.BOLD, ChatColor.RESET));
@@ -231,8 +234,8 @@ public class CommandHandler {
 										(current == null ? ChatColor.RED + "not found"
 												: current.getTitle().replaceAll(" ", " " + ChatColor.GOLD)),
 										ChatColor.RESET));
-						extra.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL,
-								git.getWebUrl() + "/commit/" + (current == null ? "master" : current.getLongId()) + "?view=parallel"));
+						extra.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, git.getWebUrl() + "/commit/"
+								+ (current == null ? "master" : current.getLongId()) + "?view=parallel"));
 						extra.setHoverEvent(
 								new HoverEvent(HoverEvent.Action.SHOW_TEXT,
 										new ComponentBuilder((current == null

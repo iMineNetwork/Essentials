@@ -98,6 +98,10 @@ public class GitLabAPI {
 		}
 	}
 
+	public boolean canWork() {
+		return canWork;
+	}
+
 	private boolean isNewerProject(Date dateA, Date dateB) {
 		try {
 			return dateA.after(dateB);
