@@ -177,6 +177,7 @@ public class CommandHandler {
 			if (sender.isOp() || sender.hasPermission("iMine.dev")) {
 				if (!BukkitStarter.API.canWork()) {
 					sender.sendMessage("This server is outdated -> cant check on GitRepo's");
+					return;
 				}
 				sender.sendMessage(
 						String.format("%s%s[%s%sGIT%s%s]%s Checking all git repos...", ChatColor.RESET, ChatColor.BOLD,
