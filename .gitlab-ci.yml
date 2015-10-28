@@ -1,5 +1,5 @@
 # This file is made by MakerTim, a modded version of Sansko1337
-# Last Changed 27-10-2015 23:17
+# Last Changed 29-10-2015 00:11
 buildfase:
   stage: build
   script:
@@ -11,7 +11,7 @@ buildfase:
     - mkdir build
     - mkdir -p ../dist
 # set plugin version inside plugin.yml
-    - "sed -e 's/^version.*$/version: '$(git rev-parse --short HEAD)';'$(git rev-parse HEAD)'/g' ./src/plugin.yml > ./src/plugin.yml.temp"
+    - "sed -e 's/^version.*$/version: '$(git rev-parse --short HEAD)'/g' ./src/plugin.yml > ./src/plugin.yml.temp"
     - mv ./src/plugin.yml.temp ./src/plugin.yml
 # compile all java files with as classpath everything inside libs directory
     - javac -cp $(find ./libs -regex '.*\.jar' -printf '%p:') -d ./build ./src/**/*.java
