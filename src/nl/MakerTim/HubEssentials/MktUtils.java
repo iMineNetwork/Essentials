@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 public class MktUtils {
-	private final static String[][] colorCodes = new String[][] { { "&0", ChatColor.BLACK.toString() },
+	private final static String[][] COLOR_CODES = new String[][] { { "&0", ChatColor.BLACK.toString() },
 			{ "&1", ChatColor.DARK_BLUE.toString() }, { "&2", ChatColor.DARK_GREEN.toString() },
 			{ "&3", ChatColor.DARK_AQUA.toString() }, { "&4", ChatColor.DARK_RED.toString() },
 			{ "&5", ChatColor.DARK_PURPLE.toString() }, { "&6", ChatColor.GOLD.toString() },
@@ -41,7 +41,7 @@ public class MktUtils {
 		if (toReplace == null) {
 			return "";
 		}
-		for (String[] strs : colorCodes) {
+		for (String[] strs : COLOR_CODES) {
 			toReplace = toReplace.replaceAll(strs[0], strs[1]);
 		}
 		return toReplace;
