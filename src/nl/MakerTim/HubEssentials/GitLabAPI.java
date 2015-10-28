@@ -28,6 +28,7 @@ public class GitLabAPI {
 
 	private Map<String, GitProject> projects;
 	private List<Integer> ids;
+	private boolean canWork = true;
 
 	/**
 	 * Lief dagboek,
@@ -91,8 +92,10 @@ public class GitLabAPI {
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
+		} catch (Error er) {
+			er.printStackTrace();
+			canWork = false;
 		}
-
 	}
 
 	private boolean isNewerProject(Date dateA, Date dateB) {
@@ -105,6 +108,9 @@ public class GitLabAPI {
 	}
 
 	public GitProject getProjectData(String pluginName) {
+		if (!canWork) {
+			return null;
+		}
 		refreshData();
 		String file;
 		if (this.projects.containsKey(pluginName)) {
