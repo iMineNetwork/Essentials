@@ -305,7 +305,7 @@ public class CommandHandler {
 						} else {
 							sender.sendMessage(message.toPlainText());
 						}
-					} 
+					}
 				}
 				if (isUpdate) {
 					verboseMessage("update found");

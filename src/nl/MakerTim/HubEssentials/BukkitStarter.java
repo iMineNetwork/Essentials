@@ -46,6 +46,7 @@ public class BukkitStarter extends JavaPlugin {
 				}
 			}
 		} else {
+			System.out.println("plugins updatefolder not found!");
 			dir.mkdirs();
 		}
 	}
