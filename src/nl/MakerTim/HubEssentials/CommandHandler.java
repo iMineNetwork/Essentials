@@ -189,7 +189,7 @@ public class CommandHandler {
 
 		private void verboseMessage(String msg) {
 			if (verbose) {
-				sender.sendMessage("    " + ChatColor.GRAY + msg);
+				sender.sendMessage("  " + ChatColor.GRAY + msg);
 			}
 		}
 
@@ -305,9 +305,7 @@ public class CommandHandler {
 						} else {
 							sender.sendMessage(message.toPlainText());
 						}
-					} else {
-						verboseMessage("");
-					}
+					} 
 				}
 				if (isUpdate) {
 					verboseMessage("update found");
