@@ -3,6 +3,7 @@ package nl.MakerTim.HubEssentials;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -23,7 +24,6 @@ import nl.MakerTim.HubEssentials.GitLabAPI.Commit;
 import nl.MakerTim.HubEssentials.GitLabAPI.GitProject;
 
 public class CommandHandler {
-
 	public static boolean onCommand(final CommandSender sender, String command, String[] args) {
 		if (command.equalsIgnoreCase("hub") && sender instanceof Player) {
 			if (args.length == 0) {
@@ -53,7 +53,17 @@ public class CommandHandler {
 			}
 			return true;
 		} else if (command.equalsIgnoreCase("git")) {
-			new Thread(new GitCheckRunnalbe(sender)).start();
+			if (args.length == 1) {
+				if (args[0].equalsIgnoreCase("projects")) {
+					Set<String> projects = BukkitStarter.API.getProjects();
+					for (String project : projects) {
+						sender.sendMessage(project);
+					}
+				} else if (args[0].equalsIgnoreCase("-v")) {
+					new Thread(new GitCheckRunnalbe(sender, true)).start();
+				}
+			}
+			new Thread(new GitCheckRunnalbe(sender, false)).start();
 			return true;
 		} else if (command.equalsIgnoreCase("report")) {
 			new Thread(new ServerReporter(sender, args)).start();
@@ -169,9 +179,17 @@ public class CommandHandler {
 	private static class GitCheckRunnalbe implements Runnable {
 
 		private final CommandSender sender;
+		private final boolean verbose;
 
-		public GitCheckRunnalbe(CommandSender sender) {
+		public GitCheckRunnalbe(CommandSender sender, boolean verbose) {
 			this.sender = sender;
+			this.verbose = verbose;
+		}
+
+		private void verboseMessage(String msg) {
+			if (verbose) {
+				sender.sendMessage("    " + ChatColor.GRAY + msg);
+			}
 		}
 
 		@Override
@@ -186,12 +204,15 @@ public class CommandHandler {
 								ChatColor.GOLD, ChatColor.BOLD, ChatColor.RESET, ChatColor.BOLD, ChatColor.RESET));
 				boolean isUpdate = false;
 				for (Plugin pl : Bukkit.getPluginManager().getPlugins()) {
+					verboseMessage("Checking plugin " + pl.getName());
 					String version = pl.getDescription().getVersion();
 					Pattern p = Pattern.compile("\\b([0-9a-f]{5,40})\\b");
 					Matcher match = p.matcher(version);
 					if (match.find()) {
+						verboseMessage("plugin " + pl.getName() + " is a GIT project!");
 						GitProject git = BukkitStarter.API.getProjectData(pl.getName());
 						if (git == null) {
+							verboseMessage("but i couldnt find it our system");
 							continue;
 						}
 						/**
@@ -228,6 +249,7 @@ public class CommandHandler {
 						for (Commit commit : git.getCommits()) {
 							if (commit.getShortId().toLowerCase().contains(match.group(0).toLowerCase())) {
 								current = commit;
+								verboseMessage("current commit found: " + commit.getMessage());
 								break;
 							}
 							commits.add(commit);
@@ -248,7 +270,9 @@ public class CommandHandler {
 																: GitLabAPI.NL_DATE_FORMAT.format(current.getWhen())))
 														.create()));
 						message.addExtra(extra);
-						if (!commits.isEmpty()) {
+						if (commits.isEmpty()) {
+							verboseMessage("no current commit found!");
+						} else {
 							isUpdate = true;
 							// newest verion:
 							extra = new TextComponent(String.format("%snewest version: ", ChatColor.RESET));
@@ -280,25 +304,31 @@ public class CommandHandler {
 						} else {
 							sender.sendMessage(message.toPlainText());
 						}
+					} else {
+						verboseMessage("");
 					}
 				}
-				if (isUpdate && sender instanceof Player) {
-					TextComponent extra, message = new TextComponent("");
-					extra = new TextComponent(String.format("  %s%s[%sRELOAD SERVER%s%s]%s ", ChatColor.RESET,
-							ChatColor.BOLD, ChatColor.DARK_GREEN, ChatColor.RESET, ChatColor.BOLD, ChatColor.RESET));
-					extra.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/reload"));
-					extra.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-							new ComponentBuilder("Click to reload server").create()));
-					message.addExtra(extra);
+				if (isUpdate) {
+					verboseMessage("update found");
+					if (sender instanceof Player) {
+						TextComponent extra, message = new TextComponent("");
+						extra = new TextComponent(
+								String.format("  %s%s[%sRELOAD SERVER%s%s]%s ", ChatColor.RESET, ChatColor.BOLD,
+										ChatColor.DARK_GREEN, ChatColor.RESET, ChatColor.BOLD, ChatColor.RESET));
+						extra.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/reload"));
+						extra.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+								new ComponentBuilder("Click to reload server").create()));
+						message.addExtra(extra);
 
-					extra = new TextComponent(String.format("%s%s[%sREBOOT SERVER%s%s]%s ", ChatColor.RESET,
-							ChatColor.BOLD, ChatColor.RED, ChatColor.RESET, ChatColor.BOLD, ChatColor.RESET));
-					extra.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/restart"));
-					extra.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-							new ComponentBuilder(ChatColor.RED + "WARNING, will shutdown server!\n" + ChatColor.RESET
-									+ "Click to reboot server").create()));
-					message.addExtra(extra);
-					((Player) sender).spigot().sendMessage(message);
+						extra = new TextComponent(String.format("%s%s[%sREBOOT SERVER%s%s]%s ", ChatColor.RESET,
+								ChatColor.BOLD, ChatColor.RED, ChatColor.RESET, ChatColor.BOLD, ChatColor.RESET));
+						extra.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/restart"));
+						extra.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+								new ComponentBuilder(ChatColor.RED + "WARNING, will shutdown server!\n"
+										+ ChatColor.RESET + "Click to reboot server").create()));
+						message.addExtra(extra);
+						((Player) sender).spigot().sendMessage(message);
+					}
 				}
 			}
 		}
