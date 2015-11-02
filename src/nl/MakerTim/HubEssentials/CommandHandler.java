@@ -1,5 +1,6 @@
 package nl.MakerTim.HubEssentials;
 
+import java.io.File;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +12,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.InvalidDescriptionException;
+import org.bukkit.plugin.InvalidPluginException;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.UnknownDependencyException;
 
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
@@ -225,9 +229,22 @@ public class CommandHandler {
 			if (pl != null) {
 				sender.sendMessage(String.format(FORMAT, "Overriding to new plugins"));
 				Bukkit.getPluginManager().disablePlugin(pl);
-				sender.sendMessage(String.format(FORMAT, pl.getName() + " is now disabled"));
-				Bukkit.getPluginManager().enablePlugin(pl);
-				sender.sendMessage(String.format(FORMAT, pl.getName() + " is now reloaded!"));
+				sender.sendMessage(String.format(FORMAT,
+						pl.getName() + " is now disabled [" + pl.getDescription().getVersion() + "]"));
+				try {
+					Thread.sleep(1500L);
+					pl = Bukkit.getPluginManager().loadPlugin(new File("/plugins/" + args[0] + ".jar"));
+					sender.sendMessage(String.format(FORMAT,
+							pl.getName() + " is now reloaded! [" + pl.getDescription().getVersion() + "]"));
+				} catch (UnknownDependencyException ex) {
+					sender.sendMessage(ChatColor.RED + "Plugin Dependency not correctly: " + ex.getMessage());
+				} catch (InvalidPluginException ex) {
+					sender.sendMessage(ChatColor.RED + "Plugin invalid. because: " + ex.getMessage());
+				} catch (InvalidDescriptionException ex) {
+					sender.sendMessage(ChatColor.RED + "Plugin invalid description. because: " + ex.getMessage());
+				} catch (Exception ex) {
+					sender.sendMessage(ChatColor.RED + "You just fucked-up: " + ex.getMessage());
+				}
 			} else {
 				sender.sendMessage("No plugin with that name.");
 			}
