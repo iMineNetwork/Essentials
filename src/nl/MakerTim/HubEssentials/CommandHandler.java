@@ -28,7 +28,7 @@ public class CommandHandler {
 		if (command.equalsIgnoreCase("hub") && sender instanceof Player) {
 			if (args.length == 0) {
 				MktUtils.sendPlayerToServer(BukkitStarter.plugin, (Player) sender, "hub");
-			} else if (sender.isOp() || sender.hasPermission("hub.op")) {
+			} else if (sender.isOp() || sender.hasPermission("iMine.hub")) {
 				MktUtils.sendPlayerToServer(BukkitStarter.plugin, (Player) sender, args[0]);
 			} else {
 				sender.sendMessage(ChatColor.RED + "You have no acces to this command");
@@ -67,7 +67,7 @@ public class CommandHandler {
 			}
 			return true;
 		} else if (command.equalsIgnoreCase("plr")) {
-			if (sender.isOp() && args.length > 0) {
+			if ((sender.isOp() || sender.hasPermission("iMine.dev")) && args.length > 0) {
 				new Thread(new ReloadPlugin(sender, args)).start();
 			} else {
 				return false;
@@ -103,7 +103,7 @@ public class CommandHandler {
 			ret.add("-v");
 			ret.add("projects");
 		} else if (command.equalsIgnoreCase("plr")) {
-			for(Plugin pl : Bukkit.getPluginManager().getPlugins()){
+			for (Plugin pl : Bukkit.getPluginManager().getPlugins()) {
 				ret.add(pl.getName());
 			}
 		} else if (command.equalsIgnoreCase("admin")) {
