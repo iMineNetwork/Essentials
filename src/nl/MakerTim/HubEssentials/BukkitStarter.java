@@ -1,11 +1,13 @@
 package nl.MakerTim.HubEssentials;
 
 import java.io.File;
+import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class BukkitStarter extends JavaPlugin {
@@ -40,6 +42,14 @@ public class BukkitStarter extends JavaPlugin {
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		return CommandHandler.onCommand(sender, command.getName(), args);
+	}
+
+	@Override
+	public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+		if (sender instanceof Player) {
+			return CommandHandler.onTabComplete((Player) sender, command.getName(), args);
+		}
+		return super.onTabComplete(sender, command, alias, args);
 	}
 
 	public void updatePlugins() {

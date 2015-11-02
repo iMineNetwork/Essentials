@@ -90,7 +90,30 @@ public class CommandHandler {
 		return false;
 	}
 
-	public static void globalAdminMessage(Player sender, String message) {
+	public static List<String> onTabComplete(Player sender, String command, String[] args) {
+		List<String> ret = new ArrayList<>();
+		if (command.equalsIgnoreCase("hub")) {
+			ret.add("creative");
+			ret.add("uhc");
+			ret.add("hub");
+			ret.add("survival");
+			ret.add("outlaws");
+		} else if (command.equalsIgnoreCase("dev")) {
+		} else if (command.equalsIgnoreCase("git")) {
+			ret.add("-v");
+			ret.add("projects");
+		} else if (command.equalsIgnoreCase("plr")) {
+			for(Plugin pl : Bukkit.getPluginManager().getPlugins()){
+				ret.add(pl.getName());
+			}
+		} else if (command.equalsIgnoreCase("admin")) {
+		} else if (command.equalsIgnoreCase("report")) {
+		} else if (command.equalsIgnoreCase("update")) {
+		}
+		return ret;
+	}
+
+	private static void globalAdminMessage(Player sender, String message) {
 		DatabaseManager db = BukkitStarter.plugin.getDB();
 		ResultSet rs = db.doQuery("SELECT UUID_Table.LastName FROM AdminRegister JOIN UUID_Table "
 				+ "ON UUID_Table.UUID = AdminRegister.UUID;");
