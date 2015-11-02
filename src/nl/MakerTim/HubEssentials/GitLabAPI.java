@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
 
 import org.bukkit.Bukkit;
 
@@ -78,14 +79,14 @@ public class GitLabAPI {
 							commits[k] = new Commit(commitJson.get("short_id").getAsString(),
 									commitJson.get("id").getAsString(), commitJson.get("title").getAsString(),
 									commitJson.get("message").getAsString(),
-									DATE_FORMAT.parse(commitJson.get("created_at").getAsString()));
+									parseStringToDate(commitJson.get("created_at").getAsString()));
 						}
 
 						projects.put(project.get("name").getAsString(),
 								new GitProject(projectId, project.get("web_url").getAsString(),
 										project.get("description").getAsString(),
-										DATE_FORMAT.parse(project.get("last_activity_at").getAsString()), commits,
-										DATE_FORMAT.parse(project.get("created_at").getAsString())));
+										parseStringToDate(project.get("last_activity_at").getAsString()), commits,
+										parseStringToDate(project.get("created_at").getAsString())));
 						ids.add(projectId);
 					}
 				}
@@ -97,8 +98,22 @@ public class GitLabAPI {
 		}
 	}
 
+	public Set<String> getProjects(){
+		return projects.keySet();
+	}
+	
 	public boolean canWork() {
 		return canWork;
+	}
+
+	private Date parseStringToDate(String str) {
+		Date ret = new Date();
+		try {
+			ret = DATE_FORMAT.parse(str);
+		} catch (Exception ex) {
+			System.out.println("Couldnt get date");
+		}
+		return ret;
 	}
 
 	private boolean isNewerProject(Date dateA, Date dateB) {
