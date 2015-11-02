@@ -34,6 +34,15 @@ public class BukkitStarter extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		plugin = null;
+		updatePlugins();
+	}
+
+	@Override
+	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+		return CommandHandler.onCommand(sender, command.getName(), args);
+	}
+
+	public void updatePlugins() {
 		File dir = new File("plugins/update/");
 		File[] directoryListing = dir.listFiles();
 		if (directoryListing != null) {
@@ -49,11 +58,6 @@ public class BukkitStarter extends JavaPlugin {
 			System.out.println("plugins updatefolder not found!");
 			dir.mkdirs();
 		}
-	}
-
-	@Override
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		return CommandHandler.onCommand(sender, command.getName(), args);
 	}
 
 	public DatabaseManager getDB() {

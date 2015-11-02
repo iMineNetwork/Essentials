@@ -185,6 +185,9 @@ public class CommandHandler {
 	}
 
 	private static class ReloadPlugin implements Runnable {
+		private static final String FORMAT = String.format("%s%s[%s%sUpdater%s%s]%s %s", ChatColor.RESET,
+				ChatColor.BOLD, ChatColor.AQUA, ChatColor.BOLD, ChatColor.RESET, ChatColor.BOLD, ChatColor.RESET, "%s");
+
 		private final CommandSender sender;
 		private final String[] args;
 
@@ -197,10 +200,11 @@ public class CommandHandler {
 		public void run() {
 			Plugin pl = Bukkit.getPluginManager().getPlugin(args[0]);
 			if (pl != null) {
+				sender.sendMessage(String.format(FORMAT, "Overriding to new plugins"));
 				Bukkit.getPluginManager().disablePlugin(pl);
-				sender.sendMessage("Disabled!");
+				sender.sendMessage(String.format(FORMAT, pl.getName() + " is now disabled"));
 				Bukkit.getPluginManager().enablePlugin(pl);
-				sender.sendMessage("Reloaded.");
+				sender.sendMessage(String.format(FORMAT, pl.getName() + " is now reloaded!"));
 			} else {
 				sender.sendMessage("No plugin with that name.");
 			}
