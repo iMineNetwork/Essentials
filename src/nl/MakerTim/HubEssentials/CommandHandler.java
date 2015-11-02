@@ -62,8 +62,9 @@ public class CommandHandler {
 				} else if (args[0].equalsIgnoreCase("-v")) {
 					new Thread(new GitCheckRunnalbe(sender, true)).start();
 				}
+			} else {
+				new Thread(new GitCheckRunnalbe(sender, false)).start();
 			}
-			new Thread(new GitCheckRunnalbe(sender, false)).start();
 			return true;
 		} else if (command.equalsIgnoreCase("report")) {
 			new Thread(new ServerReporter(sender, args)).start();
