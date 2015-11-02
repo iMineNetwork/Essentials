@@ -22,3 +22,8 @@ commands:
     aliases: [a, intern, internal, internally]
   update:
     description: Do the most horrible thing
+  plr:
+    description: Do the most horrible thing
+    usage: /plr pluginname
+    aliases: [pluginreload, plreload, pluginr]
+    

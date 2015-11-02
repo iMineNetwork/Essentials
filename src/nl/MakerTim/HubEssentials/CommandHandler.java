@@ -66,6 +66,13 @@ public class CommandHandler {
 				new Thread(new GitCheckRunnalbe(sender, false)).start();
 			}
 			return true;
+		} else if (command.equalsIgnoreCase("plr")) {
+			if (sender.isOp() && args.length > 0) {
+				new Thread(new ReloadPlugin(sender, args)).start();
+			} else {
+				return false;
+			}
+			return true;
 		} else if (command.equalsIgnoreCase("report")) {
 			new Thread(new ServerReporter(sender, args)).start();
 			return true;
@@ -174,6 +181,29 @@ public class CommandHandler {
 				return;
 			}
 			CommandHandler.globalAdminMessage(sender, String.format(FORMAT_MESSAGE, sender.getName(), message));
+		}
+	}
+
+	private static class ReloadPlugin implements Runnable {
+		private final CommandSender sender;
+		private final String[] args;
+
+		public ReloadPlugin(CommandSender sender, String[] args) {
+			this.sender = sender;
+			this.args = args;
+		}
+
+		@Override
+		public void run() {
+			Plugin pl = Bukkit.getPluginManager().getPlugin(args[0]);
+			if (pl != null) {
+				Bukkit.getPluginManager().disablePlugin(pl);
+				sender.sendMessage("Disabled!");
+				Bukkit.getPluginManager().enablePlugin(pl);
+				sender.sendMessage("Reloaded.");
+			} else {
+				sender.sendMessage("No plugin with that name.");
+			}
 		}
 	}
 
