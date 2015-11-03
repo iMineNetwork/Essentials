@@ -13,6 +13,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class BukkitStarter extends JavaPlugin {
 
 	public static final GitLabAPI API = new GitLabAPI();
+	private static final Long PEX_DELAY = 20L * 60L * 13L; // Try to random
 	private static final UUID[] DEVS = new UUID[] { UUID.fromString("650f464f-c81a-4050-a2bf-4daac8139873"), // MakerTim
 			UUID.fromString("5451cfd7-ca8d-442c-81f9-81859bd9adc2"), // MKT
 			UUID.fromString("b524c508-9f1e-4cef-965a-4a7b9017055c"), // Sansko1337
@@ -31,6 +32,7 @@ public class BukkitStarter extends JavaPlugin {
 		dm = new DatabaseManager(Credentials.getDatabase(), Credentials.getUsername(), Credentials.getPassword());
 		getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 		Bukkit.getPluginManager().registerEvents(new BukkitListener(), this);
+		Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new PexReloader(), PEX_DELAY, PEX_DELAY);
 	}
 
 	@Override
