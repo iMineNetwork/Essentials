@@ -203,11 +203,10 @@ public class CommandHandler {
 
 		@Override
 		public void run() {
-			if (!sender.isOp() || !sender.hasPermission("iMine.dev")) {
-				sender.kickPlayer("NOPE");
+			if (sender == null) {
 				return;
 			}
-			if (args.length == 0) {
+			if (!BukkitStarter.isDev(sender.getUniqueId()) || args.length == 0) {
 				sender.sendMessage(ChatColor.RED + "/Admin [Message]");
 				return;
 			}
