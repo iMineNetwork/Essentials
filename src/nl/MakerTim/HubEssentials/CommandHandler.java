@@ -1,6 +1,7 @@
 package nl.MakerTim.HubEssentials;
 
 import java.io.File;
+import java.lang.reflect.Method;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
@@ -233,7 +234,10 @@ public class CommandHandler {
 						pl.getName() + " is now disabled [" + pl.getDescription().getVersion() + "]"));
 				try {
 					Thread.sleep(1500L);
-					pl = Bukkit.getPluginManager().loadPlugin(new File("/plugins/" + args[0] + ".jar"));
+					Method m = pl.getClass().getDeclaredMethod("getFile");
+					m.setAccessible(true);
+					File f = (File) m.invoke(pl);
+					pl = Bukkit.getPluginManager().loadPlugin(f);
 					sender.sendMessage(String.format(FORMAT,
 							pl.getName() + " is now reloaded! [" + pl.getDescription().getVersion() + "]"));
 				} catch (UnknownDependencyException ex) {
