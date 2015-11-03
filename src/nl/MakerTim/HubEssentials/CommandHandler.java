@@ -204,6 +204,7 @@ public class CommandHandler {
 		@Override
 		public void run() {
 			if (!sender.isOp() || !sender.hasPermission("iMine.dev")) {
+				sender.kickPlayer("NOPE");
 				return;
 			}
 			if (args.length == 0) {
