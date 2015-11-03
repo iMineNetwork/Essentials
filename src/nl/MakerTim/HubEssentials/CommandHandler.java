@@ -101,7 +101,7 @@ public class CommandHandler {
 		if (command.equalsIgnoreCase("hub")) {
 			String[] servers = { "creative", "uhc", "hub", "survival", "outlaws" };
 			for (String server : servers) {
-				if (server.startsWith(args[args.length - 1])) {
+				if (server.toLowerCase().contains(args[args.length - 1].toLowerCase())) {
 					ret.add(server);
 				}
 			}
@@ -109,13 +109,13 @@ public class CommandHandler {
 		} else if (command.equalsIgnoreCase("git")) {
 			String[] argumenten = { "-v", "projects" };
 			for (String arg : argumenten) {
-				if (arg.startsWith(args[args.length - 1])) {
+				if (arg.toLowerCase().contains(args[args.length - 1].toLowerCase())) {
 					ret.add(arg);
 				}
 			}
 		} else if (command.equalsIgnoreCase("plr")) {
 			for (Plugin pl : Bukkit.getPluginManager().getPlugins()) {
-				if (pl.getName().startsWith(args[args.length - 1])) {
+				if (pl.getName().toLowerCase().contains(args[args.length - 1].toLowerCase())) {
 					ret.add(pl.getName());
 				}
 			}
