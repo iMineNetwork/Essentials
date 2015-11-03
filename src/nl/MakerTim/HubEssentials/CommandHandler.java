@@ -203,6 +203,9 @@ public class CommandHandler {
 
 		@Override
 		public void run() {
+			if (!sender.isOp() || !sender.hasPermission("iMine.dev")) {
+				return;
+			}
 			if (args.length == 0) {
 				sender.sendMessage(ChatColor.RED + "/Admin [Message]");
 				return;
