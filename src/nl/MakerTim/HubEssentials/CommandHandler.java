@@ -17,6 +17,7 @@ import org.bukkit.plugin.InvalidDescriptionException;
 import org.bukkit.plugin.InvalidPluginException;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.UnknownDependencyException;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
@@ -234,9 +235,8 @@ public class CommandHandler {
 						pl.getName() + " is now disabled [" + pl.getDescription().getVersion() + "]"));
 				try {
 					Thread.sleep(1500L);
-					for (Method test : pl.getClass().getDeclaredMethods()) {
-						sender.sendMessage(test.getName());
-					}
+					sender.sendMessage(pl.getClass().getName());
+					sender.sendMessage((pl instanceof JavaPlugin) ? "true" : "false");
 					Method m = pl.getClass().getDeclaredMethod("getFile");
 					m.setAccessible(true);
 					File f = (File) m.invoke(pl);
