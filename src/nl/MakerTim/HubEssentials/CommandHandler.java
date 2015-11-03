@@ -242,12 +242,16 @@ public class CommandHandler {
 							pl.getName() + " is now reloaded! [" + pl.getDescription().getVersion() + "]"));
 				} catch (UnknownDependencyException ex) {
 					sender.sendMessage(ChatColor.RED + "Plugin Dependency not correctly: " + ex.getMessage());
+					ex.printStackTrace();
 				} catch (InvalidPluginException ex) {
 					sender.sendMessage(ChatColor.RED + "Plugin invalid. because: " + ex.getMessage());
+					ex.printStackTrace();
 				} catch (InvalidDescriptionException ex) {
 					sender.sendMessage(ChatColor.RED + "Plugin invalid description. because: " + ex.getMessage());
+					ex.printStackTrace();
 				} catch (Exception ex) {
 					sender.sendMessage(ChatColor.RED + "You just fucked-up: " + ex.getMessage());
+					ex.printStackTrace();
 				}
 			} else {
 				sender.sendMessage("No plugin with that name.");
