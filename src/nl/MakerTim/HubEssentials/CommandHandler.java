@@ -99,18 +99,25 @@ public class CommandHandler {
 	public static List<String> onTabComplete(Player sender, String command, String[] args) {
 		List<String> ret = new ArrayList<>();
 		if (command.equalsIgnoreCase("hub")) {
-			ret.add("creative");
-			ret.add("uhc");
-			ret.add("hub");
-			ret.add("survival");
-			ret.add("outlaws");
+			String[] servers = { "creative", "uhc", "hub", "survival", "outlaws" };
+			for (String server : servers) {
+				if (server.startsWith(args[args.length - 1])) {
+					ret.add(server);
+				}
+			}
 		} else if (command.equalsIgnoreCase("dev")) {
 		} else if (command.equalsIgnoreCase("git")) {
-			ret.add("-v");
-			ret.add("projects");
+			String[] argumenten = { "-v", "projects" };
+			for (String arg : argumenten) {
+				if (arg.startsWith(args[args.length - 1])) {
+					ret.add(arg);
+				}
+			}
 		} else if (command.equalsIgnoreCase("plr")) {
 			for (Plugin pl : Bukkit.getPluginManager().getPlugins()) {
-				ret.add(pl.getName());
+				if (pl.getName().startsWith(args[args.length - 1])) {
+					ret.add(pl.getName());
+				}
 			}
 		} else if (command.equalsIgnoreCase("admin")) {
 		} else if (command.equalsIgnoreCase("report")) {
@@ -234,7 +241,7 @@ public class CommandHandler {
 				sender.sendMessage(String.format(FORMAT,
 						pl.getName() + " is now disabled [" + pl.getDescription().getVersion() + "]"));
 				try {
-					Thread.sleep(1500L);
+					Thread.sleep(3000L);
 					Method m = JavaPlugin.class.getDeclaredMethod("getFile");
 					m.setAccessible(true);
 					File f = (File) m.invoke(pl);
