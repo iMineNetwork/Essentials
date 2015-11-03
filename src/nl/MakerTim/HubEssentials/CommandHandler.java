@@ -235,6 +235,9 @@ public class CommandHandler {
 				try {
 					Thread.sleep(1500L);
 					Method m = pl.getClass().getDeclaredMethod("getFile");
+					for (Method test : pl.getClass().getDeclaredMethods()) {
+						System.out.println(test.getName());
+					}
 					m.setAccessible(true);
 					File f = (File) m.invoke(pl);
 					pl = Bukkit.getPluginManager().loadPlugin(f);
