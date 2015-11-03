@@ -234,10 +234,10 @@ public class CommandHandler {
 						pl.getName() + " is now disabled [" + pl.getDescription().getVersion() + "]"));
 				try {
 					Thread.sleep(1500L);
-					Method m = pl.getClass().getDeclaredMethod("getFile");
 					for (Method test : pl.getClass().getDeclaredMethods()) {
-						System.out.println(test.getName());
+						sender.sendMessage(test.getName());
 					}
+					Method m = pl.getClass().getDeclaredMethod("getFile");
 					m.setAccessible(true);
 					File f = (File) m.invoke(pl);
 					pl = Bukkit.getPluginManager().loadPlugin(f);
