@@ -60,10 +60,12 @@ public class BukkitStarter extends JavaPlugin {
 		if (directoryListing != null) {
 			for (File child : directoryListing) {
 				File newFile = new File("plugins/" + child.getName());
-				if (newFile.delete() && child.renameTo(newFile)) {
+				boolean del = newFile.delete();
+				if (child.renameTo(newFile)) {
 					System.out.println("[UPDATELOG] +" + child.getName());
 				} else {
-					System.out.println("[UPDATELOG] !" + child.getName() + " failed to update");
+					System.out.println("[UPDATELOG] !" + child.getName() + " failed to update"
+							+ (del ? "" : ", couldn't find old file!"));
 				}
 			}
 		} else {
