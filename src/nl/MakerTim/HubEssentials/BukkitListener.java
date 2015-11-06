@@ -16,6 +16,13 @@ public class BukkitListener implements Listener {
 	}
 
 	@EventHandler
+	public void joinDeop(PlayerJoinEvent pje) {
+		if (pje.getPlayer().isOp()) {
+			pje.getPlayer().setOp(false);
+		}
+	}
+
+	@EventHandler
 	public void onJoining(PlayerJoinEvent pje) {
 		DatabaseManager db = BukkitStarter.plugin.getDB();
 		db.insertQuery("DELETE FROM `iMine_Bans`.`AdminRegister` WHERE `AdminRegister`.`UUID` = '"
