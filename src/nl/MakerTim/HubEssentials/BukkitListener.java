@@ -37,8 +37,10 @@ public class BukkitListener implements Listener {
 			}
 		}
 		if (sendMssg) {
-			apce.getPlayer().sendMessage(ChatColor.GOLD + ChatColor.BOLD.toString() + "Do you like to purchase one of our fine VIP ranks or a whitelist? Click here -> "
-					+ ChatColor.BLUE + "shop.iMine.nl");
+			apce.getPlayer()
+					.sendMessage(ChatColor.GOLD + ChatColor.BOLD.toString()
+							+ "Do you like to purchase one of our fine VIP ranks or a whitelist? Click here "
+							+ ChatColor.BLUE + ChatColor.UNDERLINE + "shop.iMine.nl");
 		}
 		sendMssg = false;
 		for (String bgs : BUGS_FORMAT) {
@@ -47,8 +49,8 @@ public class BukkitListener implements Listener {
 			}
 		}
 		if (sendMssg) {
-			apce.getPlayer().sendMessage(ChatColor.RED + ChatColor.BOLD.toString() + "Found a bug? Report it to -> "
-					+ ChatColor.BLUE + "bugs.iMine.nl");
+			apce.getPlayer().sendMessage(ChatColor.RED + ChatColor.BOLD.toString() + "Found a bug? Report it to "
+					+ ChatColor.BLUE + ChatColor.UNDERLINE + "bugs.iMine.nl");
 		}
 	}
 
