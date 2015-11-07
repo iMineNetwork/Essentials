@@ -283,7 +283,7 @@ public class CommandHandler {
 						}
 						target.sendMessage(ChatColor.DARK_GRAY.toString() + ChatColor.ITALIC + "Received message from "
 								+ ChatColor.BOLD + "\u00BB " + ChatColor.RESET + ChatColor.DARK_GRAY + msg);
-						sender.sendMessage(ChatColor.DARK_GRAY.toString() + ChatColor.ITALIC + "Sent message from "
+						sender.sendMessage(ChatColor.DARK_GRAY.toString() + ChatColor.ITALIC + "Send message from "
 								+ ChatColor.BOLD + "\u00BB " + ChatColor.RESET + ChatColor.DARK_GRAY + msg);
 					} else {
 						sender.sendMessage(ChatColor.RED + "No player with name " + args[0]);
