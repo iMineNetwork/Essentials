@@ -104,7 +104,7 @@ public class CommandHandler {
 			}
 			return true;
 		} else if (command.equalsIgnoreCase("gm")) {
-			if (sender.isOp() || sender.hasPermission("iMine.tp")) {
+			if (sender.isOp() || sender.hasPermission("iMine.gm")) {
 				if (args.length == 1) {
 					if (sender instanceof Player) {
 						GameMode set = null;
@@ -138,7 +138,8 @@ public class CommandHandler {
 						}
 						if (set != null) {
 							who.setGameMode(set);
-							who.sendMessage("Set gamemode to " + ChatColor.RED + set.name().toLowerCase());
+							who.sendMessage(
+									ChatColor.GOLD + "Set gamemode to " + ChatColor.RED + set.name().toLowerCase());
 							sender.sendMessage(ChatColor.GOLD + "Set gamemode to " + ChatColor.RED
 									+ set.name().toLowerCase() + ChatColor.GOLD + " for " + ChatColor.RED
 									+ who.getName() + ChatColor.GOLD + ".");
@@ -157,35 +158,103 @@ public class CommandHandler {
 				sender.sendMessage(ChatColor.RED + "No permission.");
 				return false;
 			}
+			return true;
 		} else if (command.startsWith("gm") && command.length() == 3) {
-			GameMode set = null;
-			try {
-				int gm = command.charAt(2);
-				set = GameMode.values()[gm];
-			} catch (Exception ex) {
-				return false;
-			}
-			if (args.length == 0) {
-				if (sender instanceof Player) {
-					((Player) sender).setGameMode(set);
-					sender.sendMessage(ChatColor.GOLD + "Set gamemode to " + ChatColor.RED + set.name().toLowerCase());
-				} else {
-					sender.sendMessage("Only for players!");
+			if (sender.isOp() || sender.hasPermission("iMine.gm")) {
+				GameMode set = null;
+				try {
+					int gm = Integer.parseInt(command.charAt(2) + "");
+					set = GameMode.values()[gm];
+				} catch (Exception ex) {
 					return false;
 				}
-			} else if (args.length == 1) {
-				Player who = getPlayer(args[0]);
-				if (who != null) {
-					who.setGameMode(set);
-					who.sendMessage("Set gamemode to " + ChatColor.RED + set.name().toLowerCase());
-					sender.sendMessage(ChatColor.GOLD + "Set gamemode to " + ChatColor.RED + set.name().toLowerCase()
-							+ ChatColor.GOLD + " for " + ChatColor.RED + who.getName() + ChatColor.GOLD + ".");
+				if (args.length == 0) {
+					if (sender instanceof Player) {
+						((Player) sender).setGameMode(set);
+						sender.sendMessage(
+								ChatColor.GOLD + "Set gamemode to " + ChatColor.RED + set.name().toLowerCase());
+					} else {
+						sender.sendMessage(ChatColor.RED + "Only for players!");
+						return false;
+					}
+				} else if (args.length == 1) {
+					Player who = getPlayer(args[0]);
+					if (who != null) {
+						who.setGameMode(set);
+						who.sendMessage(ChatColor.GOLD + "Set gamemode to " + ChatColor.RED + set.name().toLowerCase());
+						sender.sendMessage(ChatColor.GOLD + "Set gamemode to " + ChatColor.RED
+								+ set.name().toLowerCase() + ChatColor.GOLD + " for " + ChatColor.RED + who.getName()
+								+ ChatColor.GOLD + ".");
+					} else {
+						sender.sendMessage(ChatColor.RED + "No player with name " + args[0]);
+						return false;
+					}
 				} else {
-					sender.sendMessage(ChatColor.RED + "No player with name " + args[0]);
+					sender.sendMessage(ChatColor.RED + "No idea what to do");
+					return false;
+				}
+				sender.sendMessage(ChatColor.RED + "No permission.");
+				return false;
+			}
+			return true;
+		} else if (command.equalsIgnoreCase("speed")) {
+			if (sender.isOp() || sender.hasPermission("iMine.speed")) {
+				if (sender instanceof Player) {
+					Player pl = ((Player) sender);
+					if (args.length > 0) {
+						float speed = 0;
+						try {
+							speed = Math.abs(Float.parseFloat(args[0]));
+						} catch (Exception ex) {
+							sender.sendMessage(ChatColor.RED + args[0] + " is no number.");
+							return false;
+						}
+						if (args.length == 1) {
+							if (pl.isFlying()) {
+								pl.setFlySpeed(speed);
+								sender.sendMessage(ChatColor.GOLD + "Fly speed set to " + speed);
+							} else {
+								pl.setWalkSpeed(speed);
+								sender.sendMessage(ChatColor.GOLD + "Walk speed set to " + speed);
+							}
+						} else if (args.length == 2) {
+							if (args[1].toLowerCase().contains("s")) {
+								pl.setFlySpeed(speed);
+								sender.sendMessage(ChatColor.GOLD + "Fly speed set to " + speed);
+							} else {
+								pl.setWalkSpeed(speed);
+								sender.sendMessage(ChatColor.GOLD + "Walk speed set to " + speed);
+							}
+						} else if(args.length == 3) {
+							Player who = getPlayer(args[2]);
+							if (who != null) {
+								if (args[1].toLowerCase().contains("s")) {
+									who.setFlySpeed(speed);
+									who.sendMessage(ChatColor.GOLD + "Fly speed set to " + speed);
+									sender.sendMessage(ChatColor.GOLD + "Speed set.");
+								} else {
+									who.setWalkSpeed(speed);
+									who.sendMessage(ChatColor.GOLD + "Walk speed set to " + speed);
+									sender.sendMessage(ChatColor.GOLD + "Speed set.");
+								}
+							} else {
+								sender.sendMessage(ChatColor.RED + "No player with name " + args[2]);
+								return false;
+							}
+						} else {
+							sender.sendMessage(ChatColor.RED + "I dont know what to do!");
+							return false;
+						}
+					} else {
+						sender.sendMessage(ChatColor.RED + "I dont know what to do!");
+						return false;
+					}
+				} else {
+					sender.sendMessage(ChatColor.RED + "Only for players.");
 					return false;
 				}
 			} else {
-				sender.sendMessage(ChatColor.RED + "No idea what to do");
+				sender.sendMessage(ChatColor.RED + "No permission.");
 				return false;
 			}
 			return true;
