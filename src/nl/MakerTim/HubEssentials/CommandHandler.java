@@ -163,6 +163,7 @@ public class CommandHandler {
 					sender.sendMessage(ChatColor.RED + "No gamemode to be set.");
 					return false;
 				}
+			} else {
 				sender.sendMessage(ChatColor.RED + "No permission.");
 				return false;
 			}
