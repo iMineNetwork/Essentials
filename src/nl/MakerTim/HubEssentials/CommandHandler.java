@@ -274,7 +274,7 @@ public class CommandHandler {
 			return true;
 		} else if (command.equalsIgnoreCase("msg")) {
 			if (sender.isOp() || sender.hasPermission("iMine.speed")) {
-				if (args.length > 2) {
+				if (args.length > 1) {
 					Player target = getPlayer(args[0]);
 					if (target != null) {
 						String msg = "";
