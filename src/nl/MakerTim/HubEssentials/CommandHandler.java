@@ -105,50 +105,53 @@ public class CommandHandler {
 			return true;
 		} else if (command.equalsIgnoreCase("gm")) {
 			if (sender.isOp() || sender.hasPermission("iMine.gm")) {
-				if (args.length == 1) {
-					if (sender instanceof Player) {
-						GameMode set = null;
+				if (args.length > 0) {
+					GameMode set = null;
+					try {
+						int gm = Integer.parseInt(args[0]);
+						set = GameMode.values()[gm];
+					} catch (Exception ex) {
 						for (GameMode gm : GameMode.values()) {
 							if (gm.name().toLowerCase().contains(args[0].toLowerCase())) {
 								set = gm;
 								break;
 							}
 						}
-						if (set != null) {
-							((Player) sender).setGameMode(set);
-							sender.sendMessage(
-									ChatColor.GOLD + "Set gamemode to " + ChatColor.RED + set.name().toLowerCase());
-						} else {
-							sender.sendMessage(ChatColor.RED + "No gamemode found by that name.");
-							return false;
-						}
-					} else {
-						sender.sendMessage(ChatColor.RED + "Only for players!");
-						return false;
 					}
-				} else if (args.length == 2) {
-					Player who = getPlayer(args[0]);
-					if (who != null) {
-						GameMode set = null;
-						for (GameMode gm : GameMode.values()) {
-							if (gm.name().toLowerCase().contains(args[0].toLowerCase())) {
-								set = gm;
-								break;
+					if (args.length == 1) {
+						if (sender instanceof Player) {
+							if (set != null) {
+								((Player) sender).setGameMode(set);
+								sender.sendMessage(
+										ChatColor.GOLD + "Set gamemode to " + ChatColor.RED + set.name().toLowerCase());
+							} else {
+								sender.sendMessage(ChatColor.RED + "No gamemode found by that name.");
+								return false;
 							}
-						}
-						if (set != null) {
-							who.setGameMode(set);
-							who.sendMessage(
-									ChatColor.GOLD + "Set gamemode to " + ChatColor.RED + set.name().toLowerCase());
-							sender.sendMessage(ChatColor.GOLD + "Set gamemode to " + ChatColor.RED
-									+ set.name().toLowerCase() + ChatColor.GOLD + " for " + ChatColor.RED
-									+ who.getName() + ChatColor.GOLD + ".");
 						} else {
-							sender.sendMessage(ChatColor.RED + "No gamemode found by that name.");
+							sender.sendMessage(ChatColor.RED + "Only for players!");
+							return false;
+						}
+					} else if (args.length == 2) {
+						Player who = getPlayer(args[0]);
+						if (who != null) {
+							if (set != null) {
+								who.setGameMode(set);
+								who.sendMessage(
+										ChatColor.GOLD + "Set gamemode to " + ChatColor.RED + set.name().toLowerCase());
+								sender.sendMessage(ChatColor.GOLD + "Set gamemode to " + ChatColor.RED
+										+ set.name().toLowerCase() + ChatColor.GOLD + " for " + ChatColor.RED
+										+ who.getName() + ChatColor.GOLD + ".");
+							} else {
+								sender.sendMessage(ChatColor.RED + "No gamemode found by that name.");
+								return false;
+							}
+						} else {
+							sender.sendMessage(ChatColor.RED + "No player with name " + args[0]);
 							return false;
 						}
 					} else {
-						sender.sendMessage(ChatColor.RED + "No player with name " + args[0]);
+						sender.sendMessage(ChatColor.RED + "No idea what to do");
 						return false;
 					}
 				} else {
