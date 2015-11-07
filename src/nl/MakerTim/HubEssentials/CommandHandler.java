@@ -321,6 +321,26 @@ public class CommandHandler {
 				return false;
 			}
 			return true;
+		} else if (command.equalsIgnoreCase("endersee")) {
+			if (sender.isOp() || sender.hasPermission("iMine.endersee")) {
+				if (args.length == 1) {
+					Player target = getPlayer(args[0]);
+					if (sender instanceof Player) {
+						Player pl = (Player) sender;
+						pl.openInventory(target.getEnderChest());
+					} else {
+						sender.sendMessage(ChatColor.RED + "Need a player and a message.");
+						return false;
+					}
+				} else {
+					sender.sendMessage(ChatColor.RED + "Need a player.");
+					return false;
+				}
+			} else {
+				sender.sendMessage(ChatColor.RED + "No permission.");
+				return false;
+			}
+			return true;
 		} else if (command.equalsIgnoreCase("git")) {
 			if (args.length == 1) {
 				if (args[0].equalsIgnoreCase("projects")) {
