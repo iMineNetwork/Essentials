@@ -32,7 +32,7 @@ commands:
     aliases: [teleport]
   gm:
     description: Change gamemode
-    usage: /gm <Who> [gamemode]
+    usage: /gm [gamemode] <Who>
     aliases: [gamemode]
   gm0:
     description: Change gamemode to survival

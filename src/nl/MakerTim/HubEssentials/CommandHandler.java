@@ -133,7 +133,7 @@ public class CommandHandler {
 							return false;
 						}
 					} else if (args.length == 2) {
-						Player who = getPlayer(args[0]);
+						Player who = getPlayer(args[1]);
 						if (who != null) {
 							if (set != null) {
 								who.setGameMode(set);
