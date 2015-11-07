@@ -333,7 +333,6 @@ public class CommandHandler {
 					ret.add(server);
 				}
 			}
-		} else if (command.equalsIgnoreCase("dev")) {
 		} else if (command.equalsIgnoreCase("git")) {
 			String[] argumenten = { "-v", "projects" };
 			for (String arg : argumenten) {
@@ -341,13 +340,21 @@ public class CommandHandler {
 					ret.add(arg);
 				}
 			}
-		} else if (command.equalsIgnoreCase("plr") || command.equalsIgnoreCase("tp")) {
-			for (Plugin pl : Bukkit.getPluginManager().getPlugins()) {
-				if (pl.getName().toLowerCase().contains(args[args.length - 1].toLowerCase())) {
+		} else if (command.equalsIgnoreCase("plr")) {
+			for (Plugin plugin : Bukkit.getPluginManager().getPlugins()) {
+				if (plugin.getName().toLowerCase().contains(args[args.length - 1].toLowerCase())) {
+					ret.add(plugin.getName());
+				}
+			}
+		} else if (command.equalsIgnoreCase("tp") || command.equalsIgnoreCase("gm")
+				|| (command.startsWith("gm") && command.length() == 3)
+				|| (command.startsWith("msg") && args.length == 0)
+				|| (command.startsWith("speed") && args.length > 0)) {
+			for (Player pl : Bukkit.getOnlinePlayers()) {
+				if (sender.canSee(pl) && pl.getName().toLowerCase().contains(args[args.length - 1].toLowerCase())) {
 					ret.add(pl.getName());
 				}
 			}
-		} else if (command.equalsIgnoreCase("admin")) {
 		} else if (command.equalsIgnoreCase("report")) {
 		} else if (command.equalsIgnoreCase("update")) {
 		}
