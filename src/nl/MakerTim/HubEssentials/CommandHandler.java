@@ -299,6 +299,7 @@ public class CommandHandler {
 				sender.sendMessage(ChatColor.RED + "No permission.");
 				return false;
 			}
+			return true;
 		} else if (command.equalsIgnoreCase("git")) {
 			if (args.length == 1) {
 				if (args[0].equalsIgnoreCase("projects")) {
