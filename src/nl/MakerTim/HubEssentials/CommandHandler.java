@@ -219,7 +219,7 @@ public class CommandHandler {
 					if (args.length > 0) {
 						float speed = 0;
 						try {
-							speed = Math.abs(Float.parseFloat(args[0]));
+							speed = Math.min(Math.abs(Float.parseFloat(args[0]) * 0.2F), 1F);
 						} catch (Exception ex) {
 							sender.sendMessage(ChatColor.RED + args[0] + " is no number.");
 							return false;
@@ -227,29 +227,29 @@ public class CommandHandler {
 						if (args.length == 1) {
 							if (pl.isFlying()) {
 								pl.setFlySpeed(speed);
-								sender.sendMessage(ChatColor.GOLD + "Fly speed set to " + speed);
+								sender.sendMessage(ChatColor.GOLD + "Fly speed set to " + args[0]);
 							} else {
 								pl.setWalkSpeed(speed);
-								sender.sendMessage(ChatColor.GOLD + "Walk speed set to " + speed);
+								sender.sendMessage(ChatColor.GOLD + "Walk speed set to " + args[0]);
 							}
 						} else if (args.length == 2) {
 							if (args[1].toLowerCase().contains("s")) {
 								pl.setFlySpeed(speed);
-								sender.sendMessage(ChatColor.GOLD + "Fly speed set to " + speed);
+								sender.sendMessage(ChatColor.GOLD + "Fly speed set to " + args[0]);
 							} else {
 								pl.setWalkSpeed(speed);
-								sender.sendMessage(ChatColor.GOLD + "Walk speed set to " + speed);
+								sender.sendMessage(ChatColor.GOLD + "Walk speed set to " + args[0]);
 							}
 						} else if (args.length == 3) {
 							Player who = getPlayer(args[2]);
 							if (who != null) {
 								if (args[1].toLowerCase().contains("s")) {
 									who.setFlySpeed(speed);
-									who.sendMessage(ChatColor.GOLD + "Fly speed set to " + speed);
+									who.sendMessage(ChatColor.GOLD + "Fly speed set to " + args[0]);
 									sender.sendMessage(ChatColor.GOLD + "Speed set.");
 								} else {
 									who.setWalkSpeed(speed);
-									who.sendMessage(ChatColor.GOLD + "Walk speed set to " + speed);
+									who.sendMessage(ChatColor.GOLD + "Walk speed set to " + args[0]);
 									sender.sendMessage(ChatColor.GOLD + "Speed set.");
 								}
 							} else {
