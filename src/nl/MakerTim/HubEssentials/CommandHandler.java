@@ -348,8 +348,8 @@ public class CommandHandler {
 			}
 		} else if (command.equalsIgnoreCase("tp") || command.equalsIgnoreCase("gm")
 				|| (command.startsWith("gm") && command.length() == 3)
-				|| (command.startsWith("msg") && args.length == 0)
-				|| (command.startsWith("speed") && args.length > 0)) {
+				|| (command.startsWith("msg") && args.length == 1)
+				|| (command.startsWith("speed") && args.length > 1)) {
 			for (Player pl : Bukkit.getOnlinePlayers()) {
 				if (sender.canSee(pl) && pl.getName().toLowerCase().contains(args[args.length - 1].toLowerCase())) {
 					ret.add(pl.getName());
