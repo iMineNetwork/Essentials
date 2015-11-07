@@ -282,11 +282,11 @@ public class CommandHandler {
 							msg += args[i] + " ";
 						}
 						target.sendMessage(ChatColor.DARK_GRAY.toString() + ChatColor.ITALIC + "Received message from "
-								+ ChatColor.RED + sender.getName() + ChatColor.DARK_GRAY + ChatColor.BOLD + "\u00BB "
-								+ ChatColor.RESET + ChatColor.DARK_GRAY + msg);
+								+ ChatColor.RED + sender.getName() + ChatColor.DARK_GRAY + ChatColor.BOLD + " \u00BB "
+								+ ChatColor.RESET + ChatColor.GRAY + msg);
 						sender.sendMessage(ChatColor.DARK_GRAY.toString() + ChatColor.ITALIC + "Send message to "
-								+ ChatColor.RED + sender.getName() + ChatColor.DARK_GRAY + ChatColor.BOLD + "\u00BB "
-								+ ChatColor.RESET + ChatColor.DARK_GRAY + msg);
+								+ ChatColor.RED + sender.getName() + ChatColor.DARK_GRAY + ChatColor.BOLD + " \u00BB "
+								+ ChatColor.RESET + ChatColor.GRAY + msg);
 					} else {
 						sender.sendMessage(ChatColor.RED + "No player with name " + args[0]);
 						return false;
