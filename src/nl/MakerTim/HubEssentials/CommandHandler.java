@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.InvalidDescriptionException;
@@ -72,7 +73,7 @@ public class CommandHandler {
 							return false;
 						}
 					} else {
-						sender.sendMessage("Only for players!");
+						sender.sendMessage(ChatColor.RED + "Only for players!");
 						return false;
 					}
 				} else if (args.length == 2) {
@@ -98,7 +99,93 @@ public class CommandHandler {
 					return false;
 				}
 			} else {
-				sender.sendMessage(ChatColor.RED + "No target to teleport to.");
+				sender.sendMessage(ChatColor.RED + "No permission.");
+				return false;
+			}
+			return true;
+		} else if (command.equalsIgnoreCase("gm")) {
+			if (sender.isOp() || sender.hasPermission("iMine.tp")) {
+				if (args.length == 1) {
+					if (sender instanceof Player) {
+						GameMode set = null;
+						for (GameMode gm : GameMode.values()) {
+							if (gm.name().toLowerCase().contains(args[0].toLowerCase())) {
+								set = gm;
+								break;
+							}
+						}
+						if (set != null) {
+							((Player) sender).setGameMode(set);
+							sender.sendMessage(
+									ChatColor.GOLD + "Set gamemode to " + ChatColor.RED + set.name().toLowerCase());
+						} else {
+							sender.sendMessage(ChatColor.RED + "No gamemode found by that name.");
+							return false;
+						}
+					} else {
+						sender.sendMessage(ChatColor.RED + "Only for players!");
+						return false;
+					}
+				} else if (args.length == 2) {
+					Player who = getPlayer(args[0]);
+					if (who != null) {
+						GameMode set = null;
+						for (GameMode gm : GameMode.values()) {
+							if (gm.name().toLowerCase().contains(args[0].toLowerCase())) {
+								set = gm;
+								break;
+							}
+						}
+						if (set != null) {
+							who.setGameMode(set);
+							who.sendMessage("Set gamemode to " + ChatColor.RED + set.name().toLowerCase());
+							sender.sendMessage(ChatColor.GOLD + "Set gamemode to " + ChatColor.RED
+									+ set.name().toLowerCase() + ChatColor.GOLD + " for " + ChatColor.RED
+									+ who.getName() + ChatColor.GOLD + ".");
+						} else {
+							sender.sendMessage(ChatColor.RED + "No gamemode found by that name.");
+							return false;
+						}
+					} else {
+						sender.sendMessage(ChatColor.RED + "No player with name " + args[0]);
+						return false;
+					}
+				} else {
+					sender.sendMessage(ChatColor.RED + "No gamemode to be set.");
+					return false;
+				}
+				sender.sendMessage(ChatColor.RED + "No permission.");
+				return false;
+			}
+		} else if (command.startsWith("gm") && command.length() == 3) {
+			GameMode set = null;
+			try {
+				int gm = command.charAt(2);
+				set = GameMode.values()[gm];
+			} catch (Exception ex) {
+				return false;
+			}
+			if (args.length == 0) {
+				if (sender instanceof Player) {
+					((Player) sender).setGameMode(set);
+					sender.sendMessage(ChatColor.GOLD + "Set gamemode to " + ChatColor.RED + set.name().toLowerCase());
+				} else {
+					sender.sendMessage("Only for players!");
+					return false;
+				}
+			} else if (args.length == 1) {
+				Player who = getPlayer(args[0]);
+				if (who != null) {
+					who.setGameMode(set);
+					who.sendMessage("Set gamemode to " + ChatColor.RED + set.name().toLowerCase());
+					sender.sendMessage(ChatColor.GOLD + "Set gamemode to " + ChatColor.RED + set.name().toLowerCase()
+							+ ChatColor.GOLD + " for " + ChatColor.RED + who.getName() + ChatColor.GOLD + ".");
+				} else {
+					sender.sendMessage(ChatColor.RED + "No player with name " + args[0]);
+					return false;
+				}
+			} else {
+				sender.sendMessage(ChatColor.RED + "No idea what to do");
 				return false;
 			}
 			return true;
