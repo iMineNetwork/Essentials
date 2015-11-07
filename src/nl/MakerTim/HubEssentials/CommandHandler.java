@@ -206,7 +206,7 @@ public class CommandHandler {
 					sender.sendMessage(ChatColor.RED + "No idea what to do");
 					return false;
 				}
-			}else{
+			} else {
 				sender.sendMessage(ChatColor.RED + "No permission.");
 				return false;
 			}
@@ -281,12 +281,10 @@ public class CommandHandler {
 						for (int i = 2; i < args.length; i++) {
 							msg += args[i] + " ";
 						}
-						target.sendMessage(ChatColor.GOLD + "[" + ChatColor.RED + sender.getName() + ChatColor.GOLD
-								+ " -> " + ChatColor.RED + target.getName() + ChatColor.GOLD + "] " + ChatColor.RESET
-								+ msg);
-						sender.sendMessage(ChatColor.GOLD + "[" + ChatColor.RED + target.getName() + ChatColor.GOLD
-								+ " -> " + ChatColor.RED + sender.getName() + ChatColor.GOLD + "] " + ChatColor.RESET
-								+ msg);
+						target.sendMessage(ChatColor.DARK_GRAY.toString() + ChatColor.ITALIC + "Received message from "
+								+ ChatColor.BOLD + "\u00BB " + ChatColor.RESET + ChatColor.DARK_GRAY + msg);
+						sender.sendMessage(ChatColor.DARK_GRAY.toString() + ChatColor.ITALIC + "Sent message from "
+								+ ChatColor.BOLD + "\u00BB " + ChatColor.RESET + ChatColor.DARK_GRAY + msg);
 					} else {
 						sender.sendMessage(ChatColor.RED + "No player with name " + args[0]);
 						return false;
