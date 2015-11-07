@@ -274,7 +274,7 @@ public class CommandHandler {
 			}
 			return true;
 		} else if (command.equalsIgnoreCase("msg")) {
-			if (sender.isOp() || sender.hasPermission("iMine.speed")) {
+			if (sender.isOp() || sender.hasPermission("iMine.msg")) {
 				if (args.length > 1) {
 					Player target = getPlayer(args[0]);
 					if (target != null) {
@@ -294,6 +294,26 @@ public class CommandHandler {
 					}
 				} else {
 					sender.sendMessage(ChatColor.RED + "Need a player and a message.");
+					return false;
+				}
+			} else {
+				sender.sendMessage(ChatColor.RED + "No permission.");
+				return false;
+			}
+			return true;
+		} else if (command.equalsIgnoreCase("invsee")) {
+			if (sender.isOp() || sender.hasPermission("iMine.invsee")) {
+				if (args.length == 1) {
+					Player target = getPlayer(args[0]);
+					if (sender instanceof Player) {
+						Player pl = (Player) sender;
+						pl.openInventory(target.getInventory());
+					} else {
+						sender.sendMessage(ChatColor.RED + "Need a player and a message.");
+						return false;
+					}
+				} else {
+					sender.sendMessage(ChatColor.RED + "Need a player.");
 					return false;
 				}
 			} else {

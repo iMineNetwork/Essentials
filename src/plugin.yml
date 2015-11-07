@@ -54,3 +54,7 @@ commands:
     description: Whispering sounds
     usage: /msg [who] [message]
     aliases: [m, t, whisper, tell]
+  invsee:
+    description: See other inventory
+    usage: /invsee [who]
+    aliases: [invs, inventorysee]
