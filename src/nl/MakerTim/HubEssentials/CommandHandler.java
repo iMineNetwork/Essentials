@@ -58,6 +58,50 @@ public class CommandHandler {
 				}
 			}
 			return true;
+		} else if (command.equalsIgnoreCase("tp")) {
+			if (sender.isOp() || sender.hasPermission("iMine.tp")) {
+				if (args.length == 1) {
+					if (sender instanceof Player) {
+						Player pl = getPlayer(args[0]);
+						if (pl != null) {
+							((Player) sender).teleport(pl);
+							sender.sendMessage(ChatColor.GOLD + "Teleporting to " + ChatColor.RED + pl.getName()
+									+ ChatColor.GOLD + ".");
+						} else {
+							sender.sendMessage(ChatColor.RED + "No player with name " + args[0]);
+							return false;
+						}
+					} else {
+						sender.sendMessage("Only for players!");
+						return false;
+					}
+				} else if (args.length == 2) {
+					Player who = getPlayer(args[0]);
+					Player target = getPlayer(args[1]);
+					if (who != null) {
+						if (target != null) {
+							who.teleport(target);
+							who.sendMessage(ChatColor.GOLD + "Teleporting...");
+							sender.sendMessage(
+									ChatColor.GOLD + "Teleported " + ChatColor.RED + who.getName() + ChatColor.GOLD
+											+ " to " + ChatColor.RED + target.getName() + ChatColor.GOLD + ".");
+						} else {
+							sender.sendMessage(ChatColor.RED + "No player with name " + args[1]);
+							return false;
+						}
+					} else {
+						sender.sendMessage(ChatColor.RED + "No player with name " + args[0]);
+						return false;
+					}
+				} else {
+					sender.sendMessage(ChatColor.RED + "No target to teleport to.");
+					return false;
+				}
+			} else {
+				sender.sendMessage(ChatColor.RED + "No target to teleport to.");
+				return false;
+			}
+			return true;
 		} else if (command.equalsIgnoreCase("git")) {
 			if (args.length == 1) {
 				if (args[0].equalsIgnoreCase("projects")) {
@@ -94,6 +138,7 @@ public class CommandHandler {
 			return true;
 		}
 		return false;
+
 	}
 
 	public static List<String> onTabComplete(Player sender, String command, String[] args) {
@@ -113,7 +158,7 @@ public class CommandHandler {
 					ret.add(arg);
 				}
 			}
-		} else if (command.equalsIgnoreCase("plr")) {
+		} else if (command.equalsIgnoreCase("plr") || command.equalsIgnoreCase("tp")) {
 			for (Plugin pl : Bukkit.getPluginManager().getPlugins()) {
 				if (pl.getName().toLowerCase().contains(args[args.length - 1].toLowerCase())) {
 					ret.add(pl.getName());
@@ -122,6 +167,17 @@ public class CommandHandler {
 		} else if (command.equalsIgnoreCase("admin")) {
 		} else if (command.equalsIgnoreCase("report")) {
 		} else if (command.equalsIgnoreCase("update")) {
+		}
+		return ret;
+	}
+
+	private static Player getPlayer(String name) {
+		Player ret = null;
+		for (Player pl : Bukkit.getOnlinePlayers()) {
+			if (pl.getName().toLowerCase().contains(name.toLowerCase())) {
+				ret = pl;
+				break;
+			}
 		}
 		return ret;
 	}
