@@ -402,10 +402,13 @@ public class CommandHandler {
 					ret.add(plugin.getName());
 				}
 			}
-		} else if (command.equalsIgnoreCase("tp") || command.equalsIgnoreCase("gm")
-				|| (command.startsWith("gm") && command.length() == 3)
-				|| (command.startsWith("msg") && args.length == 1)
-				|| (command.startsWith("speed") && args.length > 1)) {
+		} else if ((command.startsWith("gm") && command.length() == 3)
+				|| (command.equalsIgnoreCase("tp") && (args.length == 1 || args.length == 2))
+				|| (command.equalsIgnoreCase("gm") && args.length == 2)
+				|| (command.equalsIgnoreCase("msg") && args.length == 1)
+				|| (command.equalsIgnoreCase("invsee") && args.length == 1)
+				|| (command.equalsIgnoreCase("endersee") && args.length == 1)
+				|| (command.equalsIgnoreCase("speed") && args.length > 1)) {
 			for (Player pl : Bukkit.getOnlinePlayers()) {
 				if (sender.canSee(pl) && pl.getName().toLowerCase().contains(args[args.length - 1].toLowerCase())) {
 					ret.add(pl.getName());
