@@ -233,7 +233,7 @@ public class CommandHandler {
 								sender.sendMessage(ChatColor.GOLD + "Walk speed set to " + args[0]);
 							}
 						} else if (args.length == 2) {
-							if (args[1].toLowerCase().contains("s")) {
+							if (args[1].toLowerCase().contains("f")) {
 								pl.setFlySpeed(speed);
 								sender.sendMessage(ChatColor.GOLD + "Fly speed set to " + args[0]);
 							} else {
@@ -243,7 +243,7 @@ public class CommandHandler {
 						} else if (args.length == 3) {
 							Player who = getPlayer(args[2]);
 							if (who != null) {
-								if (args[1].toLowerCase().contains("s")) {
+								if (args[1].toLowerCase().contains("f")) {
 									who.setFlySpeed(speed);
 									who.sendMessage(ChatColor.GOLD + "Fly speed set to " + args[0]);
 									sender.sendMessage(ChatColor.GOLD + "Speed set.");
