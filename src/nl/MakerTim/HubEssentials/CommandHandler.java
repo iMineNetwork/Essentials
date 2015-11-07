@@ -109,6 +109,11 @@ public class CommandHandler {
 					GameMode set = null;
 					try {
 						int gm = Integer.parseInt(args[0]);
+						if (gm == 0) {
+							gm = 1;
+						} else if (gm == 1) {
+							gm = 0;
+						}
 						set = GameMode.values()[gm];
 					} catch (Exception ex) {
 						for (GameMode gm : GameMode.values()) {
@@ -167,6 +172,11 @@ public class CommandHandler {
 				GameMode set = null;
 				try {
 					int gm = Integer.parseInt(command.charAt(2) + "");
+					if (gm == 0) {
+						gm = 1;
+					} else if (gm == 1) {
+						gm = 0;
+					}
 					set = GameMode.values()[gm];
 				} catch (Exception ex) {
 					return false;
