@@ -206,6 +206,7 @@ public class CommandHandler {
 					sender.sendMessage(ChatColor.RED + "No idea what to do");
 					return false;
 				}
+			}else{
 				sender.sendMessage(ChatColor.RED + "No permission.");
 				return false;
 			}
