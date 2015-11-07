@@ -25,5 +25,32 @@ commands:
   plr:
     description: Do the most horrible thing
     usage: /plr pluginname
-    aliases: [pluginreload, plreload, pluginr]
-    
+    aliases: [pluginreload, plreload, pluginr] 
+  tp:
+    description: Teleport to that...
+    usage: /tp <Who> [Player]
+    aliases: [teleport]
+  gm:
+    description: Change gamemode
+    usage: /gm <Who> [gamemode]
+    aliases: [gamemode]
+  gm0:
+    description: Change gamemode to survival
+    usage: /gm0 <Who>
+    aliases: [gamemodesurvival, gamemodes]
+  gm1:
+    description: Change gamemode to creative
+    usage: /gm1 <Who>
+    aliases: [gamemodecreative, gamemodec]
+  gm2:
+    description: Change gamemode to adventure
+    usage: /gm2 <Who>
+    aliases: [gamemodeadventure, gamemodea]
+  speed:
+    description: Set your speed
+    usage: /speed [Speed] <what> <Who>
+    aliases: [speeds]
+  msg:
+    description: Whispering sounds
+    usage: /msg [Who] [Message]
+    aliases: [m, t, whisper, tell]

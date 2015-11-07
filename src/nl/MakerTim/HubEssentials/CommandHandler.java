@@ -225,7 +225,7 @@ public class CommandHandler {
 								pl.setWalkSpeed(speed);
 								sender.sendMessage(ChatColor.GOLD + "Walk speed set to " + speed);
 							}
-						} else if(args.length == 3) {
+						} else if (args.length == 3) {
 							Player who = getPlayer(args[2]);
 							if (who != null) {
 								if (args[1].toLowerCase().contains("s")) {
@@ -258,6 +258,33 @@ public class CommandHandler {
 				return false;
 			}
 			return true;
+		} else if (command.equalsIgnoreCase("msg")) {
+			if (sender.isOp() || sender.hasPermission("iMine.speed")) {
+				if (args.length > 2) {
+					Player target = getPlayer(args[0]);
+					if (target != null) {
+						String msg = "";
+						for (int i = 2; i < args.length; i++) {
+							msg += args[i] + " ";
+						}
+						target.sendMessage(ChatColor.GOLD + "[" + ChatColor.RED + sender.getName() + ChatColor.GOLD
+								+ " -> " + ChatColor.RED + target.getName() + ChatColor.GOLD + "] " + ChatColor.RESET
+								+ msg);
+						sender.sendMessage(ChatColor.GOLD + "[" + ChatColor.RED + target.getName() + ChatColor.GOLD
+								+ " -> " + ChatColor.RED + sender.getName() + ChatColor.GOLD + "] " + ChatColor.RESET
+								+ msg);
+					} else {
+						sender.sendMessage(ChatColor.RED + "No player with name " + args[0]);
+						return false;
+					}
+				} else {
+					sender.sendMessage(ChatColor.RED + "Need a player and a message.");
+					return false;
+				}
+			} else {
+				sender.sendMessage(ChatColor.RED + "No permission.");
+				return false;
+			}
 		} else if (command.equalsIgnoreCase("git")) {
 			if (args.length == 1) {
 				if (args[0].equalsIgnoreCase("projects")) {
