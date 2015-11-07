@@ -286,7 +286,7 @@ public class CommandHandler {
 								+ ChatColor.RED + sender.getName() + ChatColor.DARK_GRAY + ChatColor.BOLD + " \u00BB "
 								+ ChatColor.RESET + ChatColor.GRAY + msg);
 						sender.sendMessage(ChatColor.DARK_GRAY.toString() + ChatColor.ITALIC + "Send message to "
-								+ ChatColor.RED + sender.getName() + ChatColor.DARK_GRAY + ChatColor.BOLD + " \u00BB "
+								+ ChatColor.RED + target.getName() + ChatColor.DARK_GRAY + ChatColor.BOLD + " \u00BB "
 								+ ChatColor.RESET + ChatColor.GRAY + msg);
 					} else {
 						sender.sendMessage(ChatColor.RED + "No player with name " + args[0]);
