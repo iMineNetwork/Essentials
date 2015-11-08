@@ -658,6 +658,7 @@ public class CommandHandler {
 										(current == null ? ChatColor.RED + "not found"
 												: current.getTitle().replaceAll(" ", " " + ChatColor.GOLD)),
 										ChatColor.RESET));
+						extra.setColor(net.md_5.bungee.api.ChatColor.GOLD);
 						extra.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, git.getWebUrl() + "/commit/"
 								+ (current == null ? "master" : current.getLongId()) + "?view=parallel"));
 						extra.setHoverEvent(
@@ -680,6 +681,7 @@ public class CommandHandler {
 							extra = new TextComponent(String.format("%s%s%s ", ChatColor.GOLD,
 									git.getCommits()[0].getTitle().replaceAll(" ", " " + ChatColor.GOLD),
 									ChatColor.RESET));
+							extra.setColor(net.md_5.bungee.api.ChatColor.GOLD);
 							extra.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, git.getWebUrl() + "/compare/"
 									+ (current == null ? "master" : current.getShortId()) + "...master?view=parallel"));
 							ComponentBuilder hoverBuilder = new ComponentBuilder(
