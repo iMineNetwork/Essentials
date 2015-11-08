@@ -10,7 +10,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 public class BukkitListener implements Listener {
 
-	private static final String[] SHOP_FORMAT = { "shop", "duur", "kost", "kopen", "whitelist", "vip" };
+	private static final String[] SHOP_FORMAT = { "shop", "kost", "kopen", "whitelist", "vip" };
 	private static final String[] BUGS_FORMAT = { "help", "bug", "fout", "error" };
 
 	@EventHandler
