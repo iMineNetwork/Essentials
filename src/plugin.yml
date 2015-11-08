@@ -61,4 +61,4 @@ commands:
   endersee:
     description: See other enderchest
     usage: /endersee [who]
-    aliases: [enderchestsee, enders]
+    aliases: [enderchestsee, enders, enderchest]
