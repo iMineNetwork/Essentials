@@ -70,3 +70,7 @@ commands:
     description: Back to base
     usage: /return 
     aliases: [back]
+  vanish:
+    description: GHOSTMODE
+    usage: /vanish 
+    aliases: [v]

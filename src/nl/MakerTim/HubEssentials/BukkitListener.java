@@ -1,13 +1,16 @@
 package nl.MakerTim.HubEssentials;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -22,6 +25,7 @@ public class BukkitListener implements Listener {
 	private static final String[] SHOP_FORMAT = { "shop", "kost", "kopen", "whitelist", "vip" };
 	private static final String[] BUGS_FORMAT = { "help", "bug", "fout", "error" };
 	public static final Map<UUID, List<Location>> TP_HISTORY = new HashMap<>();
+	public static final List<UUID> VANISH = new ArrayList<>();
 
 	@EventHandler
 	public void onJoin(AsyncPlayerPreLoginEvent apple) {
@@ -38,6 +42,27 @@ public class BukkitListener implements Listener {
 			}
 			TP_HISTORY.get(pte.getPlayer().getUniqueId()).add(pte.getFrom());
 		}
+	}
+
+	public static void updateVanish() {
+		Collection<? extends Player> nonHidden = Bukkit.getOnlinePlayers();
+		for (Player pl : Bukkit.getOnlinePlayers()) {
+			for (UUID vanished : VANISH) {
+				Player vanish = Bukkit.getPlayer(vanished);
+				if (vanish != null) {
+					pl.hidePlayer(vanish);
+					nonHidden.remove(vanish);
+				}
+			}
+			for (Player nonVanish : nonHidden) {
+				pl.showPlayer(nonVanish);
+			}
+		}
+	}
+
+	@EventHandler
+	public void updateVanish(PlayerJoinEvent pje) {
+		updateVanish();
 	}
 
 	@EventHandler

@@ -68,6 +68,8 @@ public class CommandHandler {
 			return plr();
 		} else if (command.equalsIgnoreCase("return")) {
 			return _return();
+		} else if (command.equalsIgnoreCase("vanish")) {
+			return vanish();
 		} else if (command.equalsIgnoreCase("report")) {
 			new Thread(new ServerReporter(sender, args)).start();
 			return true;
@@ -404,16 +406,48 @@ public class CommandHandler {
 	}
 
 	private boolean _return() {
-		if (sender instanceof Player) {
-			Player sender = (Player) this.sender;
-			if (BukkitListener.TP_HISTORY.containsKey(sender.getUniqueId())) {
-				List<Location> locs = BukkitListener.TP_HISTORY.get(sender.getUniqueId());
-				sender.teleport(locs.get(locs.size() - 1));
+		if (sender.isOp() || sender.hasPermission("iMine.return")) {
+			if (sender instanceof Player) {
+				Player sender = (Player) this.sender;
+				if (BukkitListener.TP_HISTORY.containsKey(sender.getUniqueId())) {
+					List<Location> locs = BukkitListener.TP_HISTORY.get(sender.getUniqueId());
+					sender.teleport(locs.get(locs.size() - 1));
+				} else {
+					sender.sendMessage(ChatColor.RED + "No history");
+				}
 			} else {
-				sender.sendMessage(ChatColor.RED + "No history");
+				sender.sendMessage(ChatColor.RED + "Player only");
 			}
 		} else {
-			sender.sendMessage(ChatColor.RED + "Player only");
+			sender.sendMessage(ChatColor.RED + "No permission.");
+		}
+		return true;
+	}
+
+	private boolean vanish() {
+		if (sender.isOp() || sender.hasPermission("iMine.vanish")) {
+			if (args.length == 0) {
+				if (sender instanceof Player) {
+					Player sender = (Player) this.sender;
+					if (BukkitListener.VANISH.contains(sender.getUniqueId())) {
+						BukkitListener.VANISH.remove(sender.getUniqueId());
+					} else {
+						BukkitListener.VANISH.add(sender.getUniqueId());
+					}
+				} else {
+					sender.sendMessage(ChatColor.RED + "Player only");
+				}
+			} else {
+				Player target = getPlayer(args[0]);
+				if (BukkitListener.VANISH.contains(target.getUniqueId())) {
+					BukkitListener.VANISH.remove(target.getUniqueId());
+				} else {
+					BukkitListener.VANISH.add(target.getUniqueId());
+				}
+			}
+			BukkitListener.updateVanish();
+		} else {
+			sender.sendMessage(ChatColor.RED + "No permission.");
 		}
 		return true;
 	}
