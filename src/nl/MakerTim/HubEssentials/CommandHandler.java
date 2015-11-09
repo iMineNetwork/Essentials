@@ -78,6 +78,8 @@ public class CommandHandler {
 			return kill();
 		} else if (command.equalsIgnoreCase("reply")) {
 			return reply();
+		} else if (command.equalsIgnoreCase("me")) {
+			return me();
 		} else if (command.equalsIgnoreCase("report")) {
 			new Thread(new ServerReporter(sender, args)).start();
 			return true;
@@ -538,6 +540,24 @@ public class CommandHandler {
 		return true;
 	}
 
+	private boolean me() {
+		if (sender.isOp() || sender.hasPermission("iMine.reply")) {
+			if (args.length > 0) {
+				String msg = "";
+				for (int i = 0; i < args.length; i++) {
+					msg += args[i] + " ";
+				}
+				Bukkit.broadcastMessage(
+						ChatColor.GOLD + "* " + ChatColor.GRAY + sender.getName() + " " + ChatColor.WHITE + msg);
+			} else {
+				sender.sendMessage(ChatColor.RED + "Need a message to tell.");
+			}
+		} else {
+			sender.sendMessage(ChatColor.RED + "No permission.");
+		}
+		return true;
+	}
+
 	public static List<String> onTabComplete(Player sender, String command, String[] args) {
 		List<String> ret = new ArrayList<>();
 		if (command.equalsIgnoreCase("hub")) {
@@ -563,10 +583,12 @@ public class CommandHandler {
 		} else if ((command.startsWith("gm") && command.length() == 3)
 				|| (command.equalsIgnoreCase("tp") && (args.length == 1 || args.length == 2))
 				|| (command.equalsIgnoreCase("gm") && args.length == 2)
-				|| (command.equalsIgnoreCase("msg") && args.length == 1)
+				|| (command.equalsIgnoreCase("msg"))
 				|| (command.equalsIgnoreCase("invsee") && args.length == 1)
 				|| (command.equalsIgnoreCase("vanish") && args.length == 1)
 				|| (command.equalsIgnoreCase("kill") && args.length == 1)
+				|| (command.equalsIgnoreCase("reply"))
+				|| (command.equalsIgnoreCase("me"))
 				|| (command.equalsIgnoreCase("endersee") && args.length == 1)
 				|| (command.equalsIgnoreCase("speed") && args.length > 1)) {
 			for (Player pl : Bukkit.getOnlinePlayers()) {

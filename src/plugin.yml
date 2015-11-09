@@ -80,5 +80,8 @@ commands:
     aliases: [AllahuAkbar, Suicide]
   reply:
     description: Say hy back
-    usage: /reply
+    usage: /reply [message]
     aliases: [r]
+  me:
+    description: Whats up with me
+    usage: /me [message]
