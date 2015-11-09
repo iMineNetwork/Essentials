@@ -412,11 +412,12 @@ public class CommandHandler {
 				if (BukkitListener.TP_HISTORY.containsKey(sender.getUniqueId())) {
 					List<Location> locs = BukkitListener.TP_HISTORY.get(sender.getUniqueId());
 					sender.teleport(locs.get(locs.size() - 1));
+					sender.sendMessage(ChatColor.GOLD + "Back to previous location.");
 				} else {
-					sender.sendMessage(ChatColor.RED + "No history");
+					sender.sendMessage(ChatColor.RED + "No history.");
 				}
 			} else {
-				sender.sendMessage(ChatColor.RED + "Player only");
+				sender.sendMessage(ChatColor.RED + "Player only.");
 			}
 		} else {
 			sender.sendMessage(ChatColor.RED + "No permission.");
@@ -431,8 +432,10 @@ public class CommandHandler {
 					Player sender = (Player) this.sender;
 					if (BukkitListener.VANISH.contains(sender.getUniqueId())) {
 						BukkitListener.VANISH.remove(sender.getUniqueId());
+						sender.sendMessage(ChatColor.GOLD + "You are visible again!");
 					} else {
 						BukkitListener.VANISH.add(sender.getUniqueId());
+						sender.sendMessage(ChatColor.GOLD + "GhostMode!");
 					}
 				} else {
 					sender.sendMessage(ChatColor.RED + "Player only");
@@ -441,9 +444,12 @@ public class CommandHandler {
 				Player target = getPlayer(args[0]);
 				if (BukkitListener.VANISH.contains(target.getUniqueId())) {
 					BukkitListener.VANISH.remove(target.getUniqueId());
+					target.sendMessage(ChatColor.GOLD + "You are visible again!");
 				} else {
 					BukkitListener.VANISH.add(target.getUniqueId());
+					target.sendMessage(ChatColor.GOLD + "GhostMode!");
 				}
+				sender.sendMessage(ChatColor.GOLD + "Toggled vanish for " + ChatColor.RED + target.getName());
 			}
 			BukkitListener.updateVanish();
 		} else {
@@ -479,6 +485,7 @@ public class CommandHandler {
 				|| (command.equalsIgnoreCase("gm") && args.length == 2)
 				|| (command.equalsIgnoreCase("msg") && args.length == 1)
 				|| (command.equalsIgnoreCase("invsee") && args.length == 1)
+				|| (command.equalsIgnoreCase("vanish") && args.length == 1)
 				|| (command.equalsIgnoreCase("endersee") && args.length == 1)
 				|| (command.equalsIgnoreCase("speed") && args.length > 1)) {
 			for (Player pl : Bukkit.getOnlinePlayers()) {
