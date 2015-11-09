@@ -46,6 +46,10 @@ commands:
     description: Change gamemode to adventure
     usage: /gm2 <who>
     aliases: [gamemodeadventure, gamemodea]
+  gm3:
+    description: Change gamemode to spectator
+    usage: /gm3 <who>
+    aliases: [gamemodespectator, gamemodes]
   speed:
     description: Set your speed
     usage: /speed [speed] <what> <who>
@@ -62,3 +66,7 @@ commands:
     description: See other enderchest
     usage: /endersee [who]
     aliases: [enderchestsee, enders, enderchest]
+  return:
+    description: Back to base
+    usage: /return 
+    aliases: [back]

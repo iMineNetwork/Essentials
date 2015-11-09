@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.InvalidDescriptionException;
@@ -31,337 +32,42 @@ import nl.MakerTim.HubEssentials.GitLabAPI.Commit;
 import nl.MakerTim.HubEssentials.GitLabAPI.GitProject;
 
 public class CommandHandler {
-	public static boolean onCommand(final CommandSender sender, String command, String[] args) {
+
+	private final CommandSender sender;
+	private final String command;
+	private final String[] args;
+
+	public CommandHandler(final CommandSender sender, final String command, final String[] args) {
+		this.sender = sender;
+		this.command = command;
+		this.args = args;
+	}
+
+	public boolean onCommand() {
 		if (command.equalsIgnoreCase("hub") && sender instanceof Player) {
-			if (args.length == 0) {
-				MktUtils.sendPlayerToServer(BukkitStarter.plugin, (Player) sender, "hub");
-			} else if (sender.isOp() || sender.hasPermission("iMine.hub")) {
-				MktUtils.sendPlayerToServer(BukkitStarter.plugin, (Player) sender, args[0]);
-			} else {
-				sender.sendMessage(ChatColor.RED + "You have no acces to this command");
-			}
-			return true;
+			return hub();
 		} else if (command.equalsIgnoreCase("dev")) {
-			if (sender.isOp() || sender.hasPermission("iMine.dev")) {
-				BukkitStarter.plugin.devMode = !BukkitStarter.plugin.devMode;
-				if (BukkitStarter.plugin.devMode) {
-					sender.sendMessage("Devolpermodus is now enabled!");
-					for (Player pl : new ArrayList<>(Bukkit.getOnlinePlayers())) {
-						if (!BukkitStarter.isDev(pl.getUniqueId())) {
-							MktUtils.sendPlayerToServer(BukkitStarter.plugin, pl, "hub");
-						}
-					}
-					for (Player pl : new ArrayList<>(Bukkit.getOnlinePlayers())) {
-						pl.kickPlayer("DEV MODE ONLY");
-					}
-				} else {
-					sender.sendMessage("Server now public");
-				}
-			}
-			return true;
+			return dev();
 		} else if (command.equalsIgnoreCase("tp")) {
-			if (sender.isOp() || sender.hasPermission("iMine.tp")) {
-				if (args.length == 1) {
-					if (sender instanceof Player) {
-						Player pl = getPlayer(args[0]);
-						if (pl != null) {
-							((Player) sender).teleport(pl);
-							sender.sendMessage(ChatColor.GOLD + "Teleporting to " + ChatColor.RED + pl.getName()
-									+ ChatColor.GOLD + ".");
-						} else {
-							sender.sendMessage(ChatColor.RED + "No player with name " + args[0]);
-							return false;
-						}
-					} else {
-						sender.sendMessage(ChatColor.RED + "Only for players!");
-						return false;
-					}
-				} else if (args.length == 2) {
-					Player who = getPlayer(args[0]);
-					Player target = getPlayer(args[1]);
-					if (who != null) {
-						if (target != null) {
-							who.teleport(target);
-							who.sendMessage(ChatColor.GOLD + "Teleporting...");
-							sender.sendMessage(
-									ChatColor.GOLD + "Teleported " + ChatColor.RED + who.getName() + ChatColor.GOLD
-											+ " to " + ChatColor.RED + target.getName() + ChatColor.GOLD + ".");
-						} else {
-							sender.sendMessage(ChatColor.RED + "No player with name " + args[1]);
-							return false;
-						}
-					} else {
-						sender.sendMessage(ChatColor.RED + "No player with name " + args[0]);
-						return false;
-					}
-				} else {
-					sender.sendMessage(ChatColor.RED + "No target to teleport to.");
-					return false;
-				}
-			} else {
-				sender.sendMessage(ChatColor.RED + "No permission.");
-				return false;
-			}
-			return true;
+			return tp();
 		} else if (command.equalsIgnoreCase("gm")) {
-			if (sender.isOp() || sender.hasPermission("iMine.gm")) {
-				if (args.length > 0) {
-					GameMode set = null;
-					try {
-						int gm = Integer.parseInt(args[0]);
-						if (gm == 0) {
-							gm = 1;
-						} else if (gm == 1) {
-							gm = 0;
-						}
-						set = GameMode.values()[gm];
-					} catch (Exception ex) {
-						for (GameMode gm : GameMode.values()) {
-							if (gm.name().toLowerCase().contains(args[0].toLowerCase())) {
-								set = gm;
-								break;
-							}
-						}
-					}
-					if (args.length == 1) {
-						if (sender instanceof Player) {
-							if (set != null) {
-								((Player) sender).setGameMode(set);
-								sender.sendMessage(
-										ChatColor.GOLD + "Set gamemode to " + ChatColor.RED + set.name().toLowerCase());
-							} else {
-								sender.sendMessage(ChatColor.RED + "No gamemode found by that name.");
-								return false;
-							}
-						} else {
-							sender.sendMessage(ChatColor.RED + "Only for players!");
-							return false;
-						}
-					} else if (args.length == 2) {
-						Player who = getPlayer(args[1]);
-						if (who != null) {
-							if (set != null) {
-								who.setGameMode(set);
-								who.sendMessage(
-										ChatColor.GOLD + "Set gamemode to " + ChatColor.RED + set.name().toLowerCase());
-								sender.sendMessage(ChatColor.GOLD + "Set gamemode to " + ChatColor.RED
-										+ set.name().toLowerCase() + ChatColor.GOLD + " for " + ChatColor.RED
-										+ who.getName() + ChatColor.GOLD + ".");
-							} else {
-								sender.sendMessage(ChatColor.RED + "No gamemode found by that name.");
-								return false;
-							}
-						} else {
-							sender.sendMessage(ChatColor.RED + "No player with name " + args[0]);
-							return false;
-						}
-					} else {
-						sender.sendMessage(ChatColor.RED + "No idea what to do");
-						return false;
-					}
-				} else {
-					sender.sendMessage(ChatColor.RED + "No gamemode to be set.");
-					return false;
-				}
-			} else {
-				sender.sendMessage(ChatColor.RED + "No permission.");
-				return false;
-			}
-			return true;
+			return gm();
 		} else if (command.startsWith("gm") && command.length() == 3) {
-			if (sender.isOp() || sender.hasPermission("iMine.gm")) {
-				GameMode set = null;
-				try {
-					int gm = Integer.parseInt(command.charAt(2) + "");
-					if (gm == 0) {
-						gm = 1;
-					} else if (gm == 1) {
-						gm = 0;
-					}
-					set = GameMode.values()[gm];
-				} catch (Exception ex) {
-					return false;
-				}
-				if (args.length == 0) {
-					if (sender instanceof Player) {
-						((Player) sender).setGameMode(set);
-						sender.sendMessage(
-								ChatColor.GOLD + "Set gamemode to " + ChatColor.RED + set.name().toLowerCase());
-					} else {
-						sender.sendMessage(ChatColor.RED + "Only for players!");
-						return false;
-					}
-				} else if (args.length == 1) {
-					Player who = getPlayer(args[0]);
-					if (who != null) {
-						who.setGameMode(set);
-						who.sendMessage(ChatColor.GOLD + "Set gamemode to " + ChatColor.RED + set.name().toLowerCase());
-						sender.sendMessage(ChatColor.GOLD + "Set gamemode to " + ChatColor.RED
-								+ set.name().toLowerCase() + ChatColor.GOLD + " for " + ChatColor.RED + who.getName()
-								+ ChatColor.GOLD + ".");
-					} else {
-						sender.sendMessage(ChatColor.RED + "No player with name " + args[0]);
-						return false;
-					}
-				} else {
-					sender.sendMessage(ChatColor.RED + "No idea what to do");
-					return false;
-				}
-			} else {
-				sender.sendMessage(ChatColor.RED + "No permission.");
-				return false;
-			}
-			return true;
+			return gmx();
 		} else if (command.equalsIgnoreCase("speed")) {
-			if (sender.isOp() || sender.hasPermission("iMine.speed")) {
-				if (sender instanceof Player) {
-					Player pl = ((Player) sender);
-					if (args.length > 0) {
-						float speed = 0;
-						try {
-							speed = Math.min(Math.abs(Float.parseFloat(args[0]) * 0.2F), 1F);
-						} catch (Exception ex) {
-							sender.sendMessage(ChatColor.RED + args[0] + " is no number.");
-							return false;
-						}
-						if (args.length == 1) {
-							if (pl.isFlying()) {
-								pl.setFlySpeed(speed);
-								sender.sendMessage(ChatColor.GOLD + "Fly speed set to " + args[0]);
-							} else {
-								pl.setWalkSpeed(speed);
-								sender.sendMessage(ChatColor.GOLD + "Walk speed set to " + args[0]);
-							}
-						} else if (args.length == 2) {
-							if (args[1].toLowerCase().contains("f")) {
-								pl.setFlySpeed(speed);
-								sender.sendMessage(ChatColor.GOLD + "Fly speed set to " + args[0]);
-							} else {
-								pl.setWalkSpeed(speed);
-								sender.sendMessage(ChatColor.GOLD + "Walk speed set to " + args[0]);
-							}
-						} else if (args.length == 3) {
-							Player who = getPlayer(args[2]);
-							if (who != null) {
-								if (args[1].toLowerCase().contains("f")) {
-									who.setFlySpeed(speed);
-									who.sendMessage(ChatColor.GOLD + "Fly speed set to " + args[0]);
-									sender.sendMessage(ChatColor.GOLD + "Speed set.");
-								} else {
-									who.setWalkSpeed(speed);
-									who.sendMessage(ChatColor.GOLD + "Walk speed set to " + args[0]);
-									sender.sendMessage(ChatColor.GOLD + "Speed set.");
-								}
-							} else {
-								sender.sendMessage(ChatColor.RED + "No player with name " + args[2]);
-								return false;
-							}
-						} else {
-							sender.sendMessage(ChatColor.RED + "I dont know what to do!");
-							return false;
-						}
-					} else {
-						sender.sendMessage(ChatColor.RED + "I dont know what to do!");
-						return false;
-					}
-				} else {
-					sender.sendMessage(ChatColor.RED + "Only for players.");
-					return false;
-				}
-			} else {
-				sender.sendMessage(ChatColor.RED + "No permission.");
-				return false;
-			}
-			return true;
+			return speed();
 		} else if (command.equalsIgnoreCase("msg")) {
-			if (sender.isOp() || sender.hasPermission("iMine.msg")) {
-				if (args.length > 1) {
-					Player target = getPlayer(args[0]);
-					if (target != null) {
-						String msg = "";
-						for (int i = 1; i < args.length; i++) {
-							msg += args[i] + " ";
-						}
-						target.sendMessage(ChatColor.DARK_GRAY.toString() + ChatColor.ITALIC + "Received message from "
-								+ ChatColor.RED + sender.getName() + ChatColor.DARK_GRAY + ChatColor.BOLD + " \u00BB "
-								+ ChatColor.RESET + ChatColor.GRAY + msg);
-						sender.sendMessage(ChatColor.DARK_GRAY.toString() + ChatColor.ITALIC + "Send message to "
-								+ ChatColor.RED + target.getName() + ChatColor.DARK_GRAY + ChatColor.BOLD + " \u00BB "
-								+ ChatColor.RESET + ChatColor.GRAY + msg);
-					} else {
-						sender.sendMessage(ChatColor.RED + "No player with name " + args[0]);
-						return false;
-					}
-				} else {
-					sender.sendMessage(ChatColor.RED + "Need a player and a message.");
-					return false;
-				}
-			} else {
-				sender.sendMessage(ChatColor.RED + "No permission.");
-				return false;
-			}
-			return true;
+			return msg();
 		} else if (command.equalsIgnoreCase("invsee")) {
-			if (sender.isOp() || sender.hasPermission("iMine.invsee")) {
-				if (args.length == 1) {
-					Player target = getPlayer(args[0]);
-					if (sender instanceof Player) {
-						Player pl = (Player) sender;
-						pl.openInventory(target.getInventory());
-					} else {
-						sender.sendMessage(ChatColor.RED + "Need a player and a message.");
-						return false;
-					}
-				} else {
-					sender.sendMessage(ChatColor.RED + "Need a player.");
-					return false;
-				}
-			} else {
-				sender.sendMessage(ChatColor.RED + "No permission.");
-				return false;
-			}
-			return true;
+			return invsee();
 		} else if (command.equalsIgnoreCase("endersee")) {
-			if (sender.isOp() || sender.hasPermission("iMine.endersee")) {
-				if (args.length == 1) {
-					Player target = getPlayer(args[0]);
-					if (sender instanceof Player) {
-						Player pl = (Player) sender;
-						pl.openInventory(target.getEnderChest());
-					} else {
-						sender.sendMessage(ChatColor.RED + "Need a player and a message.");
-						return false;
-					}
-				} else {
-					sender.sendMessage(ChatColor.RED + "Need a player.");
-					return false;
-				}
-			} else {
-				sender.sendMessage(ChatColor.RED + "No permission.");
-				return false;
-			}
-			return true;
+			return endersee();
 		} else if (command.equalsIgnoreCase("git")) {
-			if (args.length == 1) {
-				if (args[0].equalsIgnoreCase("projects")) {
-					Set<String> projects = BukkitStarter.API.getProjects();
-					for (String project : projects) {
-						sender.sendMessage(project);
-					}
-				} else if (args[0].equalsIgnoreCase("-v")) {
-					new Thread(new GitCheckRunnalbe(sender, true)).start();
-				}
-			} else {
-				new Thread(new GitCheckRunnalbe(sender, false)).start();
-			}
-			return true;
+			return git();
 		} else if (command.equalsIgnoreCase("plr")) {
-			if ((sender.isOp() || sender.hasPermission("iMine.dev")) && args.length > 0) {
-				new Thread(new ReloadPlugin(sender, args)).start();
-			} else {
-				return false;
-			}
-			return true;
+			return plr();
+		} else if (command.equalsIgnoreCase("return")) {
+			return _return();
 		} else if (command.equalsIgnoreCase("report")) {
 			new Thread(new ServerReporter(sender, args)).start();
 			return true;
@@ -377,7 +83,339 @@ public class CommandHandler {
 			return true;
 		}
 		return false;
+	}
 
+	private boolean hub() {
+		if (args.length == 0) {
+			MktUtils.sendPlayerToServer(BukkitStarter.plugin, (Player) sender, "hub");
+		} else if (sender.isOp() || sender.hasPermission("iMine.hub")) {
+			MktUtils.sendPlayerToServer(BukkitStarter.plugin, (Player) sender, args[0]);
+		} else {
+			sender.sendMessage(ChatColor.RED + "You have no acces to this command");
+		}
+		return true;
+	}
+
+	private boolean dev() {
+		if (sender.isOp() || sender.hasPermission("iMine.dev")) {
+			BukkitStarter.plugin.devMode = !BukkitStarter.plugin.devMode;
+			if (BukkitStarter.plugin.devMode) {
+				sender.sendMessage("Devolpermodus is now enabled!");
+				for (Player pl : new ArrayList<>(Bukkit.getOnlinePlayers())) {
+					if (!BukkitStarter.isDev(pl.getUniqueId())) {
+						MktUtils.sendPlayerToServer(BukkitStarter.plugin, pl, "hub");
+					}
+				}
+				for (Player pl : new ArrayList<>(Bukkit.getOnlinePlayers())) {
+					pl.kickPlayer("DEV MODE ONLY");
+				}
+			} else {
+				sender.sendMessage("Server now public");
+			}
+		}
+		return true;
+	}
+
+	private boolean tp() {
+		if (sender.isOp() || sender.hasPermission("iMine.tp")) {
+			if (args.length == 1) {
+				if (sender instanceof Player) {
+					Player pl = getPlayer(args[0]);
+					if (pl != null) {
+						((Player) sender).teleport(pl);
+						sender.sendMessage(ChatColor.GOLD + "Teleporting to " + ChatColor.RED + pl.getName()
+								+ ChatColor.GOLD + ".");
+					} else {
+						sender.sendMessage(ChatColor.RED + "No player with name " + args[0]);
+					}
+				} else {
+					sender.sendMessage(ChatColor.RED + "Only for players!");
+				}
+			} else if (args.length == 2) {
+				Player who = getPlayer(args[0]);
+				Player target = getPlayer(args[1]);
+				if (who != null) {
+					if (target != null) {
+						who.teleport(target);
+						who.sendMessage(ChatColor.GOLD + "Teleporting...");
+						sender.sendMessage(ChatColor.GOLD + "Teleported " + ChatColor.RED + who.getName()
+								+ ChatColor.GOLD + " to " + ChatColor.RED + target.getName() + ChatColor.GOLD + ".");
+					} else {
+						sender.sendMessage(ChatColor.RED + "No player with name " + args[1]);
+					}
+				} else {
+					sender.sendMessage(ChatColor.RED + "No player with name " + args[0]);
+				}
+			} else {
+				sender.sendMessage(ChatColor.RED + "No target to teleport to.");
+			}
+		} else {
+			sender.sendMessage(ChatColor.RED + "No permission.");
+		}
+		return true;
+	}
+
+	private boolean gm() {
+		if (sender.isOp() || sender.hasPermission("iMine.gm")) {
+			if (args.length > 0) {
+				GameMode set = null;
+				try {
+					int gm = Integer.parseInt(args[0]);
+					if (gm == 0) {
+						gm = 1;
+					} else if (gm == 1) {
+						gm = 0;
+					}
+					set = GameMode.values()[gm];
+				} catch (Exception ex) {
+					for (GameMode gm : GameMode.values()) {
+						if (gm.name().toLowerCase().contains(args[0].toLowerCase())) {
+							set = gm;
+							break;
+						}
+					}
+				}
+				if (args.length == 1) {
+					if (sender instanceof Player) {
+						if (set != null) {
+							((Player) sender).setGameMode(set);
+							sender.sendMessage(
+									ChatColor.GOLD + "Set gamemode to " + ChatColor.RED + set.name().toLowerCase());
+						} else {
+							sender.sendMessage(ChatColor.RED + "No gamemode found by that name.");
+						}
+					} else {
+						sender.sendMessage(ChatColor.RED + "Only for players!");
+					}
+				} else if (args.length == 2) {
+					Player who = getPlayer(args[1]);
+					if (who != null) {
+						if (set != null) {
+							who.setGameMode(set);
+							who.sendMessage(
+									ChatColor.GOLD + "Set gamemode to " + ChatColor.RED + set.name().toLowerCase());
+							sender.sendMessage(ChatColor.GOLD + "Set gamemode to " + ChatColor.RED
+									+ set.name().toLowerCase() + ChatColor.GOLD + " for " + ChatColor.RED
+									+ who.getName() + ChatColor.GOLD + ".");
+						} else {
+							sender.sendMessage(ChatColor.RED + "No gamemode found by that name.");
+						}
+					} else {
+						sender.sendMessage(ChatColor.RED + "No player with name " + args[0]);
+					}
+				} else {
+					sender.sendMessage(ChatColor.RED + "No idea what to do");
+				}
+			} else {
+				sender.sendMessage(ChatColor.RED + "No gamemode to be set.");
+			}
+		} else {
+			sender.sendMessage(ChatColor.RED + "No permission.");
+		}
+		return true;
+	}
+
+	private boolean gmx() {
+		if (sender.isOp() || sender.hasPermission("iMine.gm")) {
+			GameMode set = null;
+			try {
+				int gm = Integer.parseInt(command.charAt(2) + "");
+				if (gm == 0) {
+					gm = 1;
+				} else if (gm == 1) {
+					gm = 0;
+				}
+				set = GameMode.values()[gm];
+			} catch (Exception ex) {
+				sender.sendMessage(ChatColor.RED + "That is not a gamemode!");
+			}
+			if (args.length == 0) {
+				if (sender instanceof Player) {
+					((Player) sender).setGameMode(set);
+					sender.sendMessage(ChatColor.GOLD + "Set gamemode to " + ChatColor.RED + set.name().toLowerCase());
+				} else {
+					sender.sendMessage(ChatColor.RED + "Only for players!");
+				}
+			} else if (args.length == 1) {
+				Player who = getPlayer(args[0]);
+				if (who != null) {
+					who.setGameMode(set);
+					who.sendMessage(ChatColor.GOLD + "Set gamemode to " + ChatColor.RED + set.name().toLowerCase());
+					sender.sendMessage(ChatColor.GOLD + "Set gamemode to " + ChatColor.RED + set.name().toLowerCase()
+							+ ChatColor.GOLD + " for " + ChatColor.RED + who.getName() + ChatColor.GOLD + ".");
+				} else {
+					sender.sendMessage(ChatColor.RED + "No player with name " + args[0]);
+				}
+			} else {
+				sender.sendMessage(ChatColor.RED + "No idea what to do");
+			}
+		} else {
+			sender.sendMessage(ChatColor.RED + "No permission.");
+		}
+		return true;
+	}
+
+	private boolean speed() {
+		if (sender.isOp() || sender.hasPermission("iMine.speed")) {
+			if (sender instanceof Player) {
+				Player pl = ((Player) sender);
+				if (args.length > 0) {
+					float speed = 0;
+					try {
+						speed = Math.min(Math.abs(Float.parseFloat(args[0]) * 0.2F), 1F);
+					} catch (Exception ex) {
+						sender.sendMessage(ChatColor.RED + args[0] + " is no number.");
+						return false;
+					}
+					if (args.length == 1) {
+						if (pl.isFlying()) {
+							pl.setFlySpeed(speed);
+							sender.sendMessage(ChatColor.GOLD + "Fly speed set to " + args[0]);
+						} else {
+							pl.setWalkSpeed(speed);
+							sender.sendMessage(ChatColor.GOLD + "Walk speed set to " + args[0]);
+						}
+					} else if (args.length == 2) {
+						if (args[1].toLowerCase().contains("f")) {
+							pl.setFlySpeed(speed);
+							sender.sendMessage(ChatColor.GOLD + "Fly speed set to " + args[0]);
+						} else {
+							pl.setWalkSpeed(speed);
+							sender.sendMessage(ChatColor.GOLD + "Walk speed set to " + args[0]);
+						}
+					} else if (args.length == 3) {
+						Player who = getPlayer(args[2]);
+						if (who != null) {
+							if (args[1].toLowerCase().contains("f")) {
+								who.setFlySpeed(speed);
+								who.sendMessage(ChatColor.GOLD + "Fly speed set to " + args[0]);
+								sender.sendMessage(ChatColor.GOLD + "Speed set.");
+							} else {
+								who.setWalkSpeed(speed);
+								who.sendMessage(ChatColor.GOLD + "Walk speed set to " + args[0]);
+								sender.sendMessage(ChatColor.GOLD + "Speed set.");
+							}
+						} else {
+							sender.sendMessage(ChatColor.RED + "No player with name " + args[2]);
+						}
+					} else {
+						sender.sendMessage(ChatColor.RED + "I dont know what to do!");
+					}
+				} else {
+					sender.sendMessage(ChatColor.RED + "I dont know what to do!");
+				}
+			} else {
+				sender.sendMessage(ChatColor.RED + "Only for players.");
+			}
+		} else {
+			sender.sendMessage(ChatColor.RED + "No permission.");
+		}
+		return true;
+	}
+
+	private boolean msg() {
+		if (sender.isOp() || sender.hasPermission("iMine.msg")) {
+			if (args.length > 1) {
+				Player target = getPlayer(args[0]);
+				if (target != null) {
+					String msg = "";
+					for (int i = 1; i < args.length; i++) {
+						msg += args[i] + " ";
+					}
+					target.sendMessage(ChatColor.DARK_GRAY.toString() + ChatColor.ITALIC + "Received message from "
+							+ ChatColor.RED + sender.getName() + ChatColor.DARK_GRAY + ChatColor.BOLD + " \u00BB "
+							+ ChatColor.RESET + ChatColor.GRAY + msg);
+					sender.sendMessage(ChatColor.DARK_GRAY.toString() + ChatColor.ITALIC + "Send message to "
+							+ ChatColor.RED + target.getName() + ChatColor.DARK_GRAY + ChatColor.BOLD + " \u00BB "
+							+ ChatColor.RESET + ChatColor.GRAY + msg);
+				} else {
+					sender.sendMessage(ChatColor.RED + "No player with name " + args[0]);
+				}
+			} else {
+				sender.sendMessage(ChatColor.RED + "Need a player and a message.");
+			}
+		} else {
+			sender.sendMessage(ChatColor.RED + "No permission.");
+		}
+		return true;
+	}
+
+	private boolean invsee() {
+		if (sender.isOp() || sender.hasPermission("iMine.invsee")) {
+			if (args.length == 1) {
+				Player target = getPlayer(args[0]);
+				if (sender instanceof Player) {
+					Player pl = (Player) sender;
+					pl.openInventory(target.getInventory());
+				} else {
+					sender.sendMessage(ChatColor.RED + "Need a player and a message.");
+				}
+			} else {
+				sender.sendMessage(ChatColor.RED + "Need a player.");
+			}
+		} else {
+			sender.sendMessage(ChatColor.RED + "No permission.");
+		}
+		return true;
+	}
+
+	private boolean endersee() {
+		if (sender.isOp() || sender.hasPermission("iMine.endersee")) {
+			if (args.length == 1) {
+				Player target = getPlayer(args[0]);
+				if (sender instanceof Player) {
+					Player pl = (Player) sender;
+					pl.openInventory(target.getEnderChest());
+				} else {
+					sender.sendMessage(ChatColor.RED + "Need a player and a message.");
+				}
+			} else {
+				sender.sendMessage(ChatColor.RED + "Need a player.");
+			}
+		} else {
+			sender.sendMessage(ChatColor.RED + "No permission.");
+		}
+		return true;
+	}
+
+	private boolean git() {
+		if (args.length == 1) {
+			if (args[0].equalsIgnoreCase("projects")) {
+				Set<String> projects = BukkitStarter.API.getProjects();
+				for (String project : projects) {
+					sender.sendMessage(project);
+				}
+			} else if (args[0].equalsIgnoreCase("-v")) {
+				new Thread(new GitCheckRunnalbe(sender, true)).start();
+			}
+		} else {
+			new Thread(new GitCheckRunnalbe(sender, false)).start();
+		}
+		return true;
+	}
+
+	private boolean plr() {
+		if ((sender.isOp() || sender.hasPermission("iMine.dev")) && args.length > 0) {
+			new Thread(new ReloadPlugin(sender, args)).start();
+		} else {
+			return false;
+		}
+		return true;
+	}
+
+	private boolean _return() {
+		if (sender instanceof Player) {
+			Player sender = (Player) this.sender;
+			if (BukkitListener.TP_HISTORY.containsKey(sender.getUniqueId())) {
+				List<Location> locs = BukkitListener.TP_HISTORY.get(sender.getUniqueId());
+				sender.teleport(locs.get(locs.size() - 1));
+			} else {
+				sender.sendMessage(ChatColor.RED + "No history");
+			}
+		} else {
+			sender.sendMessage(ChatColor.RED + "Player only");
+		}
+		return true;
 	}
 
 	public static List<String> onTabComplete(Player sender, String command, String[] args) {

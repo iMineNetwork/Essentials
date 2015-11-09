@@ -43,7 +43,7 @@ public class BukkitStarter extends JavaPlugin {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		return CommandHandler.onCommand(sender, command.getName(), args);
+		return new CommandHandler(sender, command.getName(), args).onCommand();
 	}
 
 	@Override

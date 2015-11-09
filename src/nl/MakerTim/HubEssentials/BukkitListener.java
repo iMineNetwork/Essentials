@@ -1,22 +1,42 @@
 package nl.MakerTim.HubEssentials;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent.Result;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 
 public class BukkitListener implements Listener {
 
 	private static final String[] SHOP_FORMAT = { "shop", "kost", "kopen", "whitelist", "vip" };
 	private static final String[] BUGS_FORMAT = { "help", "bug", "fout", "error" };
+	public static final Map<UUID, List<Location>> TP_HISTORY = new HashMap<>();
 
 	@EventHandler
-	public void onJoin(AsyncPlayerPreLoginEvent event) {
-		if (!BukkitStarter.isDev(event.getUniqueId()) && BukkitStarter.plugin.devMode) {
-			event.disallow(Result.KICK_FULL, "Server is now in dev mode.");
+	public void onJoin(AsyncPlayerPreLoginEvent apple) {
+		if (!BukkitStarter.isDev(apple.getUniqueId()) && BukkitStarter.plugin.devMode) {
+			apple.disallow(Result.KICK_FULL, "Server is now in dev mode.");
+		}
+	}
+
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onTP(PlayerTeleportEvent pte) {
+		if (!pte.isCancelled()) {
+			if (!TP_HISTORY.containsKey(pte.getPlayer().getUniqueId())) {
+				TP_HISTORY.put(pte.getPlayer().getUniqueId(), new ArrayList<Location>());
+			}
+			TP_HISTORY.get(pte.getPlayer().getUniqueId()).add(pte.getFrom());
 		}
 	}
 
