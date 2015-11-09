@@ -88,4 +88,4 @@ commands:
   plugin:
     description: List plugin
     usage: /plugin
-    aliases: [pl]
+    aliases: [pl, plugins]
