@@ -64,8 +64,9 @@ public class GitLabAPI {
 					int projectId = project.get("id").getAsInt();
 					if (!ids.contains(projectId)) {
 						GitProject oldDtls = projects.get(project.get("name").getAsString());
-						if (oldDtls != null && isNewerProject(oldDtls.getLastActivity(),
-								DATE_FORMAT.parse(project.get("last_activity_at").getAsString()))) {
+						String data = project.get("last_activity_at").getAsString();
+						if (data.isEmpty() || (oldDtls != null && isNewerProject(oldDtls.getLastActivity(),
+								DATE_FORMAT.parse(data)))) {
 							continue;
 						}
 
@@ -98,10 +99,10 @@ public class GitLabAPI {
 		}
 	}
 
-	public Set<String> getProjects(){
+	public Set<String> getProjects() {
 		return projects.keySet();
 	}
-	
+
 	public boolean canWork() {
 		return canWork;
 	}
