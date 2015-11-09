@@ -70,6 +70,8 @@ public class CommandHandler {
 			return _return();
 		} else if (command.equalsIgnoreCase("vanish")) {
 			return vanish();
+		} else if (command.equalsIgnoreCase("kill")) {
+			return kill();
 		} else if (command.equalsIgnoreCase("report")) {
 			new Thread(new ServerReporter(sender, args)).start();
 			return true;
@@ -442,16 +444,43 @@ public class CommandHandler {
 				}
 			} else {
 				Player target = getPlayer(args[0]);
-				if (BukkitListener.VANISH.contains(target.getUniqueId())) {
-					BukkitListener.VANISH.remove(target.getUniqueId());
-					target.sendMessage(ChatColor.GOLD + "You are visible again!");
+				if (target != null) {
+					if (BukkitListener.VANISH.contains(target.getUniqueId())) {
+						BukkitListener.VANISH.remove(target.getUniqueId());
+						target.sendMessage(ChatColor.GOLD + "You are visible again!");
+					} else {
+						BukkitListener.VANISH.add(target.getUniqueId());
+						target.sendMessage(ChatColor.GOLD + "GhostMode!");
+					}
+					sender.sendMessage(ChatColor.GOLD + "Toggled vanish for " + ChatColor.RED + target.getName());
 				} else {
-					BukkitListener.VANISH.add(target.getUniqueId());
-					target.sendMessage(ChatColor.GOLD + "GhostMode!");
+					sender.sendMessage(ChatColor.RED + "Player not found");
 				}
-				sender.sendMessage(ChatColor.GOLD + "Toggled vanish for " + ChatColor.RED + target.getName());
 			}
 			BukkitListener.updateVanish();
+		} else {
+			sender.sendMessage(ChatColor.RED + "No permission.");
+		}
+		return true;
+	}
+
+	private boolean kill() {
+		if (sender.isOp() || sender.hasPermission("iMine.kill")) {
+			if (args.length == 0) {
+				if (sender instanceof Player) {
+					Player sender = (Player) this.sender;
+					sender.setHealth(0D);
+				} else {
+					sender.sendMessage(ChatColor.RED + "Player only");
+				}
+			} else {
+				Player target = getPlayer(args[0]);
+				if (target != null) {
+					
+				} else {
+					sender.sendMessage(ChatColor.RED + "Player not found");
+				}
+			}
 		} else {
 			sender.sendMessage(ChatColor.RED + "No permission.");
 		}

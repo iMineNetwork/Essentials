@@ -74,3 +74,7 @@ commands:
     description: GHOSTMODE
     usage: /vanish 
     aliases: [v]
+  kill:
+    description: Be that dick
+    usage: /kill <player> 
+    aliases: [AllahuAkbar, Suicide]
