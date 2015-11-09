@@ -927,6 +927,10 @@ public class CommandHandler {
 					if (sender instanceof Player) {
 						TextComponent extra, message = new TextComponent("");
 						extra = new TextComponent(
+								"Files to update: [" + BukkitStarter.UPDATE_DIR.listFiles().length + "]");
+						message.addExtra(extra);
+
+						extra = new TextComponent(
 								String.format("  %s%s[%sRELOAD SERVER%s%s]%s ", ChatColor.RESET, ChatColor.BOLD,
 										ChatColor.DARK_GREEN, ChatColor.RESET, ChatColor.BOLD, ChatColor.RESET));
 						extra.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/reload"));

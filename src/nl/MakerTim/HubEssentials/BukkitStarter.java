@@ -13,6 +13,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class BukkitStarter extends JavaPlugin {
 
 	public static final GitLabAPI API = new GitLabAPI();
+	public static final File UPDATE_DIR = new File("plugins/update/");
 	private static final Long PEX_DELAY = 20L * 60L * 13L; // Try to random
 	private static final UUID[] DEVS = new UUID[] { UUID.fromString("650f464f-c81a-4050-a2bf-4daac8139873"), // MakerTim
 			UUID.fromString("5451cfd7-ca8d-442c-81f9-81859bd9adc2"), // MKT
@@ -55,8 +56,7 @@ public class BukkitStarter extends JavaPlugin {
 	}
 
 	public void updatePlugins() {
-		File dir = new File("plugins/update/");
-		File[] directoryListing = dir.listFiles();
+		File[] directoryListing = UPDATE_DIR.listFiles();
 		if (directoryListing != null) {
 			for (File child : directoryListing) {
 				File newFile = new File("plugins/" + child.getName());
@@ -70,7 +70,7 @@ public class BukkitStarter extends JavaPlugin {
 			}
 		} else {
 			System.out.println("plugins updatefolder not found!");
-			dir.mkdirs();
+			UPDATE_DIR.mkdirs();
 		}
 	}
 
