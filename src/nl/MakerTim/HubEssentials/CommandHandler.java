@@ -4,7 +4,9 @@ import java.io.File;
 import java.lang.reflect.Method;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -32,6 +34,8 @@ import nl.MakerTim.HubEssentials.GitLabAPI.Commit;
 import nl.MakerTim.HubEssentials.GitLabAPI.GitProject;
 
 public class CommandHandler {
+
+	private static final Map<CommandSender, CommandSender> LAST_SPOKE = new HashMap<>();
 
 	private final CommandSender sender;
 	private final String command;
@@ -72,6 +76,8 @@ public class CommandHandler {
 			return vanish();
 		} else if (command.equalsIgnoreCase("kill")) {
 			return kill();
+		} else if (command.equalsIgnoreCase("reply")) {
+			return reply();
 		} else if (command.equalsIgnoreCase("report")) {
 			new Thread(new ServerReporter(sender, args)).start();
 			return true;
@@ -332,6 +338,14 @@ public class CommandHandler {
 					sender.sendMessage(ChatColor.DARK_GRAY.toString() + ChatColor.ITALIC + "Send message to "
 							+ ChatColor.RED + target.getName() + ChatColor.DARK_GRAY + ChatColor.BOLD + " \u00BB "
 							+ ChatColor.RESET + ChatColor.GRAY + msg);
+					if (LAST_SPOKE.containsKey(target)) {
+						LAST_SPOKE.remove(target);
+					}
+					LAST_SPOKE.put(target, sender);
+					if (LAST_SPOKE.containsKey(sender)) {
+						LAST_SPOKE.remove(sender);
+					}
+					LAST_SPOKE.put(sender, target);
 				} else {
 					sender.sendMessage(ChatColor.RED + "No player with name " + args[0]);
 				}
@@ -482,6 +496,41 @@ public class CommandHandler {
 				} else {
 					sender.sendMessage(ChatColor.RED + "Player not found");
 				}
+			}
+		} else {
+			sender.sendMessage(ChatColor.RED + "No permission.");
+		}
+		return true;
+	}
+
+	private boolean reply() {
+		if (sender.isOp() || sender.hasPermission("iMine.reply")) {
+			if (args.length > 1) {
+				if (LAST_SPOKE.containsKey(sender)) {
+					CommandSender target = LAST_SPOKE.get(sender);
+					String msg = "";
+					for (int i = 0; i < args.length; i++) {
+						msg += args[i] + " ";
+					}
+					target.sendMessage(ChatColor.DARK_GRAY.toString() + ChatColor.ITALIC + "Received message from "
+							+ ChatColor.RED + sender.getName() + ChatColor.DARK_GRAY + ChatColor.BOLD + " \u00BB "
+							+ ChatColor.RESET + ChatColor.GRAY + msg);
+					sender.sendMessage(ChatColor.DARK_GRAY.toString() + ChatColor.ITALIC + "Send message to "
+							+ ChatColor.RED + target.getName() + ChatColor.DARK_GRAY + ChatColor.BOLD + " \u00BB "
+							+ ChatColor.RESET + ChatColor.GRAY + msg);
+					if (LAST_SPOKE.get(target) != null) {
+						LAST_SPOKE.remove(target);
+					}
+					LAST_SPOKE.put(target, sender);
+					if (LAST_SPOKE.get(sender) != null) {
+						LAST_SPOKE.remove(sender);
+					}
+					LAST_SPOKE.put(sender, target);
+				} else {
+					sender.sendMessage(ChatColor.RED + "Nobody to reply to");
+				}
+			} else {
+				sender.sendMessage(ChatColor.RED + "Need a message to tell.");
 			}
 		} else {
 			sender.sendMessage(ChatColor.RED + "No permission.");
