@@ -21,7 +21,7 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 
 public class BukkitListener implements Listener {
 
-	private static final String[] SHOP_FORMAT = { "shop", "kost", "kopen", "whitelist", "vip" };
+	private static final String[] SHOP_FORMAT = { "shop", "kost", "duur", "kopen", "whitelist", "vip" };
 	private static final String[] BUGS_FORMAT = { "help", "bug", "fout", "error" };
 	public static final Map<UUID, List<Location>> TP_HISTORY = new HashMap<>();
 	public static final List<UUID> VANISH = new ArrayList<>();
@@ -74,27 +74,29 @@ public class BukkitListener implements Listener {
 	@EventHandler
 	public void chat(AsyncPlayerChatEvent apce) {
 		String mssg = apce.getMessage();
-		boolean sendMssg = false;
-		for (String shp : SHOP_FORMAT) {
-			if (mssg.toLowerCase().contains(shp)) {
-				sendMssg = true;
+		if (!(BukkitStarter.isDev(apce.getPlayer().getUniqueId()) || apce.getPlayer().isOp())) {
+			boolean sendMssg = false;
+			for (String shp : SHOP_FORMAT) {
+				if (mssg.toLowerCase().contains(shp)) {
+					sendMssg = true;
+				}
 			}
-		}
-		if (sendMssg) {
-			apce.getPlayer()
-					.sendMessage(ChatColor.GOLD + ChatColor.BOLD.toString()
-							+ "Do you like to purchase one of our fine VIP ranks or a whitelist? Click here "
-							+ ChatColor.BLUE + ChatColor.UNDERLINE + "shop.iMine.nl");
-		}
-		sendMssg = false;
-		for (String bgs : BUGS_FORMAT) {
-			if (mssg.toLowerCase().contains(bgs)) {
-				sendMssg = true;
+			if (sendMssg) {
+				apce.getPlayer()
+						.sendMessage(ChatColor.GOLD + ChatColor.BOLD.toString()
+								+ "Do you like to purchase one of our fine VIP ranks or a whitelist? Click here "
+								+ ChatColor.BLUE + ChatColor.UNDERLINE + "shop.iMine.nl");
 			}
-		}
-		if (sendMssg) {
-			apce.getPlayer().sendMessage(ChatColor.RED + ChatColor.BOLD.toString() + "Found a bug? Report it to "
-					+ ChatColor.BLUE + ChatColor.UNDERLINE + "bugs.iMine.nl");
+			sendMssg = false;
+			for (String bgs : BUGS_FORMAT) {
+				if (mssg.toLowerCase().contains(bgs)) {
+					sendMssg = true;
+				}
+			}
+			if (sendMssg) {
+				apce.getPlayer().sendMessage(ChatColor.RED + ChatColor.BOLD.toString() + "Found a bug? Report it to "
+						+ ChatColor.BLUE + ChatColor.UNDERLINE + "bugs.iMine.nl");
+			}
 		}
 	}
 
