@@ -938,8 +938,8 @@ public class CommandHandler {
 								new ComponentBuilder("Click to reload server").create()));
 						message.addExtra(extra);
 
-						extra = new TextComponent(String.format("%s%s[%sREBOOT SERVER%s%s]%s ", ChatColor.RESET,
-								ChatColor.BOLD, ChatColor.RED, ChatColor.RESET, ChatColor.BOLD, ChatColor.RESET));
+						extra = new TextComponent(String.format("%s%s[%sREBOOT SERVER%s%s]", ChatColor.RESET,
+								ChatColor.BOLD, ChatColor.RED, ChatColor.RESET, ChatColor.BOLD));
 						extra.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/restart"));
 						extra.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
 								new ComponentBuilder(ChatColor.RED + "WARNING, will shutdown server!\n"
