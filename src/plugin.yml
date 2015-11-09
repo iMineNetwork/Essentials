@@ -77,7 +77,7 @@ commands:
   kill:
     description: Be that dick
     usage: /kill <player> 
-    aliases: [AllahuAkbar, Suicide]
+    aliases: [allahuakbar, suicide]
   reply:
     description: Say hy back
     usage: /reply [message]
@@ -85,3 +85,7 @@ commands:
   me:
     description: Whats up with me
     usage: /me [message]
+  plugin:
+    description: List plugin
+    usage: /plugin
+    aliases: [pl]

@@ -80,6 +80,8 @@ public class CommandHandler {
 			return reply();
 		} else if (command.equalsIgnoreCase("me")) {
 			return me();
+		} else if (command.equalsIgnoreCase("plugin")) {
+			return plugin();
 		} else if (command.equalsIgnoreCase("report")) {
 			new Thread(new ServerReporter(sender, args)).start();
 			return true;
@@ -95,6 +97,39 @@ public class CommandHandler {
 			return true;
 		}
 		return false;
+	}
+
+	private boolean plugin() {
+		Plugin[] plugins = Bukkit.getPluginManager().getPlugins();
+		TextComponent extra, message = new TextComponent("");
+		extra = new TextComponent("Plugins (" + plugins.length + "): ");
+		message.addExtra(extra);
+		for (Plugin plugin : plugins) {
+			extra = new TextComponent(plugin.getName());
+			extra.setColor(net.md_5.bungee.api.ChatColor.GREEN);
+			try {
+				Method m = JavaPlugin.class.getDeclaredMethod("getFile");
+				m.setAccessible(true);
+				File f = (File) m.invoke(plugin);
+				extra.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+						new ComponentBuilder(plugin.getDescription().getVersion()).append("\n\n" + f.getName())
+								.create()));
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+			message.addExtra(extra);
+			if (plugin != plugins[plugins.length - 1]) {
+				extra = new TextComponent(", ");
+				extra.setColor(net.md_5.bungee.api.ChatColor.WHITE);
+				message.addExtra(extra);
+			}
+		}
+		if (sender instanceof Player) {
+			((Player) sender).spigot().sendMessage(message);
+		} else {
+			sender.sendMessage(message.toPlainText());
+		}
+		return true;
 	}
 
 	private boolean hub() {
@@ -582,14 +617,11 @@ public class CommandHandler {
 			}
 		} else if ((command.startsWith("gm") && command.length() == 3)
 				|| (command.equalsIgnoreCase("tp") && (args.length == 1 || args.length == 2))
-				|| (command.equalsIgnoreCase("gm") && args.length == 2)
-				|| (command.equalsIgnoreCase("msg"))
+				|| (command.equalsIgnoreCase("gm") && args.length == 2) || (command.equalsIgnoreCase("msg"))
 				|| (command.equalsIgnoreCase("invsee") && args.length == 1)
 				|| (command.equalsIgnoreCase("vanish") && args.length == 1)
-				|| (command.equalsIgnoreCase("kill") && args.length == 1)
-				|| (command.equalsIgnoreCase("reply"))
-				|| (command.equalsIgnoreCase("me"))
-				|| (command.equalsIgnoreCase("endersee") && args.length == 1)
+				|| (command.equalsIgnoreCase("kill") && args.length == 1) || (command.equalsIgnoreCase("reply"))
+				|| (command.equalsIgnoreCase("me")) || (command.equalsIgnoreCase("endersee") && args.length == 1)
 				|| (command.equalsIgnoreCase("speed") && args.length > 1)) {
 			for (Player pl : Bukkit.getOnlinePlayers()) {
 				if (sender.canSee(pl) && pl.getName().toLowerCase().contains(args[args.length - 1].toLowerCase())) {
