@@ -1,7 +1,6 @@
 package nl.MakerTim.HubEssentials;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,7 +44,7 @@ public class BukkitListener implements Listener {
 	}
 
 	public static void updateVanish() {
-		Collection<? extends Player> nonHidden = Bukkit.getOnlinePlayers();
+		List<Player> nonHidden = new ArrayList<Player>(Bukkit.getOnlinePlayers());
 		for (Player pl : Bukkit.getOnlinePlayers()) {
 			for (UUID vanished : VANISH) {
 				Player vanish = Bukkit.getPlayer(vanished);
