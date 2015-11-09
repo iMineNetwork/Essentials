@@ -470,13 +470,15 @@ public class CommandHandler {
 				if (sender instanceof Player) {
 					Player sender = (Player) this.sender;
 					sender.setHealth(0D);
+					sender.sendMessage(ChatColor.GOLD + "Suisided");
 				} else {
 					sender.sendMessage(ChatColor.RED + "Player only");
 				}
 			} else {
 				Player target = getPlayer(args[0]);
 				if (target != null) {
-					
+					target.setHealth(0D);
+					sender.sendMessage(ChatColor.GOLD + "Assassinated!");
 				} else {
 					sender.sendMessage(ChatColor.RED + "Player not found");
 				}
