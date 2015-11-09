@@ -80,7 +80,8 @@ public class CommandHandler {
 			return reply();
 		} else if (command.equalsIgnoreCase("me")) {
 			return me();
-		} else if (command.equalsIgnoreCase("plugin")) {
+		} else if (command.equalsIgnoreCase("pl") || command.equalsIgnoreCase("plugin")
+				|| command.equalsIgnoreCase("plugins")) {
 			return plugin();
 		} else if (command.equalsIgnoreCase("report")) {
 			new Thread(new ServerReporter(sender, args)).start();

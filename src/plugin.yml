@@ -85,7 +85,12 @@ commands:
   me:
     description: Whats up with me
     usage: /me [message]
+  pl:
+    description: List plugin
+    usage: /pl
   plugin:
     description: List plugin
     usage: /plugin
-    aliases: [pl, plugins]
+  plugins:
+    description: List plugin
+    usage: /plugins
