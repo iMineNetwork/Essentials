@@ -505,7 +505,7 @@ public class CommandHandler {
 
 	private boolean reply() {
 		if (sender.isOp() || sender.hasPermission("iMine.reply")) {
-			if (args.length > 1) {
+			if (args.length > 0) {
 				if (LAST_SPOKE.containsKey(sender)) {
 					CommandSender target = LAST_SPOKE.get(sender);
 					String msg = "";
