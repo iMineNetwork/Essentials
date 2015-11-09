@@ -517,6 +517,7 @@ public class CommandHandler {
 				|| (command.equalsIgnoreCase("msg") && args.length == 1)
 				|| (command.equalsIgnoreCase("invsee") && args.length == 1)
 				|| (command.equalsIgnoreCase("vanish") && args.length == 1)
+				|| (command.equalsIgnoreCase("kill") && args.length == 1)
 				|| (command.equalsIgnoreCase("endersee") && args.length == 1)
 				|| (command.equalsIgnoreCase("speed") && args.length > 1)) {
 			for (Player pl : Bukkit.getOnlinePlayers()) {
