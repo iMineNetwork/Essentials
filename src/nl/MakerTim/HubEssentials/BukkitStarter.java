@@ -31,8 +31,10 @@ public class BukkitStarter extends JavaPlugin {
 	public void onEnable() {
 		plugin = this;
 		dm = new DatabaseManager(Credentials.getDatabase(), Credentials.getUsername(), Credentials.getPassword());
+		setupConfig();
 		getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 		Bukkit.getPluginManager().registerEvents(new BukkitListener(), this);
+		Bukkit.getPluginManager().registerEvents(new Profiler(), this);
 		Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new PexReloader(), PEX_DELAY, PEX_DELAY);
 	}
 
@@ -53,6 +55,14 @@ public class BukkitStarter extends JavaPlugin {
 			return CommandHandler.onTabComplete((Player) sender, command.getName(), args);
 		}
 		return super.onTabComplete(sender, command, alias, args);
+	}
+
+	private void setupConfig() {
+		String check = "QWERTY";
+		if (getConfig().getString("ServerName", check).equalsIgnoreCase(check)) {
+			getConfig().set("ServerName", "Unknown");
+			saveConfig();
+		}
 	}
 
 	public void updatePlugins() {
