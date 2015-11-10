@@ -643,6 +643,9 @@ public class CommandHandler {
 				playerNames.add(pl.getName());
 			}
 		}
+		if (playerNames.size() == 0) {
+			return null;
+		}
 		Collections.sort(playerNames, new StringSearchSorter(name));
 		return Bukkit.getPlayer(playerNames.get(0));
 	}
