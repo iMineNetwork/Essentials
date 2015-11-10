@@ -195,6 +195,41 @@ public class CommandHandler {
 				} else {
 					sender.sendMessage(ChatColor.RED + "No player with name " + args[0]);
 				}
+			} else if (args.length == 3 || args.length == 4) {
+				int faultArg = -1;
+				double[] coords = new double[args.length];
+				for (int i = 0; i < args.length; i++) {
+					try {
+						coords[i] = Double.parseDouble(args[i]);
+					} catch (Exception ex) {
+						faultArg = i;
+					}
+				}
+				try {
+					if (faultArg == 0 && args.length == 4) {
+						Player target = getPlayer(args[0]);
+						target.teleport(new Location(target.getWorld(), coords[1], coords[2], coords[3]));
+						sender.sendMessage(ChatColor.GOLD + "Teleporting...");
+					} else if (faultArg < 0) {
+						if (sender instanceof Player) {
+							Player who = (Player) sender;
+							if (args.length == 3) {
+								who.teleport(new Location(who.getWorld(), coords[0], coords[1], coords[2]));
+								sender.sendMessage(ChatColor.GOLD + "Teleporting...");
+							} else {
+								who.teleport(new Location(Bukkit.getWorlds().get((int) coords[3]), coords[0], coords[1],
+										coords[2]));
+								sender.sendMessage(ChatColor.GOLD + "Teleporting...");
+							}
+						} else {
+							sender.sendMessage(ChatColor.RED + "You must be a player!");
+						}
+					} else {
+						sender.sendMessage(ChatColor.RED + args[faultArg] + " is not a number.");
+					}
+				} catch (Exception ex) {
+					sender.sendMessage(ChatColor.RED + "error: " + ex.getMessage() + "   - PLZ REPORT");
+				}
 			} else {
 				sender.sendMessage(ChatColor.RED + "No target to teleport to.");
 			}
