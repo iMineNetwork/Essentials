@@ -43,8 +43,8 @@ public class DatabaseManager {
 
 	}
 
-	public static String prepaireString(String raw) {
-		return raw.replaceAll(
+	public static String prepaireString(Object raw) {
+		return raw.toString().replaceAll(
 				"\\{ | \\} | \\\\ | \\, | \\& | \\? | \\( | \\) | \\[ | \\] | \\- | \\; | \\~ | \\| | \\ $ |"
 						+ " \\! | \\< | \\> | \\* | \\% | \\_ | \\' | \\\"",
 				"\\\\$0");

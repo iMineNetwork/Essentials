@@ -58,7 +58,7 @@ public class BukkitStarter extends JavaPlugin {
 	}
 
 	private void setupConfig() {
-		String check = "QWERTY";
+		String check = "QWERTY" + Math.random();
 		if (getConfig().getString("ServerName", check).equalsIgnoreCase(check)) {
 			getConfig().set("ServerName", "Unknown");
 			saveConfig();
