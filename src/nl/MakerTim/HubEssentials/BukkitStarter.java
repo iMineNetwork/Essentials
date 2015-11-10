@@ -1,6 +1,7 @@
 package nl.MakerTim.HubEssentials;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -52,7 +53,9 @@ public class BukkitStarter extends JavaPlugin {
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
 		if (sender instanceof Player) {
-			return CommandHandler.onTabComplete((Player) sender, command.getName(), args);
+			List<String> list = CommandHandler.onTabComplete((Player) sender, command.getName(), args);
+			Collections.sort(list, new StringSearchSorter(args[args.length - 1]));
+			return list;
 		}
 		return super.onTabComplete(sender, command, alias, args);
 	}
