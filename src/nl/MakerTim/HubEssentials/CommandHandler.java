@@ -4,6 +4,7 @@ import java.io.File;
 import java.lang.reflect.Method;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -636,14 +637,14 @@ public class CommandHandler {
 	}
 
 	private static Player getPlayer(String name) {
-		Player ret = null;
+		List<String> playerNames = new ArrayList<>();
 		for (Player pl : Bukkit.getOnlinePlayers()) {
 			if (pl.getName().toLowerCase().contains(name.toLowerCase())) {
-				ret = pl;
-				break;
+				playerNames.add(pl.getName());
 			}
 		}
-		return ret;
+		Collections.sort(playerNames, new StringSearchSorter(name));
+		return Bukkit.getPlayer(playerNames.get(0));
 	}
 
 	private static void globalAdminMessage(Player sender, String message) {
