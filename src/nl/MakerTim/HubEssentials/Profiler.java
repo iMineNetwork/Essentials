@@ -32,7 +32,7 @@ public class Profiler implements Listener, Runnable {
 		db.insertQuery(String.format(
 				"INSERT INTO ServerLog (TimeChecked, ServerName, PlayerCount, TPS, RamUsage) VALUES (NOW(), '%s', '%s', '%s', '%s');",
 				DatabaseManager.prepaireString(serverName),
-				DatabaseManager.prepaireString(Bukkit.getOfflinePlayers().length),
+				DatabaseManager.prepaireString(Bukkit.getOnlinePlayers().size()),
 				DatabaseManager.prepaireString(Math.round(Lagg.getTPS())),
 				DatabaseManager.prepaireString(Math.round(memPercentageFree))));
 	}
