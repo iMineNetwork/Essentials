@@ -46,7 +46,7 @@ public class Profiler implements Listener, Runnable {
 		}
 
 		public static double getTPS(int ticks) {
-			if (TICK_COUNT < ticks) {
+			if (TICK_COUNT <= ticks) {
 				return 20.0D;
 			}
 			int target = (TICK_COUNT - 1 - ticks) % TICKS.length;
