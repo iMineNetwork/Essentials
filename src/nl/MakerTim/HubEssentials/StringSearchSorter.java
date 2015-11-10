@@ -12,6 +12,6 @@ public class StringSearchSorter implements Comparator<String> {
 
 	@Override
 	public int compare(String s1, String s2) {
-		return s1.indexOf(toFind) - s2.indexOf(toFind);
+		return s1.toLowerCase().indexOf(toFind.toLowerCase()) - s2.toLowerCase().indexOf(toFind.toLowerCase());
 	}
 }
