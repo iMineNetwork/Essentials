@@ -208,9 +208,13 @@ public class CommandHandler {
 				try {
 					if (faultArg == 0 && args.length == 4) {
 						Player target = getPlayer(args[0]);
-						target.teleport(new Location(target.getWorld(), coords[1], coords[2], coords[3],
-								target.getLocation().getYaw(), target.getLocation().getPitch()));
-						sender.sendMessage(ChatColor.GOLD + "Teleporting...");
+						if (target != null) {
+							target.teleport(new Location(target.getWorld(), coords[1], coords[2], coords[3],
+									target.getLocation().getYaw(), target.getLocation().getPitch()));
+							sender.sendMessage(ChatColor.GOLD + "Teleporting...");
+						} else {
+							sender.sendMessage(ChatColor.RED + "No player with name " + args[0]);
+						}
 					} else if (faultArg < 0) {
 						if (sender instanceof Player) {
 							Player who = (Player) sender;
@@ -219,9 +223,14 @@ public class CommandHandler {
 										who.getLocation().getYaw(), who.getLocation().getPitch()));
 								sender.sendMessage(ChatColor.GOLD + "Teleporting...");
 							} else {
-								who.teleport(new Location(Bukkit.getWorlds().get((int) coords[3]), coords[0], coords[1],
-										coords[2], who.getLocation().getYaw(), who.getLocation().getPitch()));
-								sender.sendMessage(ChatColor.GOLD + "Teleporting...");
+								if (Bukkit.getWorlds().get((int) coords[3]) != null) {
+									who.teleport(new Location(Bukkit.getWorlds().get((int) coords[3]), coords[0],
+											coords[1], coords[2], who.getLocation().getYaw(),
+											who.getLocation().getPitch()));
+									sender.sendMessage(ChatColor.GOLD + "Teleporting...");
+								} else {
+									sender.sendMessage(ChatColor.RED + "No world on id " + coords[3]);
+								}
 							}
 						} else {
 							sender.sendMessage(ChatColor.RED + "You must be a player!");
