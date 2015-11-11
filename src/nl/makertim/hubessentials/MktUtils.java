@@ -1,4 +1,4 @@
-package nl.nakertim.hubessentials;
+package nl.makertim.hubessentials;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;

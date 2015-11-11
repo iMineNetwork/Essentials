@@ -1,4 +1,4 @@
-package nl.nakertim.hubessentials;
+package nl.makertim.hubessentials;
 
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;

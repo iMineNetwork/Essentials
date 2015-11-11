@@ -1,4 +1,4 @@
-package nl.nakertim.hubessentials;
+package nl.makertim.hubessentials;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -30,10 +30,9 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
-
-import nl.nakertim.hubessentials.GitLabAPI.Commit;
-import nl.nakertim.hubessentials.GitLabAPI.GitProject;
-import nl.nakertim.hubessentials.api.PlayerGetter;
+import nl.makertim.hubessentials.GitLabAPI.Commit;
+import nl.makertim.hubessentials.GitLabAPI.GitProject;
+import nl.makertim.hubessentials.api.PlayerGetter;
 
 public class CommandHandler {
 

@@ -1,4 +1,4 @@
-package nl.nakertim.hubessentials.api;
+package nl.makertim.hubessentials.api;
 
 import java.util.Comparator;
 
