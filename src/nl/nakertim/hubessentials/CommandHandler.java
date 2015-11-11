@@ -4,7 +4,6 @@ import java.io.File;
 import java.lang.reflect.Method;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,8 +30,10 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
+
 import nl.nakertim.hubessentials.GitLabAPI.Commit;
 import nl.nakertim.hubessentials.GitLabAPI.GitProject;
+import nl.nakertim.hubessentials.api.PlayerGetter;
 
 public class CommandHandler {
 
@@ -169,7 +170,7 @@ public class CommandHandler {
 		if (sender.isOp() || sender.hasPermission("iMine.tp")) {
 			if (args.length == 1) {
 				if (sender instanceof Player) {
-					Player pl = getPlayer(args[0]);
+					Player pl = PlayerGetter.getOnline(args[0]);
 					if (pl != null) {
 						((Player) sender).teleport(pl);
 						sender.sendMessage(ChatColor.GOLD + "Teleporting to " + ChatColor.RED + pl.getName()
@@ -181,8 +182,8 @@ public class CommandHandler {
 					sender.sendMessage(ChatColor.RED + "Only for players!");
 				}
 			} else if (args.length == 2) {
-				Player who = getPlayer(args[0]);
-				Player target = getPlayer(args[1]);
+				Player who = PlayerGetter.getOnline(args[0]);
+				Player target = PlayerGetter.getOnline(args[1]);
 				if (who != null) {
 					if (target != null) {
 						who.teleport(target);
@@ -207,7 +208,7 @@ public class CommandHandler {
 				}
 				try {
 					if (faultArg == 0 && args.length == 4) {
-						Player target = getPlayer(args[0]);
+						Player target = PlayerGetter.getOnline(args[0]);
 						if (target != null) {
 							target.teleport(new Location(target.getWorld(), coords[1], coords[2], coords[3],
 									target.getLocation().getYaw(), target.getLocation().getPitch()));
@@ -283,7 +284,7 @@ public class CommandHandler {
 						sender.sendMessage(ChatColor.RED + "Only for players!");
 					}
 				} else if (args.length == 2) {
-					Player who = getPlayer(args[1]);
+					Player who = PlayerGetter.getOnline(args[1]);
 					if (who != null) {
 						if (set != null) {
 							who.setGameMode(set);
@@ -332,7 +333,7 @@ public class CommandHandler {
 					sender.sendMessage(ChatColor.RED + "Only for players!");
 				}
 			} else if (args.length == 1) {
-				Player who = getPlayer(args[0]);
+				Player who = PlayerGetter.getOnline(args[0]);
 				if (who != null) {
 					who.setGameMode(set);
 					who.sendMessage(ChatColor.GOLD + "Set gamemode to " + ChatColor.RED + set.name().toLowerCase());
@@ -379,7 +380,7 @@ public class CommandHandler {
 							sender.sendMessage(ChatColor.GOLD + "Walk speed set to " + args[0]);
 						}
 					} else if (args.length == 3) {
-						Player who = getPlayer(args[2]);
+						Player who = PlayerGetter.getOnline(args[2]);
 						if (who != null) {
 							if (args[1].toLowerCase().contains("f")) {
 								who.setFlySpeed(speed);
@@ -411,7 +412,7 @@ public class CommandHandler {
 	private boolean msg() {
 		if (sender.isOp() || sender.hasPermission("iMine.msg")) {
 			if (args.length > 1) {
-				Player target = getPlayer(args[0]);
+				Player target = PlayerGetter.getOnline(args[0]);
 				if (target != null) {
 					String msg = "";
 					for (int i = 1; i < args.length; i++) {
@@ -446,7 +447,7 @@ public class CommandHandler {
 	private boolean invsee() {
 		if (sender.isOp() || sender.hasPermission("iMine.invsee")) {
 			if (args.length == 1) {
-				Player target = getPlayer(args[0]);
+				Player target = PlayerGetter.getOnline(args[0]);
 				if (sender instanceof Player) {
 					Player pl = (Player) sender;
 					pl.openInventory(target.getInventory());
@@ -465,7 +466,7 @@ public class CommandHandler {
 	private boolean endersee() {
 		if (sender.isOp() || sender.hasPermission("iMine.endersee")) {
 			if (args.length == 1) {
-				Player target = getPlayer(args[0]);
+				Player target = PlayerGetter.getOnline(args[0]);
 				if (sender instanceof Player) {
 					Player pl = (Player) sender;
 					pl.openInventory(target.getEnderChest());
@@ -542,7 +543,7 @@ public class CommandHandler {
 					sender.sendMessage(ChatColor.RED + "Player only");
 				}
 			} else {
-				Player target = getPlayer(args[0]);
+				Player target = PlayerGetter.getOnline(args[0]);
 				if (target != null) {
 					if (BukkitListener.VANISH.contains(target.getUniqueId())) {
 						BukkitListener.VANISH.remove(target.getUniqueId());
@@ -574,7 +575,7 @@ public class CommandHandler {
 					sender.sendMessage(ChatColor.RED + "Player only");
 				}
 			} else {
-				Player target = getPlayer(args[0]);
+				Player target = PlayerGetter.getOnline(args[0]);
 				if (target != null) {
 					target.setHealth(0D);
 					sender.sendMessage(ChatColor.GOLD + "Assassinated!");
@@ -664,36 +665,17 @@ public class CommandHandler {
 				}
 			}
 		} else if ((command.startsWith("gm") && command.length() == 3)
-				|| (command.equalsIgnoreCase("tp") && (args.length == 1 || args.length == 2))
-				|| (command.equalsIgnoreCase("gm") && args.length == 2) || (command.equalsIgnoreCase("msg"))
+				|| (command.equalsIgnoreCase("gm") && args.length == 2)
 				|| (command.equalsIgnoreCase("invsee") && args.length == 1)
-				|| (command.equalsIgnoreCase("vanish") && args.length == 1)
+				|| (command.equalsIgnoreCase("vanish") && args.length == 1) || (command.equalsIgnoreCase("report"))
+				|| (command.equalsIgnoreCase("tp") && (args.length == 1 || args.length == 2))
 				|| (command.equalsIgnoreCase("kill") && args.length == 1) || (command.equalsIgnoreCase("reply"))
-				|| (command.equalsIgnoreCase("me")) || (command.equalsIgnoreCase("endersee") && args.length == 1)
-				|| (command.equalsIgnoreCase("speed") && args.length > 1)) {
-			for (Player pl : Bukkit.getOnlinePlayers()) {
-				if (sender.canSee(pl) && pl.getName().toLowerCase().contains(args[args.length - 1].toLowerCase())) {
-					ret.add(pl.getName());
-				}
-			}
-		} else if (command.equalsIgnoreCase("report")) {
+				|| (command.equalsIgnoreCase("endersee") && args.length == 1) || (command.equalsIgnoreCase("msg"))
+				|| (command.equalsIgnoreCase("speed") && args.length > 1) || (command.equalsIgnoreCase("me"))) {
+			ret.addAll(PlayerGetter.getAllOnlineNames(args[args.length - 1]));
 		} else if (command.equalsIgnoreCase("update")) {
 		}
 		return ret;
-	}
-
-	private static Player getPlayer(String name) {
-		List<String> playerNames = new ArrayList<>();
-		for (Player pl : Bukkit.getOnlinePlayers()) {
-			if (pl.getName().toLowerCase().contains(name.toLowerCase())) {
-				playerNames.add(pl.getName());
-			}
-		}
-		if (playerNames.size() == 0) {
-			return null;
-		}
-		Collections.sort(playerNames, new StringSearchSorter(name));
-		return Bukkit.getPlayer(playerNames.get(0));
 	}
 
 	private static void globalAdminMessage(Player sender, String message) {

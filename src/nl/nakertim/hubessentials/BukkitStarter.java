@@ -1,7 +1,6 @@
 package nl.nakertim.hubessentials;
 
 import java.io.File;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -54,7 +53,6 @@ public class BukkitStarter extends JavaPlugin {
 	public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
 		if (sender instanceof Player) {
 			List<String> list = CommandHandler.onTabComplete((Player) sender, command.getName(), args);
-			Collections.sort(list, new StringSearchSorter(args[args.length - 1]));
 			return list;
 		}
 		return super.onTabComplete(sender, command, alias, args);
