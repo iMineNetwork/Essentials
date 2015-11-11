@@ -1,4 +1,4 @@
-package nl.MakerTim.HubEssentials;
+package nl.nakertim.hubessentials;
 
 import java.util.ArrayList;
 import java.util.HashMap;
