@@ -152,7 +152,7 @@ public class CommandHandler {
 			if (BukkitStarter.plugin.devMode) {
 				sender.sendMessage("Devolpermodus is now enabled!");
 				for (Player pl : new ArrayList<>(Bukkit.getOnlinePlayers())) {
-					if (!BukkitStarter.isDev(pl.getUniqueId())) {
+					if (!(pl.isOp() || pl.hasPermission("iMine.dev"))) {
 						MktUtils.sendPlayerToServer(pl, "hub");
 					}
 				}
