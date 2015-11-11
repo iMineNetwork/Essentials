@@ -418,6 +418,7 @@ public class CommandHandler {
 					for (int i = 1; i < args.length; i++) {
 						msg += args[i] + " ";
 					}
+					msg = ColorFormatter.replaceColors(msg);
 					target.sendMessage(ChatColor.DARK_GRAY.toString() + ChatColor.ITALIC + "Received message from "
 							+ ChatColor.RED + sender.getName() + ChatColor.DARK_GRAY + ChatColor.BOLD + " \u00BB "
 							+ ChatColor.RESET + ChatColor.GRAY + msg);
@@ -598,6 +599,7 @@ public class CommandHandler {
 					for (int i = 0; i < args.length; i++) {
 						msg += args[i] + " ";
 					}
+					msg = ColorFormatter.replaceColors(msg);
 					target.sendMessage(ChatColor.DARK_GRAY.toString() + ChatColor.ITALIC + "Received message from "
 							+ ChatColor.RED + sender.getName() + ChatColor.DARK_GRAY + ChatColor.BOLD + " \u00BB "
 							+ ChatColor.RESET + ChatColor.GRAY + msg);
@@ -631,6 +633,7 @@ public class CommandHandler {
 				for (int i = 0; i < args.length; i++) {
 					msg += args[i] + " ";
 				}
+				msg = ColorFormatter.replaceColors(msg);
 				Bukkit.broadcastMessage(
 						ChatColor.GOLD + "* " + ChatColor.GRAY + sender.getName() + " " + ChatColor.WHITE + msg);
 			} else {
