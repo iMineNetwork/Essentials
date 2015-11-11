@@ -32,6 +32,7 @@ import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import nl.makertim.hubessentials.GitLabAPI.Commit;
 import nl.makertim.hubessentials.GitLabAPI.GitProject;
+import nl.makertim.hubessentials.api.ColorFormatter;
 import nl.makertim.hubessentials.api.PlayerGetter;
 
 public class CommandHandler {
@@ -136,9 +137,9 @@ public class CommandHandler {
 
 	private boolean hub() {
 		if (args.length == 0) {
-			MktUtils.sendPlayerToServer(BukkitStarter.plugin, (Player) sender, "hub");
+			MktUtils.sendPlayerToServer((Player) sender, "hub");
 		} else if (sender.isOp() || sender.hasPermission("iMine.hub")) {
-			MktUtils.sendPlayerToServer(BukkitStarter.plugin, (Player) sender, args[0]);
+			MktUtils.sendPlayerToServer((Player) sender, args[0]);
 		} else {
 			sender.sendMessage(ChatColor.RED + "You have no acces to this command");
 		}
@@ -152,7 +153,7 @@ public class CommandHandler {
 				sender.sendMessage("Devolpermodus is now enabled!");
 				for (Player pl : new ArrayList<>(Bukkit.getOnlinePlayers())) {
 					if (!BukkitStarter.isDev(pl.getUniqueId())) {
-						MktUtils.sendPlayerToServer(BukkitStarter.plugin, pl, "hub");
+						MktUtils.sendPlayerToServer(pl, "hub");
 					}
 				}
 				for (Player pl : new ArrayList<>(Bukkit.getOnlinePlayers())) {
@@ -723,7 +724,7 @@ public class CommandHandler {
 			for (String str : args) {
 				message += str + " ";
 			}
-			message = MktUtils.replaceColors(message);
+			message = ColorFormatter.replaceColors(message);
 			if (message.matches("^\\s*$")) {
 				sender.sendMessage(ChatColor.RED + "/Report [Message]");
 				return;
@@ -765,7 +766,7 @@ public class CommandHandler {
 			for (String str : args) {
 				message += str + " ";
 			}
-			message = MktUtils.replaceColors(message);
+			message = ColorFormatter.replaceColors(message);
 			if (message.matches("^\\s*$")) {
 				sender.sendMessage(ChatColor.RED + "/Admin [Message]");
 				return;
