@@ -960,17 +960,19 @@ public class CommandHandler {
 						extra = new TextComponent(
 								"Files to update: [" + BukkitStarter.UPDATE_DIR.listFiles().length + "]");
 						message.addExtra(extra);
-
+						boolean hasUpdate = BukkitStarter.UPDATE_DIR.listFiles().length > 0;
 						extra = new TextComponent(
 								String.format("  %s%s[%sRELOAD SERVER%s%s]%s ", ChatColor.RESET, ChatColor.BOLD,
-										ChatColor.DARK_GREEN, ChatColor.RESET, ChatColor.BOLD, ChatColor.RESET));
+										ChatColor.DARK_GREEN + (hasUpdate ? ChatColor.STRIKETHROUGH.toString() : ""),
+										ChatColor.RESET, ChatColor.BOLD, ChatColor.RESET));
 						extra.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/reload"));
 						extra.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
 								new ComponentBuilder("Click to reload server").create()));
 						message.addExtra(extra);
 
 						extra = new TextComponent(String.format("%s%s[%sREBOOT SERVER%s%s]", ChatColor.RESET,
-								ChatColor.BOLD, ChatColor.RED, ChatColor.RESET, ChatColor.BOLD));
+								ChatColor.BOLD, ChatColor.RED + (hasUpdate ? ChatColor.STRIKETHROUGH.toString() : ""),
+								ChatColor.RESET, ChatColor.BOLD));
 						extra.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/restart"));
 						extra.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
 								new ComponentBuilder(ChatColor.RED + "WARNING, will shutdown server!\n"
