@@ -24,14 +24,22 @@ public class PlayerGetter {
 	public static List<String> getAllNames(String name) {
 		List<String> ret = new ArrayList<>();
 		ret.addAll(getAllOnlineNames(name));
-		ret.addAll(getAllOflineNames(name));
+		for (String opl : getAllOfflineNames(name)) {
+			if (!ret.contains(opl)) {
+				ret.add(opl);
+			}
+		}
 		return ret;
 	}
 
 	public static List<OfflinePlayer> getAll(String name) {
 		List<OfflinePlayer> ret = new ArrayList<>();
 		ret.addAll(getAllOnline(name));
-		ret.addAll(getAllOffline(name));
+		for (OfflinePlayer opl : getAllOffline(name)) {
+			if (!ret.contains(opl)) {
+				ret.add(opl);
+			}
+		}
 		return ret;
 	}
 
@@ -47,14 +55,22 @@ public class PlayerGetter {
 	public static List<String> getAllNames(String name, Player pls) {
 		List<String> ret = new ArrayList<>();
 		ret.addAll(getAllOnlineNames(name, pls));
-		ret.addAll(getAllOflineNames(name));
+		for (String opl : getAllOfflineNames(name)) {
+			if (!ret.contains(opl)) {
+				ret.add(opl);
+			}
+		}
 		return ret;
 	}
 
 	public static List<OfflinePlayer> getAll(String name, Player pls) {
 		List<OfflinePlayer> ret = new ArrayList<>();
 		ret.addAll(getAllOnline(name, pls));
-		ret.addAll(getAllOffline(name));
+		for (OfflinePlayer opl : getAllOffline(name)) {
+			if (!ret.contains(opl)) {
+				ret.add(opl);
+			}
+		}
 		return ret;
 	}
 
@@ -131,7 +147,7 @@ public class PlayerGetter {
 		return ret.get(0);
 	}
 
-	public static List<String> getAllOflineNames(String name) {
+	public static List<String> getAllOfflineNames(String name) {
 		List<String> ret = new ArrayList<>();
 		for (OfflinePlayer pl : getAllOffline(name)) {
 			if (pl.getName().toLowerCase().contains(name.toLowerCase())) {
