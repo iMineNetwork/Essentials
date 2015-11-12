@@ -3,6 +3,7 @@ package nl.makertim.hubessentials.api;
 import org.bukkit.ChatColor;
 
 public class ColorFormatter {
+
 	private final static String[][] COLOR_CODES = new String[][] { { "&0", ChatColor.BLACK.toString() },
 			{ "&1", ChatColor.DARK_BLUE.toString() }, { "&2", ChatColor.DARK_GREEN.toString() },
 			{ "&3", ChatColor.DARK_AQUA.toString() }, { "&4", ChatColor.DARK_RED.toString() },

@@ -36,6 +36,29 @@ public class PlayerGetter {
 	}
 
 	@CheckForNull
+	public static OfflinePlayer get(String name, Player pls) {
+		OfflinePlayer ret = getOnline(name, pls);
+		if (ret == null) {
+			ret = getOflline(name);
+		}
+		return ret;
+	}
+
+	public static List<String> getAllNames(String name, Player pls) {
+		List<String> ret = new ArrayList<>();
+		ret.addAll(getAllOnlineNames(name, pls));
+		ret.addAll(getAllOflineNames(name));
+		return ret;
+	}
+
+	public static List<OfflinePlayer> getAll(String name, Player pls) {
+		List<OfflinePlayer> ret = new ArrayList<>();
+		ret.addAll(getAllOnline(name, pls));
+		ret.addAll(getAllOffline(name));
+		return ret;
+	}
+
+	@CheckForNull
 	public static Player getOnline(String name) {
 		List<Player> ret = getAllOnline(name);
 		if (ret.isEmpty()) {
@@ -47,7 +70,9 @@ public class PlayerGetter {
 	public static List<String> getAllOnlineNames(String name) {
 		List<String> ret = new ArrayList<>();
 		for (Player pl : getAllOnline(name)) {
-			ret.add(pl.getName());
+			if (pl.getName().toLowerCase().contains(name.toLowerCase())) {
+				ret.add(pl.getName());
+			}
 		}
 		return ret;
 	}
@@ -57,6 +82,40 @@ public class PlayerGetter {
 		for (Player pl : Bukkit.getOnlinePlayers()) {
 			if (pl.getName().toLowerCase().contains(name.toLowerCase())) {
 				ret.add(pl);
+			}
+		}
+		Collections.sort(ret, new PlayerSearchSorter(name));
+		return ret;
+	}
+
+	@CheckForNull
+	public static Player getOnline(String name, Player pls) {
+		List<Player> ret = getAllOnline(name, pls);
+		if (ret.isEmpty()) {
+			return null;
+		}
+		return ret.get(0);
+	}
+
+	public static List<String> getAllOnlineNames(String name, Player pls) {
+		List<String> ret = new ArrayList<>();
+		for (Player pl : getAllOnline(name)) {
+			if (pl.getName().toLowerCase().contains(name.toLowerCase())) {
+				if (pls.canSee(pl)) {
+					ret.add(pl.getName());
+				}
+			}
+		}
+		return ret;
+	}
+
+	public static List<Player> getAllOnline(String name, Player pls) {
+		List<Player> ret = new ArrayList<>();
+		for (Player pl : Bukkit.getOnlinePlayers()) {
+			if (pl.getName().toLowerCase().contains(name.toLowerCase())) {
+				if (pls.canSee(pl)) {
+					ret.add(pl);
+				}
 			}
 		}
 		Collections.sort(ret, new PlayerSearchSorter(name));
@@ -75,7 +134,9 @@ public class PlayerGetter {
 	public static List<String> getAllOflineNames(String name) {
 		List<String> ret = new ArrayList<>();
 		for (OfflinePlayer pl : getAllOffline(name)) {
-			ret.add(pl.getName());
+			if (pl.getName().toLowerCase().contains(name.toLowerCase())) {
+				ret.add(pl.getName());
+			}
 		}
 		return ret;
 	}
