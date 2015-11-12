@@ -675,7 +675,7 @@ public class CommandHandler {
 				|| (command.equalsIgnoreCase("kill") && args.length == 1) || (command.equalsIgnoreCase("reply"))
 				|| (command.equalsIgnoreCase("endersee") && args.length == 1) || (command.equalsIgnoreCase("msg"))
 				|| (command.equalsIgnoreCase("speed") && args.length > 1) || (command.equalsIgnoreCase("me"))) {
-			ret.addAll(PlayerGetter.getAllOnlineNames(args[args.length - 1]));
+			ret.addAll(PlayerGetter.getAllOnlineNames(args[args.length - 1], sender));
 		} else if (command.equalsIgnoreCase("update")) {
 		}
 		return ret;
