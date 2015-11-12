@@ -52,8 +52,7 @@ public class BukkitStarter extends JavaPlugin {
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
 		if (sender instanceof Player) {
-			List<String> list = CommandHandler.onTabComplete((Player) sender, command.getName(), args);
-			return list;
+			return CommandHandler.onTabComplete((Player) sender, command.getName(), args);
 		}
 		return super.onTabComplete(sender, command, alias, args);
 	}
