@@ -1011,9 +1011,9 @@ public class CommandHandler {
 						extra = new TextComponent(noUpdate ? ChatColor.RED + " No plugins are ready to update"
 								: ChatColor.GREEN + " " + BukkitStarter.UPDATE_DIR.listFiles().length
 										+ " plugins are ready to update!");
-						ComponentBuilder cb = new ComponentBuilder("");
+						ComponentBuilder cb = new ComponentBuilder("Plugins to update: \n");
 						for (Plugin pl : toUpdate) {
-							cb.append(ChatColor.GRAY + " " + pl.getName());
+							cb.append(ChatColor.GRAY + " " + pl.getName() + "\n");
 						}
 						extra.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, cb.create()));
 						message.addExtra(extra);
