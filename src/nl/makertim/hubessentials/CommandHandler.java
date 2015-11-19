@@ -1011,6 +1011,7 @@ public class CommandHandler {
 						extra = new TextComponent(noUpdate ? ChatColor.RED + "No plugins are ready to update"
 								: ChatColor.GREEN.toString() + BukkitStarter.UPDATE_DIR.listFiles().length
 										+ " plugins are ready to update!");
+						message.addExtra(extra);
 						extra = new TextComponent(
 								String.format("    %s%s[%sRELOAD SERVER%s%s]%s ", ChatColor.RESET, ChatColor.BOLD,
 										ChatColor.DARK_GREEN + (noUpdate ? ChatColor.STRIKETHROUGH.toString() : ""),
