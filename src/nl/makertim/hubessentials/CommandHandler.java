@@ -854,9 +854,7 @@ public class CommandHandler {
 		}
 
 		private void message(String msg) {
-			if (shouldSend()) {
-				sender.sendMessage("  " + ChatColor.GRAY + msg);
-			}
+			sender.sendMessage("  " + ChatColor.GRAY + msg);
 		}
 
 		@Override
@@ -1030,6 +1028,11 @@ public class CommandHandler {
 								new ComponentBuilder(ChatColor.RED + "WARNING, will shutdown server!\n"
 										+ ChatColor.RESET + "Click to reboot server").create()));
 						message.addExtra(extra);
+						if (sender instanceof Player) {
+							((Player) sender).spigot().sendMessage(message);
+						} else {
+							sender.sendMessage(message.toPlainText());
+						}
 					}
 				}
 			}
