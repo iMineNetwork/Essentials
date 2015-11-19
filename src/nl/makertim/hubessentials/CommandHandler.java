@@ -850,11 +850,11 @@ public class CommandHandler {
 		}
 
 		private boolean shouldSend() {
-			return (verbose & 0b10) == 2;
+			return (verbose & 0b10) == 0;
 		}
 
 		private void message(String msg) {
-			sender.sendMessage("  " + ChatColor.GRAY + msg);
+			sender.sendMessage(ChatColor.GRAY + msg);
 		}
 
 		@Override
@@ -1031,9 +1031,11 @@ public class CommandHandler {
 						if (sender instanceof Player) {
 							((Player) sender).spigot().sendMessage(message);
 						} else {
-							sender.sendMessage(message.toPlainText());
+							message(message.toPlainText());
 						}
 					}
+				}else if(!shouldSend()){
+					message("No updates found!");
 				}
 			}
 		}
