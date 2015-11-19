@@ -1008,12 +1008,19 @@ public class CommandHandler {
 					} else {
 						TextComponent extra, message = new TextComponent("");
 						boolean noUpdate = BukkitStarter.UPDATE_DIR.listFiles().length == 0;
-						extra = new TextComponent(noUpdate ? ChatColor.RED + "No plugins are ready to update"
-								: ChatColor.GREEN.toString() + BukkitStarter.UPDATE_DIR.listFiles().length
+						extra = new TextComponent(noUpdate ? ChatColor.RED + " No plugins are ready to update"
+								: ChatColor.GREEN + " " + BukkitStarter.UPDATE_DIR.listFiles().length
 										+ " plugins are ready to update!");
 						message.addExtra(extra);
+						if (sender instanceof Player) {
+							((Player) sender).spigot().sendMessage(message);
+						} else {
+							message(message.toPlainText());
+						}
+
+						message = new TextComponent("");
 						extra = new TextComponent(
-								String.format("    %s%s[%sRELOAD SERVER%s%s]%s ", ChatColor.RESET, ChatColor.BOLD,
+								String.format("  %s%s[%sRELOAD SERVER%s%s]%s ", ChatColor.RESET, ChatColor.BOLD,
 										ChatColor.DARK_GREEN + (noUpdate ? ChatColor.STRIKETHROUGH.toString() : ""),
 										ChatColor.RESET, ChatColor.BOLD, ChatColor.RESET));
 						extra.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/reload"));
@@ -1031,11 +1038,9 @@ public class CommandHandler {
 						message.addExtra(extra);
 						if (sender instanceof Player) {
 							((Player) sender).spigot().sendMessage(message);
-						} else {
-							message(message.toPlainText());
 						}
 					}
-				}else if(!shouldSend()){
+				} else if (!shouldSend()) {
 					message("No updates found!");
 				}
 			}
