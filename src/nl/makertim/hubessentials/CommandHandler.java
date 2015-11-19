@@ -627,7 +627,7 @@ public class CommandHandler {
 	}
 
 	private boolean me() {
-		if (sender.isOp() || sender.hasPermission("iMine.reply")) {
+		if (sender.isOp() || sender.hasPermission("iMine.me")) {
 			if (args.length > 0) {
 				String msg = "";
 				for (int i = 0; i < args.length; i++) {
