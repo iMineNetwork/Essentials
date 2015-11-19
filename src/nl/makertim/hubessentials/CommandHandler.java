@@ -1046,7 +1046,7 @@ public class CommandHandler {
 						}
 					}
 				} else if (!shouldSend()) {
-					message(ChatColor.GRAY + "No updates found!");
+					message(ChatColor.GRAY + " No updates found!");
 				}
 			}
 		}
