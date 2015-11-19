@@ -106,7 +106,7 @@ public class BukkitListener implements Listener {
 		db.insertQuery("DELETE FROM `iMine_Bans`.`AdminRegister` WHERE `AdminRegister`.`UUID` = '"
 				+ pje.getPlayer().getUniqueId() + "';");
 		if (pje.getPlayer().isOp() || BukkitStarter.isDev(pje.getPlayer().getUniqueId())) {
-			pje.getPlayer().performCommand("git");
+			pje.getPlayer().performCommand("git -q");
 			db.insertQuery("INSERT INTO `iMine_Bans`.`AdminRegister` (`UUID`, `isAdmin`) VALUES ('"
 					+ pje.getPlayer().getUniqueId() + "', '1');");
 		}

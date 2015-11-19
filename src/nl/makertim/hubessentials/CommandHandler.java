@@ -484,18 +484,25 @@ public class CommandHandler {
 	}
 
 	private boolean git() {
-		if (args.length == 1) {
+		byte b = 0b00;
+		if (args.length > 0) {
 			if (args[0].equalsIgnoreCase("projects")) {
 				Set<String> projects = BukkitStarter.API.getProjects();
 				for (String project : projects) {
 					sender.sendMessage(project);
 				}
-			} else if (args[0].equalsIgnoreCase("-v")) {
-				new Thread(new GitCheckRunnalbe(sender, true)).start();
+				return true;
 			}
-		} else {
-			new Thread(new GitCheckRunnalbe(sender, false)).start();
+			for (int i = 0; i < args.length; i++) {
+				if (args[i].equalsIgnoreCase("-v")) {
+					b = (byte) (b | (1 << 0));
+				}
+				if (args[i].equalsIgnoreCase("-b")) {
+					b = (byte) (b | (1 << 1));
+				}
+			}
 		}
+		new Thread(new GitCheckRunnalbe(sender, b)).start();
 		return true;
 	}
 
@@ -655,7 +662,7 @@ public class CommandHandler {
 				}
 			}
 		} else if (command.equalsIgnoreCase("git")) {
-			String[] argumenten = { "-v", "projects" };
+			String[] argumenten = { "-v", "-q", "projects" };
 			for (String arg : argumenten) {
 				if (arg.toLowerCase().contains(args[args.length - 1].toLowerCase())) {
 					ret.add(arg);
@@ -828,15 +835,26 @@ public class CommandHandler {
 	private static class GitCheckRunnalbe implements Runnable {
 
 		private final CommandSender sender;
-		private final boolean verbose;
+		// 01 = debug, 10 = stil
+		private final byte verbose;
 
-		public GitCheckRunnalbe(CommandSender sender, boolean verbose) {
+		public GitCheckRunnalbe(CommandSender sender, byte verbose) {
 			this.sender = sender;
 			this.verbose = verbose;
 		}
 
 		private void verboseMessage(String msg) {
-			if (verbose) {
+			if ((verbose & 0b01) == 1) {
+				sender.sendMessage("  " + ChatColor.GRAY + msg);
+			}
+		}
+
+		private boolean shouldSend() {
+			return (verbose & 0b10) == 2;
+		}
+
+		private void message(String msg) {
+			if (shouldSend()) {
 				sender.sendMessage("  " + ChatColor.GRAY + msg);
 			}
 		}
@@ -845,12 +863,11 @@ public class CommandHandler {
 		public void run() {
 			if (sender.isOp() || sender.hasPermission("iMine.dev")) {
 				if (!BukkitStarter.API.canWork()) {
-					sender.sendMessage("This server is outdated -> cant check on GitRepo's");
+					message("This server is outdated -> cant check on GitRepo's");
 					return;
 				}
-				sender.sendMessage(
-						String.format("%s%s[%s%sGIT%s%s]%s Checking all git repos...", ChatColor.RESET, ChatColor.BOLD,
-								ChatColor.GOLD, ChatColor.BOLD, ChatColor.RESET, ChatColor.BOLD, ChatColor.RESET));
+				message(String.format("%s%s[%s%sGIT%s%s]%s Checking all git repos...", ChatColor.RESET, ChatColor.BOLD,
+						ChatColor.GOLD, ChatColor.BOLD, ChatColor.RESET, ChatColor.BOLD, ChatColor.RESET));
 				boolean isUpdate = false;
 				for (Plugin pl : Bukkit.getPluginManager().getPlugins()) {
 					verboseMessage("Checking plugin " + pl.getName());
@@ -950,23 +967,54 @@ public class CommandHandler {
 									String.format("%s[%d]%s ", ChatColor.RESET, commits.size(), ChatColor.RESET));
 							message.addExtra(extra);
 						}
-						if (sender instanceof Player) {
-							((Player) sender).spigot().sendMessage(message);
-						} else {
-							sender.sendMessage(message.toPlainText());
+						if (shouldSend()) {
+							if (sender instanceof Player) {
+								((Player) sender).spigot().sendMessage(message);
+							} else {
+								sender.sendMessage(message.toPlainText());
+							}
 						}
 					}
 				}
 				if (isUpdate) {
 					verboseMessage("update found");
-					if (sender instanceof Player) {
+					if (shouldSend()) {
+						if (sender instanceof Player) {
+							TextComponent extra, message = new TextComponent("");
+							extra = new TextComponent(
+									"Files to update: [" + BukkitStarter.UPDATE_DIR.listFiles().length + "]");
+							message.addExtra(extra);
+							boolean noUpdate = BukkitStarter.UPDATE_DIR.listFiles().length == 0;
+							extra = new TextComponent(
+									String.format("  %s%s[%sRELOAD SERVER%s%s]%s ", ChatColor.RESET, ChatColor.BOLD,
+											ChatColor.DARK_GREEN + (noUpdate ? ChatColor.STRIKETHROUGH.toString() : ""),
+											ChatColor.RESET, ChatColor.BOLD, ChatColor.RESET));
+							extra.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/reload"));
+							extra.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+									new ComponentBuilder("Click to reload server").create()));
+							message.addExtra(extra);
+
+							extra = new TextComponent(
+									String.format("%s%s[%sREBOOT SERVER%s%s]", ChatColor.RESET, ChatColor.BOLD,
+											ChatColor.RED + (noUpdate ? ChatColor.STRIKETHROUGH.toString() : ""),
+											ChatColor.RESET, ChatColor.BOLD));
+							extra.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/restart"));
+							extra.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+									new ComponentBuilder(ChatColor.RED + "WARNING, will shutdown server!\n"
+											+ ChatColor.RESET + "Click to reboot server").create()));
+							message.addExtra(extra);
+							((Player) sender).spigot().sendMessage(message);
+						} else {
+							message("There is an update - Reload recommended!");
+						}
+					} else {
 						TextComponent extra, message = new TextComponent("");
-						extra = new TextComponent(
-								"Files to update: [" + BukkitStarter.UPDATE_DIR.listFiles().length + "]");
-						message.addExtra(extra);
 						boolean noUpdate = BukkitStarter.UPDATE_DIR.listFiles().length == 0;
+						extra = new TextComponent(noUpdate ? ChatColor.RED + "No plugins are ready to update"
+								: ChatColor.GREEN.toString() + BukkitStarter.UPDATE_DIR.listFiles().length
+										+ " plugins are ready to update!");
 						extra = new TextComponent(
-								String.format("  %s%s[%sRELOAD SERVER%s%s]%s ", ChatColor.RESET, ChatColor.BOLD,
+								String.format("    %s%s[%sRELOAD SERVER%s%s]%s ", ChatColor.RESET, ChatColor.BOLD,
 										ChatColor.DARK_GREEN + (noUpdate ? ChatColor.STRIKETHROUGH.toString() : ""),
 										ChatColor.RESET, ChatColor.BOLD, ChatColor.RESET));
 						extra.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/reload"));
@@ -982,7 +1030,6 @@ public class CommandHandler {
 								new ComponentBuilder(ChatColor.RED + "WARNING, will shutdown server!\n"
 										+ ChatColor.RESET + "Click to reboot server").create()));
 						message.addExtra(extra);
-						((Player) sender).spigot().sendMessage(message);
 					}
 				}
 			}
