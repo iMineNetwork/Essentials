@@ -859,14 +859,14 @@ public class CommandHandler {
 
 		@Override
 		public void run() {
-			if (sender.isOp() || sender.hasPermission("iMine.dev")) {
+			if (sender.isOp() || sender.hasPermission("iMine.git")) {
 				if (!BukkitStarter.API.canWork()) {
 					message("This server is outdated -> cant check on GitRepo's");
 					return;
 				}
 				message(String.format("%s%s[%s%sGIT%s%s]%s Checking all git repos...", ChatColor.RESET, ChatColor.BOLD,
 						ChatColor.GOLD, ChatColor.BOLD, ChatColor.RESET, ChatColor.BOLD, ChatColor.RESET));
-				boolean isUpdate = false;
+				List<Plugin> toUpdate = new ArrayList<>();
 				for (Plugin pl : Bukkit.getPluginManager().getPlugins()) {
 					verboseMessage("Checking plugin " + pl.getName());
 					String version = pl.getDescription().getVersion();
@@ -938,7 +938,7 @@ public class CommandHandler {
 						if (commits.isEmpty()) {
 							verboseMessage("no current commit found!");
 						} else {
-							isUpdate = true;
+							toUpdate.add(pl);
 							// newest verion:
 							extra = new TextComponent(String.format("%snewest version: ", ChatColor.RESET));
 							message.addExtra(extra);
@@ -974,7 +974,7 @@ public class CommandHandler {
 						}
 					}
 				}
-				if (isUpdate) {
+				if (toUpdate.size() > 0) {
 					verboseMessage("update found");
 					if (shouldSend()) {
 						if (sender instanceof Player) {
@@ -1011,6 +1011,11 @@ public class CommandHandler {
 						extra = new TextComponent(noUpdate ? ChatColor.RED + " No plugins are ready to update"
 								: ChatColor.GREEN + " " + BukkitStarter.UPDATE_DIR.listFiles().length
 										+ " plugins are ready to update!");
+						ComponentBuilder cb = new ComponentBuilder("");
+						for (Plugin pl : toUpdate) {
+							cb.append(ChatColor.GRAY + " " + pl.getName());
+						}
+						extra.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, cb.create()));
 						message.addExtra(extra);
 						if (sender instanceof Player) {
 							((Player) sender).spigot().sendMessage(message);
