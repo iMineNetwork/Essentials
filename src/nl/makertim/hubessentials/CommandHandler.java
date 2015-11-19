@@ -854,7 +854,7 @@ public class CommandHandler {
 		}
 
 		private void message(String msg) {
-			sender.sendMessage(ChatColor.GRAY + msg);
+			sender.sendMessage(msg);
 		}
 
 		@Override
@@ -1041,7 +1041,7 @@ public class CommandHandler {
 						}
 					}
 				} else if (!shouldSend()) {
-					message("No updates found!");
+					message(ChatColor.GRAY + "No updates found!");
 				}
 			}
 		}
