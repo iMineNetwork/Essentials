@@ -497,7 +497,7 @@ public class CommandHandler {
 				if (args[i].equalsIgnoreCase("-v")) {
 					b = (byte) (b | (1 << 0));
 				}
-				if (args[i].equalsIgnoreCase("-b")) {
+				if (args[i].equalsIgnoreCase("-q")) {
 					b = (byte) (b | (1 << 1));
 				}
 			}
