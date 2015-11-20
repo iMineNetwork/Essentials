@@ -139,7 +139,16 @@ public class CommandHandler {
 		if (args.length == 0) {
 			MktUtils.sendPlayerToServer((Player) sender, "hub");
 		} else if (sender.isOp() || sender.hasPermission("iMine.hub")) {
-			MktUtils.sendPlayerToServer((Player) sender, args[0]);
+			if (args.length == 1) {
+				MktUtils.sendPlayerToServer((Player) sender, args[0]);
+			} else if (args.length == 2) {
+				Player pl = PlayerGetter.getOnline(args[1]);
+				if (pl != null) {
+					MktUtils.sendPlayerToServer(pl, args[0]);
+				} else {
+					sender.sendMessage("That player... is not online");
+				}
+			}
 		} else {
 			sender.sendMessage(ChatColor.RED + "You have no acces to this command");
 		}
@@ -449,11 +458,11 @@ public class CommandHandler {
 		if (sender.isOp() || sender.hasPermission("iMine.invsee")) {
 			if (args.length == 1) {
 				Player target = PlayerGetter.getOnline(args[0]);
-				if (sender instanceof Player) {
+				if (sender instanceof Player && target != null) {
 					Player pl = (Player) sender;
 					pl.openInventory(target.getInventory());
 				} else {
-					sender.sendMessage(ChatColor.RED + "Need a player and a message.");
+					sender.sendMessage(ChatColor.RED + "No player to open inventory.");
 				}
 			} else {
 				sender.sendMessage(ChatColor.RED + "Need a player.");
@@ -468,7 +477,7 @@ public class CommandHandler {
 		if (sender.isOp() || sender.hasPermission("iMine.endersee")) {
 			if (args.length == 1) {
 				Player target = PlayerGetter.getOnline(args[0]);
-				if (sender instanceof Player) {
+				if (sender instanceof Player && target != null) {
 					Player pl = (Player) sender;
 					pl.openInventory(target.getEnderChest());
 				} else {
@@ -656,10 +665,14 @@ public class CommandHandler {
 		List<String> ret = new ArrayList<>();
 		if (command.equalsIgnoreCase("hub")) {
 			String[] servers = { "creative", "uhc", "hub", "survival", "outlaws" };
-			for (String server : servers) {
-				if (server.toLowerCase().contains(args[args.length - 1].toLowerCase())) {
-					ret.add(server);
+			if (args.length == 1) {
+				for (String server : servers) {
+					if (server.toLowerCase().contains(args[args.length - 1].toLowerCase())) {
+						ret.add(server);
+					}
 				}
+			} else if (args.length == 2) {
+				PlayerGetter.getAllOnlineNames(args[args.length - 1], sender);
 			}
 		} else if (command.equalsIgnoreCase("git")) {
 			String[] argumenten = { "-v", "-q", "projects" };
