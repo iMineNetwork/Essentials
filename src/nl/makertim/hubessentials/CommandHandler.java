@@ -672,7 +672,7 @@ public class CommandHandler {
 					}
 				}
 			} else if (args.length == 2) {
-				PlayerGetter.getAllOnlineNames(args[args.length - 1], sender);
+				ret.addAll(PlayerGetter.getAllOnlineNames(args[args.length - 1], sender));
 			}
 		} else if (command.equalsIgnoreCase("git")) {
 			String[] argumenten = { "-v", "-q", "projects" };
