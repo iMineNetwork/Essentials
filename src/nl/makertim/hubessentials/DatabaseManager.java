@@ -43,7 +43,7 @@ public class DatabaseManager {
 
 	}
 
-	public static String prepaireString(Object raw) {
+	public static String prepareString(Object raw) {
 		return raw.toString().replaceAll(
 				"\\{ | \\} | \\\\ | \\, | \\& | \\? | \\( | \\) | \\[ | \\] | \\- | \\; | \\~ | \\| | \\ $ |"
 						+ " \\! | \\< | \\> | \\* | \\% | \\_ | \\' | \\\"",
