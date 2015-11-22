@@ -1,5 +1,7 @@
 package nl.makertim.hubessentials;
 
+import java.util.Calendar;
+
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 
@@ -29,8 +31,16 @@ public class Profiler implements Listener, Runnable {
 	@Override
 	public void run() {
 		updateMemoryStats();
+		Calendar c = Calendar.getInstance();
+		int year = c.get(Calendar.YEAR);
+		int month = c.get(Calendar.MONTH);
+		int day = c.get(Calendar.DAY_OF_MONTH);
+		int hour = c.get(Calendar.HOUR_OF_DAY);
+		int minute = c.get(Calendar.MINUTE);
+		minute = minute - (minute % 5);
 		db.insertQuery(String.format(
-				"INSERT INTO ServerLog (TimeChecked, ServerName, PlayerCount, TPS, RamUsage) VALUES (NOW(), '%s', '%s', '%s', '%s');",
+				"INSERT INTO ServerLog (TimeChecked, ServerName, PlayerCount, TPS, RamUsage) VALUES ('%s', '%s', '%s', '%s', '%s');",
+				DatabaseManager.prepaireString(String.format("%d-%d-%d %d:%d:00", year, month, day, hour, minute)),
 				DatabaseManager.prepaireString(serverName),
 				DatabaseManager.prepaireString(Bukkit.getOnlinePlayers().size()),
 				DatabaseManager.prepaireString(Math.round(Lagg.getTPS())),
