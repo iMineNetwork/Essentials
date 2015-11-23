@@ -15,7 +15,7 @@ public class Profiler implements Listener, Runnable {
 
 	public Profiler() {
 		Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(BukkitStarter.plugin, new Lagg(), 100L, 1L);
-		Bukkit.getScheduler().scheduleSyncRepeatingTask(BukkitStarter.plugin, this, 1000L, DELAY);
+		Bukkit.getScheduler().scheduleSyncRepeatingTask(BukkitStarter.plugin, this, 200L, DELAY);
 		db = BukkitStarter.plugin.getDB();
 		serverName = BukkitStarter.plugin.getConfig().getString("ServerName", "unknown");
 	}
