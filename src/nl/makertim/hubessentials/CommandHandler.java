@@ -50,7 +50,7 @@ public class CommandHandler {
 	}
 
 	public boolean onCommand() {
-		if (command.equalsIgnoreCase("hub") && sender instanceof Player) {
+		if (command.equalsIgnoreCase("hub")) {
 			return hub();
 		} else if (command.equalsIgnoreCase("dev")) {
 			return dev();
@@ -137,10 +137,18 @@ public class CommandHandler {
 
 	private boolean hub() {
 		if (args.length == 0) {
-			MktUtils.sendPlayerToServer((Player) sender, "hub");
+			if (sender instanceof Player) {
+				MktUtils.sendPlayerToServer((Player) sender, "hub");
+			} else {
+				sender.sendMessage("Player only!");
+			}
 		} else if (sender.isOp() || sender.hasPermission("iMine.hub")) {
 			if (args.length == 1) {
-				MktUtils.sendPlayerToServer((Player) sender, args[0]);
+				if (sender instanceof Player) {
+					MktUtils.sendPlayerToServer((Player) sender, args[0]);
+				} else {
+					sender.sendMessage("Player only!");
+				}
 			} else if (args.length == 2) {
 				Player pl = PlayerGetter.getOnline(args[1]);
 				if (pl != null) {
