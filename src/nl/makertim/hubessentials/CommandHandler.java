@@ -33,6 +33,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 import nl.makertim.hubessentials.GitLabAPI.Commit;
 import nl.makertim.hubessentials.GitLabAPI.GitProject;
 import nl.makertim.hubessentials.api.ColorFormatter;
+import nl.makertim.hubessentials.api.DatabaseManager;
 import nl.makertim.hubessentials.api.PlayerGetter;
 
 public class CommandHandler {

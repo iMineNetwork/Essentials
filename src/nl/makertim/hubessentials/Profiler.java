@@ -5,6 +5,8 @@ import java.util.Calendar;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 
+import nl.makertim.hubessentials.api.DatabaseManager;
+
 public class Profiler implements Listener, Runnable {
 
 	private static final Long DELAY = 20L * 60L * 5L;

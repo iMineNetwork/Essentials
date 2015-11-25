@@ -10,6 +10,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import nl.makertim.hubessentials.api.DatabaseManager;
+
 public class BukkitStarter extends JavaPlugin {
 
 	public static final GitLabAPI API = new GitLabAPI();

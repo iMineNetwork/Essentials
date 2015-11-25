@@ -1,4 +1,4 @@
-package nl.makertim.hubessentials;
+package nl.makertim.hubessentials.api;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
