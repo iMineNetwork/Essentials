@@ -24,7 +24,7 @@ public class DatabaseManager {
 			connection = DriverManager.getConnection("jdbc:mysql://localhost:" + PORT + "/" + database, username,
 					password);
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			System.out.println(ex.getMessage());
 			return false;
 		}
 		return true;
@@ -58,7 +58,7 @@ public class DatabaseManager {
 			Statement statement = connection.createStatement();
 			statement.executeQuery(query);
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			System.out.println(ex.getMessage());
 			return false;
 		}
 		return true;
@@ -71,7 +71,7 @@ public class DatabaseManager {
 			Statement statement = connection.createStatement();
 			result = statement.executeQuery(query);
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			System.out.println(ex.getMessage());
 		}
 		return result;
 	}
@@ -84,7 +84,7 @@ public class DatabaseManager {
 			statement.executeUpdate(query, Statement.RETURN_GENERATED_KEYS);
 			result = statement.getGeneratedKeys();
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			System.out.println(ex.getMessage());
 		}
 		return result;
 	}
@@ -97,7 +97,7 @@ public class DatabaseManager {
 			statement.executeUpdate(query, Statement.RETURN_GENERATED_KEYS);
 			result = statement.getGeneratedKeys();
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			System.out.println(ex.getMessage());
 		}
 		return result;
 	}
@@ -108,7 +108,7 @@ public class DatabaseManager {
 			Statement statement = connection.createStatement();
 			statement.executeUpdate(query, Statement.RETURN_GENERATED_KEYS);
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			System.out.println(ex.getMessage());
 			return false;
 		}
 		return true;
