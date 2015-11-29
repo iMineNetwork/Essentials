@@ -1003,9 +1003,14 @@ public class CommandHandler {
 				do {
 					allDone = true;
 					for (Thread t : threads) {
-						if (!t.isAlive()) {
+						if (t.isAlive()) {
 							allDone = false;
 						}
+					}
+					try {
+						Thread.sleep(100);
+					} catch (InterruptedException ex) {
+						ex.printStackTrace();
 					}
 				} while (!allDone);
 				if (toUpdate.size() > 0) {
