@@ -859,10 +859,12 @@ public class CommandHandler {
 		private final CommandSender sender;
 		// 01 = debug, 10 = stil
 		private final byte verbose;
+		private final List<Plugin> toUpdate;
 
 		public GitCheckRunnalbe(CommandSender sender, byte verbose) {
 			this.sender = sender;
 			this.verbose = verbose;
+			this.toUpdate = new ArrayList<>();
 		}
 
 		private void verboseMessage(String msg) {
@@ -879,6 +881,105 @@ public class CommandHandler {
 			sender.sendMessage(msg);
 		}
 
+		private void checkPlugin(Plugin plugin) {
+			verboseMessage("Checking plugin " + plugin.getName());
+			String version = plugin.getDescription().getVersion();
+			Pattern p = Pattern.compile("\\b([0-9a-f]{5,40})\\b");
+			Matcher match = p.matcher(version);
+			if (match.find()) {
+				verboseMessage("plugin " + plugin.getName() + " is a GIT project!");
+				GitProject git = BukkitStarter.API.getProjectData(plugin.getName());
+				if (git == null) {
+					verboseMessage("but i couldnt find it our system");
+					return;
+				}
+				/**
+				 * Lief dagboek,
+				 * 
+				 * Een mooie message maakt lelijke code. Mocht je hier onder nog
+				 * iets nuttigs mee willen doen, im sorry
+				 * 
+				 * groetjes Tim
+				 */
+				// newestversion: %gitshort% [RELOAD SERVER]
+				TextComponent extra, message = new TextComponent("");
+				// [GIT]
+				extra = new TextComponent(String.format("%s%s[%s%sGIT%s%s]%s ", ChatColor.RESET, ChatColor.BOLD,
+						ChatColor.GOLD, ChatColor.BOLD, ChatColor.RESET, ChatColor.BOLD, ChatColor.RESET));
+				message.addExtra(extra);
+				// %plugin naam%
+				extra = new TextComponent(String.format("%s%s%s ", ChatColor.GREEN, plugin.getName(), ChatColor.RESET));
+				extra.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, git.getWebUrl()));
+				extra.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+						new ComponentBuilder(git.getDescription())
+								.append("\n\nCreated at: " + GitLabAPI.NL_DATE_FORMAT.format(git.getCreateDate()))
+								.create()));
+				message.addExtra(extra);
+				// current verion:
+				extra = new TextComponent(String.format("%scurrent version: ", ChatColor.RESET));
+				message.addExtra(extra);
+				// %git short this version%
+				Commit current = null;
+				List<Commit> commits = new ArrayList<>();
+				for (Commit commit : git.getCommits()) {
+					if (commit.getShortId().toLowerCase().contains(match.group(0).toLowerCase())) {
+						current = commit;
+						verboseMessage("current commit found: " + commit.getMessage());
+						break;
+					}
+					commits.add(commit);
+				}
+				extra = new TextComponent(
+						String.format("%s%s%s ", ChatColor.GOLD, (current == null ? ChatColor.RED + "not found"
+								: current.getTitle().replaceAll(" ", " " + ChatColor.GOLD)), ChatColor.RESET));
+				extra.setColor(net.md_5.bungee.api.ChatColor.GOLD);
+				extra.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, git.getWebUrl() + "/commit/"
+						+ (current == null ? "master" : current.getLongId()) + "?view=parallel"));
+				extra.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+						new ComponentBuilder((current == null ? ChatColor.RED + match.group(0) + " - commit not found!"
+								: "version id: " + current.getShortId())).append("\n\nPushed at: "
+										+ (current == null ? "~" : GitLabAPI.NL_DATE_FORMAT.format(current.getWhen())))
+										.create()));
+				message.addExtra(extra);
+				if (commits.isEmpty()) {
+					verboseMessage("no current commit found!");
+				} else {
+					toUpdate.add(plugin);
+					// newest verion:
+					extra = new TextComponent(String.format("%snewest version: ", ChatColor.RESET));
+					message.addExtra(extra);
+					// %git short new version%
+					extra = new TextComponent(String.format("%s%s%s ", ChatColor.GOLD,
+							git.getCommits()[0].getTitle().replaceAll(" ", " " + ChatColor.GOLD), ChatColor.RESET));
+					extra.setColor(net.md_5.bungee.api.ChatColor.GOLD);
+					extra.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, git.getWebUrl() + "/compare/"
+							+ (current == null ? "master" : current.getShortId()) + "...master?view=parallel"));
+					ComponentBuilder hoverBuilder = new ComponentBuilder(
+							"version id: " + git.getCommits()[0].getShortId());
+					hoverBuilder.append("\nMissing Versions:");
+					for (Commit commit : commits) {
+						hoverBuilder.append("\n" + ChatColor.GOLD + " " + ChatColor.GRAY + commit.getTitle() + "  ["
+								+ GitLabAPI.NL_DATE_FORMAT.format(commit.getWhen()) + "]");
+					}
+					hoverBuilder
+							.append("\n\nPushed at: " + GitLabAPI.NL_DATE_FORMAT.format(git.getCommits()[0].getWhen()));
+					extra.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverBuilder.create()));
+					message.addExtra(extra);
+					// versions behind [#]:
+					extra = new TextComponent(
+							String.format("%s[%d]%s ", ChatColor.RESET, commits.size(), ChatColor.RESET));
+					message.addExtra(extra);
+				}
+				if (shouldSend()) {
+					if (sender instanceof Player) {
+						((Player) sender).spigot().sendMessage(message);
+					} else {
+						sender.sendMessage(message.toPlainText());
+					}
+				}
+			}
+		}
+
 		@Override
 		public void run() {
 			if (sender.isOp() || sender.hasPermission("iMine.git")) {
@@ -888,114 +989,25 @@ public class CommandHandler {
 				}
 				message(String.format("%s%s[%s%sGIT%s%s]%s Checking all git repos...", ChatColor.RESET, ChatColor.BOLD,
 						ChatColor.GOLD, ChatColor.BOLD, ChatColor.RESET, ChatColor.BOLD, ChatColor.RESET));
-				List<Plugin> toUpdate = new ArrayList<>();
-				for (Plugin pl : Bukkit.getPluginManager().getPlugins()) {
-					verboseMessage("Checking plugin " + pl.getName());
-					String version = pl.getDescription().getVersion();
-					Pattern p = Pattern.compile("\\b([0-9a-f]{5,40})\\b");
-					Matcher match = p.matcher(version);
-					if (match.find()) {
-						verboseMessage("plugin " + pl.getName() + " is a GIT project!");
-						GitProject git = BukkitStarter.API.getProjectData(pl.getName());
-						if (git == null) {
-							verboseMessage("but i couldnt find it our system");
-							continue;
+				Thread[] threads = new Thread[Bukkit.getPluginManager().getPlugins().length];
+				int i = 0;
+				for (final Plugin plugin : Bukkit.getPluginManager().getPlugins()) {
+					threads[i] = new Thread(new Runnable() {
+						public void run() {
+							checkPlugin(plugin);
 						}
-						/**
-						 * Lief dagboek,
-						 * 
-						 * Een mooie message maakt lelijke code. Mocht je hier
-						 * onder nog iets nuttigs mee willen doen, im sorry
-						 * 
-						 * groetjes Tim
-						 */
-						// newestversion: %gitshort% [RELOAD SERVER]
-						TextComponent extra, message = new TextComponent("");
-						// [GIT]
-						extra = new TextComponent(String.format("%s%s[%s%sGIT%s%s]%s ", ChatColor.RESET, ChatColor.BOLD,
-								ChatColor.GOLD, ChatColor.BOLD, ChatColor.RESET, ChatColor.BOLD, ChatColor.RESET));
-						message.addExtra(extra);
-						// %plugin naam%
-						extra = new TextComponent(
-								String.format("%s%s%s ", ChatColor.GREEN, pl.getName(), ChatColor.RESET));
-						extra.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, git.getWebUrl()));
-						extra.setHoverEvent(
-								new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-										new ComponentBuilder(git.getDescription())
-												.append("\n\nCreated at: "
-														+ GitLabAPI.NL_DATE_FORMAT.format(git.getCreateDate()))
-												.create()));
-						message.addExtra(extra);
-						// current verion:
-						extra = new TextComponent(String.format("%scurrent version: ", ChatColor.RESET));
-						message.addExtra(extra);
-						// %git short this version%
-						Commit current = null;
-						List<Commit> commits = new ArrayList<>();
-						for (Commit commit : git.getCommits()) {
-							if (commit.getShortId().toLowerCase().contains(match.group(0).toLowerCase())) {
-								current = commit;
-								verboseMessage("current commit found: " + commit.getMessage());
-								break;
-							}
-							commits.add(commit);
-						}
-						extra = new TextComponent(
-								String.format("%s%s%s ", ChatColor.GOLD,
-										(current == null ? ChatColor.RED + "not found"
-												: current.getTitle().replaceAll(" ", " " + ChatColor.GOLD)),
-										ChatColor.RESET));
-						extra.setColor(net.md_5.bungee.api.ChatColor.GOLD);
-						extra.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, git.getWebUrl() + "/commit/"
-								+ (current == null ? "master" : current.getLongId()) + "?view=parallel"));
-						extra.setHoverEvent(
-								new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-										new ComponentBuilder((current == null
-												? ChatColor.RED + match.group(0) + " - commit not found!"
-												: "version id: " + current.getShortId()))
-														.append("\n\nPushed at: " + (current == null ? "~"
-																: GitLabAPI.NL_DATE_FORMAT.format(current.getWhen())))
-														.create()));
-						message.addExtra(extra);
-						if (commits.isEmpty()) {
-							verboseMessage("no current commit found!");
-						} else {
-							toUpdate.add(pl);
-							// newest verion:
-							extra = new TextComponent(String.format("%snewest version: ", ChatColor.RESET));
-							message.addExtra(extra);
-							// %git short new version%
-							extra = new TextComponent(String.format("%s%s%s ", ChatColor.GOLD,
-									git.getCommits()[0].getTitle().replaceAll(" ", " " + ChatColor.GOLD),
-									ChatColor.RESET));
-							extra.setColor(net.md_5.bungee.api.ChatColor.GOLD);
-							extra.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, git.getWebUrl() + "/compare/"
-									+ (current == null ? "master" : current.getShortId()) + "...master?view=parallel"));
-							ComponentBuilder hoverBuilder = new ComponentBuilder(
-									"version id: " + git.getCommits()[0].getShortId());
-							hoverBuilder.append("\nMissing Versions:");
-							for (Commit commit : commits) {
-								hoverBuilder.append("\n" + ChatColor.GOLD + " " + ChatColor.GRAY + commit.getTitle()
-										+ "  [" + GitLabAPI.NL_DATE_FORMAT.format(commit.getWhen()) + "]");
-							}
-							hoverBuilder.append(
-									"\n\nPushed at: " + GitLabAPI.NL_DATE_FORMAT.format(git.getCommits()[0].getWhen()));
-							extra.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverBuilder.create()));
-							message.addExtra(extra);
-							// versions behind [#]:
-							extra = new TextComponent(
-									String.format("%s[%d]%s ", ChatColor.RESET, commits.size(), ChatColor.RESET));
-							message.addExtra(extra);
-						}
-						if (shouldSend()) {
-							if (sender instanceof Player) {
-								((Player) sender).spigot().sendMessage(message);
-							} else {
-								sender.sendMessage(message.toPlainText());
-							}
+					});
+					threads[i++].start();
+				}
+				boolean allDone = true;
+				do {
+					allDone = true;
+					for (Thread t : threads) {
+						if (!t.isAlive()) {
+							allDone = false;
 						}
 					}
-				}
+				} while (!allDone);
 				if (toUpdate.size() > 0) {
 					verboseMessage("update found");
 					if (shouldSend()) {
