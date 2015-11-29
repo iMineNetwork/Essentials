@@ -673,7 +673,7 @@ public class CommandHandler {
 	public static List<String> onTabComplete(Player sender, String command, String[] args) {
 		List<String> ret = new ArrayList<>();
 		if (command.equalsIgnoreCase("hub")) {
-			String[] servers = { "creative", "uhc", "hub", "survival", "outlaws" };
+			String[] servers = { "creative", "uhc", "hub", "survival", "outlaws", "testserver", "outlawsB" };
 			if (args.length == 1) {
 				for (String server : servers) {
 					if (server.toLowerCase().contains(args[args.length - 1].toLowerCase())) {
