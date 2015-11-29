@@ -520,7 +520,7 @@ public class CommandHandler {
 				}
 			}
 		}
-		new Thread(new GitCheckRunnalbe(sender, b)).start();
+		Bukkit.getScheduler().runTaskAsynchronously(BukkitStarter.plugin, new GitCheckRunnalbe(sender, b));
 		return true;
 	}
 
