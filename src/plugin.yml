@@ -16,6 +16,10 @@ commands:
     description: Report to all admins a issue
     usage: /report <issue>
     aliases: [re, rep, repo, abuse, meld]
+  lagdebug:
+    description: Lag debug
+    usage: /lagdebug
+    aliases: [mobcount]
   admin:
     description: Admin Chat
     usage: /Admin <chat>

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -15,7 +16,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.InvalidDescriptionException;
 import org.bukkit.plugin.InvalidPluginException;
@@ -57,6 +60,8 @@ public class CommandHandler {
 			return dev();
 		} else if (command.equalsIgnoreCase("tp")) {
 			return tp();
+		} else if (command.equalsIgnoreCase("lagdebug")) {
+			return lagdebug();
 		} else if (command.equalsIgnoreCase("gm")) {
 			return gm();
 		} else if (command.startsWith("gm") && command.length() == 3) {
@@ -179,6 +184,27 @@ public class CommandHandler {
 				}
 			} else {
 				sender.sendMessage("Server now public");
+			}
+		}
+		return true;
+	}
+
+	private boolean lagdebug() {
+		if (sender.isOp() || sender.hasPermission("iMine.lagdebug")) {
+			for (World w : Bukkit.getWorlds()) {
+				sender.sendMessage(ChatColor.GOLD + "Mobs in world " + w.getName() + " " + ChatColor.BOLD
+						+ w.getEntities().size());
+				Map<Class<? extends Entity>, Integer> countMap = new HashMap<>();
+				for (Entity e : w.getEntities()) {
+					if (!countMap.containsKey(e.getClass())) {
+						countMap.put(e.getClass(), 0);
+					}
+					countMap.put(e.getClass(), countMap.get(e.getClass()));
+				}
+				for (Entry<Class<? extends Entity>, Integer> entityTypeCount : countMap.entrySet()) {
+					sender.sendMessage(ChatColor.GREEN + "  Type " + entityTypeCount.getKey().getName().toLowerCase()
+							+ ": " + entityTypeCount.getValue());
+				}
 			}
 		}
 		return true;
