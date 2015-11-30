@@ -232,7 +232,8 @@ public class CommandHandler {
 					}
 					sender.sendMessage(ChatColor.GOLD + "All entitys by player");
 					for (String plName : MapCountSorter.getOrder(countMap, Sort.DESC)) {
-						sender.sendMessage(ChatColor.AQUA + "  " + plName + ": " + countMap.get(plName).size());
+						sender.sendMessage(
+								ChatColor.AQUA + "  " + plName + ": " + ChatColor.BOLD + countMap.get(plName).size());
 					}
 				} else {
 					Map<Class<? extends Entity>, List<Entity>> countMap = new HashMap<>();
