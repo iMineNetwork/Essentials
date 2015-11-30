@@ -202,7 +202,8 @@ public class CommandHandler {
 					countMap.put(e.getClass(), countMap.get(e.getClass()) + 1);
 				}
 				for (Entry<Class<? extends Entity>, Integer> entityTypeCount : countMap.entrySet()) {
-					sender.sendMessage(ChatColor.GREEN + "  Type " + entityTypeCount.getKey().getSimpleName() + ": "
+					sender.sendMessage(ChatColor.GREEN + "  Type "
+							+ entityTypeCount.getKey().getSimpleName().replaceAll("Craft", "") + ": "
 							+ entityTypeCount.getValue());
 				}
 			}
