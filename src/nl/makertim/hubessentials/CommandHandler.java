@@ -211,24 +211,56 @@ public class CommandHandler {
 			} else {
 				if (args[0].toLowerCase().startsWith("player")) {
 					Map<String, List<Class<? extends Entity>>> countMap = new HashMap<>();
-					for (Entity e : Bukkit.getWorlds().get(0).getEntities()) {
-						double distance = 999;
-						Player distancePlayer = null;
-						for (Player pl : Bukkit.getOnlinePlayers()) {
-							if (e.getLocation().getWorld().equals(pl.getLocation().getWorld())) {
-								double plDistance = e.getLocation().distance(pl.getLocation());
-								if (e.getLocation().distance(pl.getLocation()) < distance) {
-									distance = plDistance;
-									distancePlayer = pl;
+					for (World w : Bukkit.getWorlds()) {
+						for (Entity e : w.getEntities()) {
+							double distance = Math.pow(10D, 4D);
+							Player distancePlayer = null;
+							for (Player pl : Bukkit.getOnlinePlayers()) {
+								if (e.getLocation().getWorld().equals(pl.getLocation().getWorld())) {
+									double plDistance = e.getLocation().distance(pl.getLocation());
+									if (e.getLocation().distance(pl.getLocation()) < distance) {
+										distance = plDistance;
+										distancePlayer = pl;
+									}
 								}
 							}
+							String name = (distancePlayer != null ? distancePlayer.getName() : "Spawn Chunks");
+							if (!countMap.containsKey(name)) {
+								countMap.put(name, new ArrayList<Class<? extends Entity>>());
+							}
+							countMap.get(name).add(e.getClass());
 						}
-						String name = (distancePlayer != null ? distancePlayer.getName() : "Spawn Chunks");
-						if (!countMap.containsKey(name)) {
-							countMap.put(name, new ArrayList<Class<? extends Entity>>());
-						}
-						countMap.get(name).add(e.getClass());
 					}
+					sender.sendMessage(ChatColor.GOLD + "All entitys by player");
+					for (String plName : MapCountSorter.getOrder(countMap, Sort.DESC)) {
+						sender.sendMessage(ChatColor.AQUA + "  " + plName + ": " + countMap.get(plName).size());
+					}
+				} else {
+					Map<String, List<Class<? extends Entity>>> countMap = new HashMap<>();
+					List<Player> argsPlayers = PlayerGetter.getAllOnline(args[0]);
+					for (World w : Bukkit.getWorlds()) {
+						for (Entity e : w.getEntities()) {
+							double distance = Math.pow(10D, 4D);
+							Player distancePlayer = null;
+							for (Player plw : Bukkit.getOnlinePlayers()) {
+								if (e.getLocation().getWorld().equals(plw.getLocation().getWorld())) {
+									double plDistance = e.getLocation().distance(plw.getLocation());
+									if (e.getLocation().distance(plw.getLocation()) < distance) {
+										distance = plDistance;
+										distancePlayer = plw;
+									}
+								}
+							}
+							if (argsPlayers.contains(distancePlayer)) {
+								String name = (distancePlayer != null ? distancePlayer.getName() : "Spawn Chunks");
+								if (!countMap.containsKey(name)) {
+									countMap.put(name, new ArrayList<Class<? extends Entity>>());
+								}
+								countMap.get(name).add(e.getClass());
+							}
+						}
+					}
+					sender.sendMessage(ChatColor.GOLD + "All entitys by player " + args[0]);
 					for (String plName : MapCountSorter.getOrder(countMap, Sort.DESC)) {
 						sender.sendMessage(ChatColor.AQUA + "  " + plName + ": " + countMap.get(plName).size());
 					}
@@ -762,6 +794,9 @@ public class CommandHandler {
 				|| (command.equalsIgnoreCase("speed") && args.length > 1) || (command.equalsIgnoreCase("me"))) {
 			ret.addAll(PlayerGetter.getAllOnlineNames(args[args.length - 1], sender));
 		} else if (command.equalsIgnoreCase("update")) {
+		} else if (command.equalsIgnoreCase("lagdebug")) {
+			ret.add("players");
+			ret.addAll(PlayerGetter.getAllOnlineNames(args[args.length - 1], sender));
 		}
 		return ret;
 	}

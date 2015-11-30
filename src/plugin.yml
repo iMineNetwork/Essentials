@@ -19,7 +19,7 @@ commands:
   lagdebug:
     description: Lag debug
     usage: /lagdebug
-    aliases: [mobcount]
+    aliases: [mobcount, countmob]
   admin:
     description: Admin Chat
     usage: /Admin <chat>
