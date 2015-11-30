@@ -13,18 +13,17 @@ public class MapCountSorter<E, U> implements Comparator<E> {
 	}
 
 	private final Map<E, List<U>> map;
-	private final List<E> order;
 	private final Sort sort;
 
 	private MapCountSorter(Map<E, List<U>> map, Sort direction) {
 		this.map = map;
 		this.sort = direction;
-		this.order = new ArrayList<E>(map.keySet());
-		Collections.sort(order, this);
 	}
 
 	public static <T, U> List<T> getOrder(Map<T, List<U>> map, Sort sort) {
-		return new MapCountSorter<T, U>(map, sort).order;
+		List<T> order = new ArrayList<T>(map.keySet());
+		Collections.sort(order, new MapCountSorter<T, U>(map, sort));
+		return order;
 	}
 
 	@Override
