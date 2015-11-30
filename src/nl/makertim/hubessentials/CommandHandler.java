@@ -983,36 +983,16 @@ public class CommandHandler {
 		@Override
 		public void run() {
 			if (sender.isOp() || sender.hasPermission("iMine.git")) {
+				BukkitStarter.API.refreshData();
 				if (!BukkitStarter.API.canWork()) {
 					message("This server is outdated -> cant check on GitRepo's");
 					return;
 				}
 				message(String.format("%s%s[%s%sGIT%s%s]%s Checking all git repos...", ChatColor.RESET, ChatColor.BOLD,
 						ChatColor.GOLD, ChatColor.BOLD, ChatColor.RESET, ChatColor.BOLD, ChatColor.RESET));
-				Thread[] threads = new Thread[Bukkit.getPluginManager().getPlugins().length];
-				int i = 0;
 				for (final Plugin plugin : Bukkit.getPluginManager().getPlugins()) {
-					threads[i] = new Thread(new Runnable() {
-						public void run() {
-							checkPlugin(plugin);
-						}
-					});
-					threads[i++].start();
+					checkPlugin(plugin);
 				}
-				boolean allDone = true;
-				do {
-					allDone = true;
-					for (Thread t : threads) {
-						if (t.isAlive()) {
-							allDone = false;
-						}
-					}
-					try {
-						Thread.sleep(100);
-					} catch (InterruptedException ex) {
-						ex.printStackTrace();
-					}
-				} while (!allDone);
 				if (toUpdate.size() > 0) {
 					verboseMessage("update found");
 					if (shouldSend()) {
@@ -1084,7 +1064,7 @@ public class CommandHandler {
 							((Player) sender).spigot().sendMessage(message);
 						}
 					}
-				} else if (!shouldSend()) {
+				} else {
 					message(ChatColor.GRAY + " No updates found!");
 				}
 			}

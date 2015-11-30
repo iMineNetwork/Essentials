@@ -44,7 +44,7 @@ public class GitLabAPI {
 		refreshData();
 	}
 
-	private void refreshData() {
+	public void refreshData() {
 		try {
 			JsonArray je = new JsonParser().parse(getResponseFromURL(new URL(String.format(URL_USERS, PRIVATE_TOKEN))))
 					.getAsJsonArray();
@@ -130,7 +130,6 @@ public class GitLabAPI {
 		if (!canWork) {
 			return null;
 		}
-		refreshData();
 		String file;
 		if (this.projects.containsKey(pluginName)) {
 			file = pluginName;
