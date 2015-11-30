@@ -520,6 +520,8 @@ public class CommandHandler {
 				}
 			}
 		}
+		sender.sendMessage(String.format("%s%s[%s%sGIT%s%s]%s Checking all git repos...", ChatColor.RESET,
+				ChatColor.BOLD, ChatColor.GOLD, ChatColor.BOLD, ChatColor.RESET, ChatColor.BOLD, ChatColor.RESET));
 		new Thread(new GitCheckRunnalbe(sender, b)).start();
 		return true;
 	}
@@ -981,7 +983,6 @@ public class CommandHandler {
 		}
 
 		private void prosessData() {
-
 			for (final Plugin plugin : Bukkit.getPluginManager().getPlugins()) {
 				checkPlugin(plugin);
 			}
@@ -1067,8 +1068,6 @@ public class CommandHandler {
 					message("This server is outdated -> cant check on GitRepo's");
 					return;
 				}
-				message(String.format("%s%s[%s%sGIT%s%s]%s Checking all git repos...", ChatColor.RESET, ChatColor.BOLD,
-						ChatColor.GOLD, ChatColor.BOLD, ChatColor.RESET, ChatColor.BOLD, ChatColor.RESET));
 				new Thread(new Runnable() {
 					public void run() {
 						prosessData();
