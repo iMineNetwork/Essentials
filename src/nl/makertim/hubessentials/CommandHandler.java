@@ -191,20 +191,46 @@ public class CommandHandler {
 
 	private boolean lagdebug() {
 		if (sender.isOp() || sender.hasPermission("iMine.lagdebug")) {
-			for (World w : Bukkit.getWorlds()) {
-				sender.sendMessage(ChatColor.GOLD + "Mobs in world " + w.getName() + " " + ChatColor.BOLD
-						+ w.getEntities().size());
-				Map<Class<? extends Entity>, Integer> countMap = new HashMap<>();
-				for (Entity e : w.getEntities()) {
-					if (!countMap.containsKey(e.getClass())) {
-						countMap.put(e.getClass(), 0);
+			if (args.length == 0) {
+				for (World w : Bukkit.getWorlds()) {
+					sender.sendMessage(ChatColor.GOLD + "Mobs in world " + w.getName() + " " + ChatColor.BOLD
+							+ w.getEntities().size());
+					Map<Class<? extends Entity>, Integer> countMap = new HashMap<>();
+					for (Entity e : w.getEntities()) {
+						if (!countMap.containsKey(e.getClass())) {
+							countMap.put(e.getClass(), 0);
+						}
+						countMap.put(e.getClass(), countMap.get(e.getClass()) + 1);
 					}
-					countMap.put(e.getClass(), countMap.get(e.getClass()) + 1);
+					for (Entry<Class<? extends Entity>, Integer> entityTypeCount : countMap.entrySet()) {
+						sender.sendMessage(ChatColor.GREEN + "  Type "
+								+ entityTypeCount.getKey().getSimpleName().replaceAll("Craft", "") + ": "
+								+ entityTypeCount.getValue());
+					}
 				}
-				for (Entry<Class<? extends Entity>, Integer> entityTypeCount : countMap.entrySet()) {
-					sender.sendMessage(ChatColor.GREEN + "  Type "
-							+ entityTypeCount.getKey().getSimpleName().replaceAll("Craft", "") + ": "
-							+ entityTypeCount.getValue());
+			} else {
+				if (args[0].toLowerCase().startsWith("player")) {
+					Map<String, Integer> countMap = new HashMap<>();
+					for (Entity e : Bukkit.getWorlds().get(0).getEntities()) {
+						double distance = 999;
+						Player distancePlayer = null;
+						for (Player pl : Bukkit.getOnlinePlayers()) {
+							double plDistance = e.getLocation().distance(pl.getLocation());
+							if (e.getLocation().distance(pl.getLocation()) < distance) {
+								distance = plDistance;
+								distancePlayer = pl;
+							}
+						}
+						String name = (distancePlayer != null ? distancePlayer.getName() : "Onbekend");
+						if (!countMap.containsKey(name)) {
+							countMap.put(name, 0);
+						}
+						countMap.put(name, countMap.get(name) + 1);
+					}
+					for (Entry<String, Integer> playerCount : countMap.entrySet()) {
+						sender.sendMessage(
+								ChatColor.AQUA + "  " + playerCount.getKey() + ": " + playerCount.getValue());
+					}
 				}
 			}
 		}
