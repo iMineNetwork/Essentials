@@ -215,11 +215,12 @@ public class CommandHandler {
 						double distance = 999;
 						Player distancePlayer = null;
 						for (Player pl : Bukkit.getOnlinePlayers()) {
-							double plDistance = e.getLocation().distance(pl.getLocation());
-							if (e.getLocation().getWorld().equals(pl.getLocation().getWorld())
-									&& e.getLocation().distance(pl.getLocation()) < distance) {
-								distance = plDistance;
-								distancePlayer = pl;
+							if (e.getLocation().getWorld().equals(pl.getLocation().getWorld())) {
+								double plDistance = e.getLocation().distance(pl.getLocation());
+								if (e.getLocation().distance(pl.getLocation()) < distance) {
+									distance = plDistance;
+									distancePlayer = pl;
+								}
 							}
 						}
 						String name = (distancePlayer != null ? distancePlayer.getName() : "Onbekend");
