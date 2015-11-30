@@ -236,7 +236,7 @@ public class CommandHandler {
 						sender.sendMessage(ChatColor.AQUA + "  " + plName + ": " + countMap.get(plName).size());
 					}
 				} else {
-					Map<String, List<Class<? extends Entity>>> countMap = new HashMap<>();
+					Map<Class<? extends Entity>, List<Entity>> countMap = new HashMap<>();
 					List<Player> argsPlayers = PlayerGetter.getAllOnline(args[0]);
 					for (World w : Bukkit.getWorlds()) {
 						for (Entity e : w.getEntities()) {
@@ -252,17 +252,18 @@ public class CommandHandler {
 								}
 							}
 							if (argsPlayers.contains(distancePlayer)) {
-								String name = (distancePlayer != null ? distancePlayer.getName() : "Spawn Chunks");
-								if (!countMap.containsKey(name)) {
-									countMap.put(name, new ArrayList<Class<? extends Entity>>());
+								if (!countMap.containsKey(e.getClass())) {
+									countMap.put(e.getClass(), new ArrayList<Entity>());
 								}
-								countMap.get(name).add(e.getClass());
+								countMap.get(e.getClass()).add(e);
 							}
 						}
 					}
-					sender.sendMessage(ChatColor.GOLD + "All entitys by player " + args[0]);
-					for (String plName : MapCountSorter.getOrder(countMap, Sort.DESC)) {
-						sender.sendMessage(ChatColor.AQUA + "  " + plName + ": " + countMap.get(plName).size());
+					sender.sendMessage(ChatColor.GOLD + "All entitys by player(s) " + ChatColor.BOLD + args[0]);
+					for (Class<? extends Entity> entityClass : MapCountSorter.getOrder(countMap, Sort.DESC)) {
+						sender.sendMessage(
+								ChatColor.GREEN + "  Type " + entityClass.getSimpleName().replace("Craft", "") + ": "
+										+ countMap.get(entityClass).size());
 					}
 				}
 			}
