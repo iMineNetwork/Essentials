@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -35,6 +34,7 @@ import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import nl.makertim.hubessentials.GitLabAPI.Commit;
 import nl.makertim.hubessentials.GitLabAPI.GitProject;
+import nl.makertim.hubessentials.MapCountSorter.Sort;
 import nl.makertim.hubessentials.api.ColorFormatter;
 import nl.makertim.hubessentials.api.DatabaseManager;
 import nl.makertim.hubessentials.api.PlayerGetter;
@@ -195,22 +195,22 @@ public class CommandHandler {
 				for (World w : Bukkit.getWorlds()) {
 					sender.sendMessage(ChatColor.GOLD + "Mobs in world " + w.getName() + " " + ChatColor.BOLD
 							+ w.getEntities().size());
-					Map<Class<? extends Entity>, Integer> countMap = new HashMap<>();
+					Map<Class<? extends Entity>, List<Entity>> countMap = new HashMap<>();
 					for (Entity e : w.getEntities()) {
 						if (!countMap.containsKey(e.getClass())) {
-							countMap.put(e.getClass(), 0);
+							countMap.put(e.getClass(), new ArrayList<Entity>());
 						}
-						countMap.put(e.getClass(), countMap.get(e.getClass()) + 1);
+						countMap.get(e.getClass()).add(e);
 					}
-					for (Entry<Class<? extends Entity>, Integer> entityTypeCount : countMap.entrySet()) {
-						sender.sendMessage(ChatColor.GREEN + "  Type "
-								+ entityTypeCount.getKey().getSimpleName().replaceAll("Craft", "") + ": "
-								+ entityTypeCount.getValue());
+					for (Class<? extends Entity> entityClass : MapCountSorter.getOrder(countMap, Sort.ASC)) {
+						sender.sendMessage(
+								ChatColor.GREEN + "  Type " + entityClass.getSimpleName().replace("Craft", "") + ": "
+										+ countMap.get(entityClass).size());
 					}
 				}
 			} else {
 				if (args[0].toLowerCase().startsWith("player")) {
-					Map<String, Integer> countMap = new HashMap<>();
+					Map<String, List<Class<? extends Entity>>> countMap = new HashMap<>();
 					for (Entity e : Bukkit.getWorlds().get(0).getEntities()) {
 						double distance = 999;
 						Player distancePlayer = null;
@@ -225,13 +225,12 @@ public class CommandHandler {
 						}
 						String name = (distancePlayer != null ? distancePlayer.getName() : "Onbekend");
 						if (!countMap.containsKey(name)) {
-							countMap.put(name, 0);
+							countMap.put(name, new ArrayList<Class<? extends Entity>>());
 						}
-						countMap.put(name, countMap.get(name) + 1);
+						countMap.get(name).add(e.getClass());
 					}
-					for (Entry<String, Integer> playerCount : countMap.entrySet()) {
-						sender.sendMessage(
-								ChatColor.AQUA + "  " + playerCount.getKey() + ": " + playerCount.getValue());
+					for (String plName : MapCountSorter.getOrder(countMap, Sort.ASC)) {
+						sender.sendMessage(ChatColor.AQUA + "  " + plName + ": " + countMap.get(plName).size());
 					}
 				}
 			}
