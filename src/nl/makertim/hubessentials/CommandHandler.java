@@ -202,7 +202,7 @@ public class CommandHandler {
 						}
 						countMap.get(e.getClass()).add(e);
 					}
-					for (Class<? extends Entity> entityClass : MapCountSorter.getOrder(countMap, Sort.ASC)) {
+					for (Class<? extends Entity> entityClass : MapCountSorter.getOrder(countMap, Sort.DESC)) {
 						sender.sendMessage(
 								ChatColor.GREEN + "  Type " + entityClass.getSimpleName().replace("Craft", "") + ": "
 										+ countMap.get(entityClass).size());
@@ -223,13 +223,13 @@ public class CommandHandler {
 								}
 							}
 						}
-						String name = (distancePlayer != null ? distancePlayer.getName() : "Onbekend");
+						String name = (distancePlayer != null ? distancePlayer.getName() : "Spawn Chunks");
 						if (!countMap.containsKey(name)) {
 							countMap.put(name, new ArrayList<Class<? extends Entity>>());
 						}
 						countMap.get(name).add(e.getClass());
 					}
-					for (String plName : MapCountSorter.getOrder(countMap, Sort.ASC)) {
+					for (String plName : MapCountSorter.getOrder(countMap, Sort.DESC)) {
 						sender.sendMessage(ChatColor.AQUA + "  " + plName + ": " + countMap.get(plName).size());
 					}
 				}
