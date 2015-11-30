@@ -795,7 +795,7 @@ public class CommandHandler {
 			ret.addAll(PlayerGetter.getAllOnlineNames(args[args.length - 1], sender));
 		} else if (command.equalsIgnoreCase("update")) {
 		} else if (command.equalsIgnoreCase("lagdebug")) {
-			if (args[args.length - 1].contains("players")) {
+			if ("players".contains(args[args.length - 1])) {
 				ret.add("players");
 			}
 			ret.addAll(PlayerGetter.getAllOnlineNames(args[args.length - 1], sender));
