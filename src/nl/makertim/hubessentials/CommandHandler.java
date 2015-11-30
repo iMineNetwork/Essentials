@@ -199,11 +199,11 @@ public class CommandHandler {
 					if (!countMap.containsKey(e.getClass())) {
 						countMap.put(e.getClass(), 0);
 					}
-					countMap.put(e.getClass(), countMap.get(e.getClass()));
+					countMap.put(e.getClass(), countMap.get(e.getClass()) + 1);
 				}
 				for (Entry<Class<? extends Entity>, Integer> entityTypeCount : countMap.entrySet()) {
-					sender.sendMessage(ChatColor.GREEN + "  Type " + entityTypeCount.getKey().getName().toLowerCase()
-							+ ": " + entityTypeCount.getValue());
+					sender.sendMessage(ChatColor.GREEN + "  Type " + entityTypeCount.getKey().getSimpleName() + ": "
+							+ entityTypeCount.getValue());
 				}
 			}
 		}
