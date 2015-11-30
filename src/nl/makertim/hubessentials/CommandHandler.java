@@ -204,7 +204,7 @@ public class CommandHandler {
 					}
 					for (Class<? extends Entity> entityClass : MapCountSorter.getOrder(countMap, Sort.DESC)) {
 						sender.sendMessage(
-								ChatColor.GREEN + "  Type " + entityClass.getSimpleName().replace("Craft", "") + ": "
+								ChatColor.GREEN + "  " + entityClass.getSimpleName().replace("Craft", "") + "s: "
 										+ countMap.get(entityClass).size());
 					}
 				}
@@ -262,7 +262,7 @@ public class CommandHandler {
 					sender.sendMessage(ChatColor.GOLD + "All entitys by player(s) " + ChatColor.BOLD + args[0]);
 					for (Class<? extends Entity> entityClass : MapCountSorter.getOrder(countMap, Sort.DESC)) {
 						sender.sendMessage(
-								ChatColor.GREEN + "  Type " + entityClass.getSimpleName().replace("Craft", "") + ": "
+								ChatColor.GREEN + "  " + entityClass.getSimpleName().replace("Craft", "") + "s: "
 										+ countMap.get(entityClass).size());
 					}
 				}
