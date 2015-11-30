@@ -216,7 +216,8 @@ public class CommandHandler {
 						Player distancePlayer = null;
 						for (Player pl : Bukkit.getOnlinePlayers()) {
 							double plDistance = e.getLocation().distance(pl.getLocation());
-							if (e.getLocation().distance(pl.getLocation()) < distance) {
+							if (e.getWorld() == pl.getWorld()
+									&& e.getLocation().distance(pl.getLocation()) < distance) {
 								distance = plDistance;
 								distancePlayer = pl;
 							}
