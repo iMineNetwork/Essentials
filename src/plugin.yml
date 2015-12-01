@@ -16,6 +16,9 @@ commands:
     description: Kan iemand dit kind uitzetten?
     usage: /mute [player]
     aliases: [stil, aufgedonderd]
+  fly:
+    description: We vliegen er in! PATAT
+    usage: /fly <player>
   report:
     description: Report to all admins a issue
     usage: /report <issue>

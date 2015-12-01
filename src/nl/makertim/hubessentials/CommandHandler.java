@@ -63,6 +63,8 @@ public class CommandHandler {
 			return mute();
 		} else if (command.equalsIgnoreCase("tp")) {
 			return tp();
+		} else if (command.equalsIgnoreCase("fly")) {
+			return fly();
 		} else if (command.equalsIgnoreCase("lagdebug")) {
 			return lagdebug();
 		} else if (command.equalsIgnoreCase("gm")) {
@@ -109,6 +111,23 @@ public class CommandHandler {
 			return true;
 		}
 		return false;
+	}
+
+	private boolean fly() {
+		if (sender.hasPermission("iMine.fly")) {
+			Player pl = null;
+			if (args.length == 0 && sender instanceof Player) {
+				pl = (Player) sender;
+			} else {
+				pl = PlayerGetter.getOnline(args[0]);
+			}
+			if (pl != null) {
+				pl.setFlying(!pl.isFlying());
+			} else {
+				sender.sendMessage(ChatColor.RED + "No player with fly powers");
+			}
+		}
+		return true;
 	}
 
 	private boolean plugin() {
