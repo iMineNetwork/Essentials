@@ -122,7 +122,8 @@ public class CommandHandler {
 				pl = PlayerGetter.getOnline(args[0]);
 			}
 			if (pl != null) {
-				pl.setFlying(!pl.isFlying());
+				pl.setAllowFlight(!pl.getAllowFlight());
+				pl.setFlying(pl.getAllowFlight());
 			} else {
 				sender.sendMessage(ChatColor.RED + "No player with fly powers");
 			}
