@@ -803,6 +803,7 @@ public class CommandHandler {
 			}
 		} else if ((command.startsWith("gm") && command.length() == 3)
 				|| (command.equalsIgnoreCase("gm") && args.length == 2)
+				|| (command.equalsIgnoreCase("mute") && args.length == 1)
 				|| (command.equalsIgnoreCase("invsee") && args.length == 1)
 				|| (command.equalsIgnoreCase("vanish") && args.length == 1) || (command.equalsIgnoreCase("report"))
 				|| (command.equalsIgnoreCase("tp") && (args.length == 1 || args.length == 2))
