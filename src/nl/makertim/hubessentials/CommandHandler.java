@@ -145,7 +145,7 @@ public class CommandHandler {
 	}
 
 	private boolean mute() {
-		if (args.length != 0) {
+		if (args.length != 0 && sender.hasPermission("iMine.mute")) {
 			OfflinePlayer pl = PlayerGetter.get(args[0]);
 			if (pl != null) {
 				BukkitListener.toggleMuted(pl);
