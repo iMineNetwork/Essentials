@@ -2,19 +2,23 @@ package nl.makertim.hubessentials;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent.Result;
 
 import nl.makertim.hubessentials.api.DatabaseManager;
@@ -26,6 +30,7 @@ public class BukkitListener implements Listener {
 
 	private static final String[] SHOP_FORMAT = { "shop", "kost", "duur", "kopen", "whitelist", "vip" };
 	private static final String[] BUGS_FORMAT = { "help", "bug", "fout", "error" };
+	private static final Set<UUID> MUTED = new HashSet<>();
 	public static final Map<UUID, List<Location>> TP_HISTORY = new HashMap<>();
 	public static final List<UUID> VANISH = new ArrayList<>();
 
@@ -44,6 +49,38 @@ public class BukkitListener implements Listener {
 			}
 			TP_HISTORY.get(pte.getPlayer().getUniqueId()).add(pte.getFrom());
 		}
+	}
+
+	public static void toggleMuted(OfflinePlayer pl) {
+		if (isMuted(pl)) {
+			MUTED.remove(pl.getUniqueId());
+			if (pl.isOnline()) {
+				((Player) pl).sendMessage("-Free to talk again-");
+			}
+		} else {
+			MUTED.add(pl.getUniqueId());
+			if (pl.isOnline()) {
+				((Player) pl).sendMessage("-No talky talky for you-");
+			}
+		}
+	}
+
+	@EventHandler
+	public void onChat(AsyncPlayerChatEvent apce) {
+		if (isMuted(apce.getPlayer())) {
+			apce.setCancelled(true);
+		}
+	}
+
+	@EventHandler
+	public void onCommand(PlayerCommandPreprocessEvent pcpe) {
+		if (isMuted(pcpe.getPlayer())) {
+			pcpe.setCancelled(true);
+		}
+	}
+
+	public static boolean isMuted(OfflinePlayer pl) {
+		return MUTED.contains(pl.getUniqueId());
 	}
 
 	public static void updateVanish() {

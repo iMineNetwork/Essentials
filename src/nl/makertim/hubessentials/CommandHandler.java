@@ -15,6 +15,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
@@ -58,6 +59,8 @@ public class CommandHandler {
 			return hub();
 		} else if (command.equalsIgnoreCase("dev")) {
 			return dev();
+		} else if (command.equalsIgnoreCase("mute")) {
+			return mute();
 		} else if (command.equalsIgnoreCase("tp")) {
 			return tp();
 		} else if (command.equalsIgnoreCase("lagdebug")) {
@@ -137,6 +140,20 @@ public class CommandHandler {
 			((Player) sender).spigot().sendMessage(message);
 		} else {
 			sender.sendMessage(message.toPlainText());
+		}
+		return true;
+	}
+
+	private boolean mute() {
+		if (args.length != 0) {
+			OfflinePlayer pl = PlayerGetter.get(args[0]);
+			if (pl != null) {
+				BukkitListener.toggleMuted(pl);
+				sender.sendMessage(ChatColor.GOLD + pl.getName() + " is now "
+						+ (BukkitListener.isMuted(pl) ? "muted." : "unmuted."));
+			} else {
+				sender.sendMessage(ChatColor.RED + "No player by name " + args[0]);
+			}
 		}
 		return true;
 	}

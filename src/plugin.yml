@@ -12,6 +12,10 @@ commands:
   dev:
     description: DEVMODE = kick everyone now!
     usage: /dev
+  mute:
+    description: Kan iemand dit kind uitzetten?
+    usage: /mute [player]
+    aliases: [stil, aufgedonderd]
   report:
     description: Report to all admins a issue
     usage: /report <issue>
