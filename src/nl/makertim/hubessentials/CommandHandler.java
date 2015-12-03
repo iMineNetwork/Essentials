@@ -117,8 +117,8 @@ public class CommandHandler {
 
 	private boolean tab() {
 		if (sender.hasPermission("iMine.tabchange")) {
+			TabListHandler tlh = BukkitStarter.plugin.getTLH();
 			if (args.length > 1) {
-				TabListHandler tlh = BukkitStarter.plugin.getTLH();
 				String msg = "";
 				for (int i = 1; i < args.length; i++) {
 					msg += args[i] + " ";
@@ -132,6 +132,8 @@ public class CommandHandler {
 					tlh.updateBottom(msg);
 					sender.sendMessage(ChatColor.GOLD + "Tab bottom updated to " + ChatColor.RESET + msg);
 				}
+			} else if (args.length == 1 && args[0].equalsIgnoreCase("update")) {
+				tlh.updateAll();
 			} else {
 				sender.sendMessage(ChatColor.RED + "Need more args!");
 			}
@@ -836,7 +838,7 @@ public class CommandHandler {
 				ret.addAll(PlayerGetter.getAllOnlineNames(args[args.length - 1], sender));
 			}
 		} else if (command.equalsIgnoreCase("tab") && args.length == 1) {
-			String[] argumenten = { "top", "bottom" };
+			String[] argumenten = { "top", "bottom", "update" };
 			for (String arg : argumenten) {
 				if (arg.toLowerCase().contains(args[args.length - 1].toLowerCase())) {
 					ret.add(arg);

@@ -47,7 +47,7 @@ public class TabListHandler implements Listener {
 		updateAll();
 	}
 
-	private void updateAll() {
+	public void updateAll() {
 		for (Player pl : Bukkit.getOnlinePlayers()) {
 			PlayerOptions po = new PlayerOptions(pl);
 			po.updateTabPrefix();
