@@ -65,6 +65,8 @@ public class CommandHandler {
 			return tp();
 		} else if (command.equalsIgnoreCase("fly")) {
 			return fly();
+		} else if (command.equalsIgnoreCase("tab")) {
+			return tab();
 		} else if (command.equalsIgnoreCase("lagdebug")) {
 			return lagdebug();
 		} else if (command.equalsIgnoreCase("gm")) {
@@ -111,6 +113,26 @@ public class CommandHandler {
 			return true;
 		}
 		return false;
+	}
+
+	private boolean tab() {
+		if (sender.hasPermission("iMine.tabchange")) {
+			if (args.length > 1) {
+				TabListHandler tlh = BukkitStarter.plugin.getTLH();
+				String mssg = "";
+				for (int i = 1; i < args.length; i++) {
+					mssg += args[i] + " ";
+				}
+				if (args[0].equalsIgnoreCase("top")) {
+					tlh.updateTop(mssg);
+					sender.sendMessage(ChatColor.GOLD + "Tab top updated to " + mssg);
+				} else if (args[0].equalsIgnoreCase("bottom")) {
+					tlh.updateBottom(mssg);
+					sender.sendMessage(ChatColor.GOLD + "Tab bottom updated to " + mssg);
+				}
+			}
+		}
+		return true;
 	}
 
 	private boolean fly() {
@@ -807,6 +829,13 @@ public class CommandHandler {
 				}
 			} else if (args.length == 2) {
 				ret.addAll(PlayerGetter.getAllOnlineNames(args[args.length - 1], sender));
+			}
+		} else if (command.equalsIgnoreCase("tab") && args.length == 1) {
+			String[] argumenten = { "top", "bottom" };
+			for (String arg : argumenten) {
+				if (arg.toLowerCase().contains(args[args.length - 1].toLowerCase())) {
+					ret.add(arg);
+				}
 			}
 		} else if (command.equalsIgnoreCase("git")) {
 			String[] argumenten = { "-v", "-q", "projects" };

@@ -12,6 +12,9 @@ commands:
   dev:
     description: DEVMODE = kick everyone now!
     usage: /dev
+  tab:
+    description: Change tablist
+    usage: /tab <message>
   mute:
     description: Kan iemand dit kind uitzetten?
     usage: /mute [player]

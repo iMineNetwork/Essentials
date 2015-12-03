@@ -27,6 +27,7 @@ public class BukkitStarter extends JavaPlugin {
 	public static BukkitStarter plugin;
 
 	private DatabaseManager dm;
+	private TabListHandler tlh;
 	public boolean devMode = false;
 
 	@Override
@@ -38,6 +39,7 @@ public class BukkitStarter extends JavaPlugin {
 		Bukkit.getPluginManager().registerEvents(new BukkitListener(), this);
 		Bukkit.getPluginManager().registerEvents(new Profiler(), this);
 		Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new PexReloader(), PEX_DELAY, PEX_DELAY);
+		new TabListHandler();
 	}
 
 	@Override
@@ -89,6 +91,10 @@ public class BukkitStarter extends JavaPlugin {
 
 	public DatabaseManager getDB() {
 		return dm;
+	}
+
+	public TabListHandler getTLH() {
+		return tlh;
 	}
 
 	public static boolean isDev(UUID check) {
