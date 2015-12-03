@@ -17,9 +17,25 @@ public class ColorFormatter {
 			{ "&n", ChatColor.UNDERLINE.toString() }, { "&o", ChatColor.ITALIC.toString() },
 			{ "&r", ChatColor.RESET.toString() } };
 
+	public static String rainbow(String toReplace) {
+		if (toReplace == null) {
+			return "";
+		}
+		String ret = "";
+		int i = 0;
+		for (char c : toReplace.toCharArray()) {
+			ret += COLOR_CODES[i][1] + c;
+			i = (i + 1) % COLOR_CODES.length;
+		}
+		return ret;
+	}
+
 	public static String replaceColors(String toReplace) {
 		if (toReplace == null) {
 			return "";
+		}
+		if (toReplace.startsWith("&z")) {
+			return rainbow(toReplace.replaceFirst("&z", ""));
 		}
 		for (String[] strs : COLOR_CODES) {
 			toReplace = toReplace.replaceAll(strs[0], strs[1]);
