@@ -24,9 +24,8 @@ public class ColorFormatter {
 		String ret = "";
 		int i = 10;
 		for (char c : toReplace.toCharArray()) {
-			ret += COLOR_CODES[i][1] + c;
-			i = (i + 1) % COLOR_CODES.length;
-			if (i == 0) {
+			ret += COLOR_CODES[i++][1] + c;
+			if (i == 15) {
 				i = 10;
 			}
 		}
