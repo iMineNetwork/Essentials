@@ -37,14 +37,14 @@ public class TabListHandler implements Listener {
 	public void updateTop(String newTop) {
 		BukkitStarter.plugin.getConfig().set("tab.top", newTop);
 		BukkitStarter.plugin.saveConfig();
-		top = ColorFormatter.replaceColors(newTop);
+		top = newTop;
 		updateAll();
 	}
 
 	public void updateBottom(String newBottom) {
 		BukkitStarter.plugin.getConfig().set("tab.bottom", newBottom);
 		BukkitStarter.plugin.saveConfig();
-		bottom = ColorFormatter.replaceColors(newBottom);
+		bottom = newBottom;
 		updateAll();
 	}
 

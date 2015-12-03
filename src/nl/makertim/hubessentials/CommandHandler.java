@@ -119,17 +119,21 @@ public class CommandHandler {
 		if (sender.hasPermission("iMine.tabchange")) {
 			if (args.length > 1) {
 				TabListHandler tlh = BukkitStarter.plugin.getTLH();
-				String mssg = "";
+				String msg = "";
 				for (int i = 1; i < args.length; i++) {
-					mssg += args[i] + " ";
+					msg += args[i] + " ";
 				}
+				msg = msg.substring(0, msg.length() - 1);
+				msg = ColorFormatter.replaceColors(msg);
 				if (args[0].equalsIgnoreCase("top")) {
-					tlh.updateTop(mssg);
-					sender.sendMessage(ChatColor.GOLD + "Tab top updated to " + mssg);
+					tlh.updateTop(msg);
+					sender.sendMessage(ChatColor.GOLD + "Tab top updated to " + ChatColor.RESET + msg);
 				} else if (args[0].equalsIgnoreCase("bottom")) {
-					tlh.updateBottom(mssg);
-					sender.sendMessage(ChatColor.GOLD + "Tab bottom updated to " + mssg);
+					tlh.updateBottom(msg);
+					sender.sendMessage(ChatColor.GOLD + "Tab bottom updated to " + ChatColor.RESET + msg);
 				}
+			} else {
+				sender.sendMessage(ChatColor.RED + "Need more args!");
 			}
 		}
 		return true;
