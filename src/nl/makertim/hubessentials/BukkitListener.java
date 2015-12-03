@@ -17,14 +17,13 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.player.AsyncPlayerPreLoginEvent.Result;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.event.player.PlayerLoginEvent.Result;
+import org.bukkit.event.player.PlayerTeleportEvent;
 
 import nl.makertim.hubessentials.api.DatabaseManager;
-
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerTeleportEvent;
 
 public class BukkitListener implements Listener {
 
@@ -35,9 +34,9 @@ public class BukkitListener implements Listener {
 	public static final List<UUID> VANISH = new ArrayList<>();
 
 	@EventHandler
-	public void onJoin(AsyncPlayerPreLoginEvent apple) {
-		if (!BukkitStarter.isDev(apple.getUniqueId()) && BukkitStarter.plugin.devMode) {
-			apple.disallow(Result.KICK_FULL, "Server is now in dev mode.");
+	public void onJoin(PlayerLoginEvent ple) {
+		if (BukkitStarter.plugin.devMode && !ple.getPlayer().hasPermission("iMine.devOverride")) {
+			ple.disallow(Result.KICK_FULL, "Server is now in dev mode.");
 		}
 	}
 
@@ -117,7 +116,7 @@ public class BukkitListener implements Listener {
 	@EventHandler
 	public void chat(AsyncPlayerChatEvent apce) {
 		String mssg = apce.getMessage();
-		if (!(BukkitStarter.isDev(apce.getPlayer().getUniqueId()) || apce.getPlayer().isOp())) {
+		if (!apce.getPlayer().hasPermission("iMine.helpOverride")) {
 			boolean sendMssg = false;
 			for (String shp : SHOP_FORMAT) {
 				if (mssg.toLowerCase().contains(shp)) {
@@ -148,8 +147,10 @@ public class BukkitListener implements Listener {
 		DatabaseManager db = BukkitStarter.plugin.getDB();
 		db.insertQuery("DELETE FROM `iMine_Bans`.`AdminRegister` WHERE `AdminRegister`.`UUID` = '"
 				+ pje.getPlayer().getUniqueId() + "';");
-		if (pje.getPlayer().isOp() || BukkitStarter.isDev(pje.getPlayer().getUniqueId())) {
+		if (pje.getPlayer().hasPermission("iMine.autoGit")) {
 			pje.getPlayer().performCommand("git -q");
+		}
+		if (pje.getPlayer().hasPermission("iMine.adminChat")) {
 			db.insertQuery("INSERT INTO `iMine_Bans`.`AdminRegister` (`UUID`, `isAdmin`) VALUES ('"
 					+ pje.getPlayer().getUniqueId() + "', '1');");
 		}

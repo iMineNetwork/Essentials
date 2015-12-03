@@ -958,7 +958,7 @@ public class CommandHandler {
 			if (sender == null) {
 				return;
 			}
-			if (!BukkitStarter.isDev(sender.getUniqueId()) || args.length == 0) {
+			if (!sender.hasPermission("iMine.adminChat") || args.length == 0) {
 				sender.sendMessage(ChatColor.RED + "/Admin [Message]");
 				return;
 			}
