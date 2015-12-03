@@ -22,10 +22,13 @@ public class ColorFormatter {
 			return "";
 		}
 		String ret = "";
-		int i = 0;
+		int i = 10;
 		for (char c : toReplace.toCharArray()) {
 			ret += COLOR_CODES[i][1] + c;
 			i = (i + 1) % COLOR_CODES.length;
+			if (i == 0) {
+				i = 10;
+			}
 		}
 		return ret;
 	}
