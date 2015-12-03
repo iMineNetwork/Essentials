@@ -805,6 +805,7 @@ public class CommandHandler {
 				for (int i = 0; i < args.length; i++) {
 					msg += args[i] + " ";
 				}
+				msg = msg.substring(0, msg.length() - 1);
 				msg = ColorFormatter.replaceColors(msg);
 				Bukkit.broadcastMessage(
 						ChatColor.GOLD + "* " + ChatColor.GRAY + sender.getName() + " " + ChatColor.WHITE + msg);

@@ -39,7 +39,7 @@ public class BukkitStarter extends JavaPlugin {
 		Bukkit.getPluginManager().registerEvents(new BukkitListener(), this);
 		Bukkit.getPluginManager().registerEvents(new Profiler(), this);
 		Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new PexReloader(), PEX_DELAY, PEX_DELAY);
-		new TabListHandler();
+		tlh = new TabListHandler();
 	}
 
 	@Override

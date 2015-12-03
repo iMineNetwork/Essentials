@@ -23,11 +23,11 @@ public class TabListHandler implements Listener {
 	private void updateTitle() {
 		FileConfiguration config = BukkitStarter.plugin.getConfig();
 		if (config.getString("tab.top") == null) {
-			config.set("tab.top", "&l&6iMineNetwerk");
+			config.set("tab.top", "&6&liMineNetwerk");
 			BukkitStarter.plugin.saveConfig();
 		}
 		if (config.getString("tab.bottom") == null) {
-			config.set("tab.bottom", "&l&fiMine.nl");
+			config.set("tab.bottom", "&f&liMine.nl");
 			BukkitStarter.plugin.saveConfig();
 		}
 		top = ColorFormatter.replaceColors(config.getString("tab.top"));
