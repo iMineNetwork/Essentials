@@ -74,7 +74,7 @@ public class BukkitListener implements Listener {
 
 	@EventHandler
 	public void onCommand(PlayerCommandPreprocessEvent pcpe) {
-		if (isMuted(pcpe.getPlayer()) && !pcpe.getPlayer().hasPermission("iMine.unMute")) {
+		if (isMuted(pcpe.getPlayer()) && !pcpe.getPlayer().hasPermission("iMine.unMuteAble")) {
 			pcpe.setCancelled(true);
 		}
 	}
