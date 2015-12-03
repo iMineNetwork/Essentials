@@ -213,7 +213,7 @@ public class CommandHandler {
 			} else {
 				sender.sendMessage("Player only!");
 			}
-		} else if (sender.isOp() || sender.hasPermission("iMine.hub")) {
+		} else if (sender.hasPermission("iMine.hub")) {
 			if (args.length == 1) {
 				if (sender instanceof Player) {
 					MktUtils.sendPlayerToServer((Player) sender, args[0]);
@@ -235,12 +235,12 @@ public class CommandHandler {
 	}
 
 	private boolean dev() {
-		if (sender.isOp() || sender.hasPermission("iMine.dev")) {
+		if (sender.hasPermission("iMine.dev")) {
 			BukkitStarter.plugin.devMode = !BukkitStarter.plugin.devMode;
 			if (BukkitStarter.plugin.devMode) {
 				sender.sendMessage("Devolpermodus is now enabled!");
 				for (Player pl : new ArrayList<>(Bukkit.getOnlinePlayers())) {
-					if (!(pl.isOp() || pl.hasPermission("iMine.dev"))) {
+					if (!pl.hasPermission("iMine.dev")) {
 						MktUtils.sendPlayerToServer(pl, "hub");
 					}
 				}
@@ -255,7 +255,7 @@ public class CommandHandler {
 	}
 
 	private boolean lagdebug() {
-		if (sender.isOp() || sender.hasPermission("iMine.lagdebug")) {
+		if (sender.hasPermission("iMine.lagdebug")) {
 			if (args.length == 0) {
 				for (World w : Bukkit.getWorlds()) {
 					sender.sendMessage(ChatColor.GOLD + "Mobs in world " + w.getName() + " " + ChatColor.BOLD
@@ -336,7 +336,7 @@ public class CommandHandler {
 	}
 
 	private boolean tp() {
-		if (sender.isOp() || sender.hasPermission("iMine.tp")) {
+		if (sender.hasPermission("iMine.tp")) {
 			if (args.length == 1) {
 				if (sender instanceof Player) {
 					Player pl = PlayerGetter.getOnline(args[0]);
@@ -421,7 +421,7 @@ public class CommandHandler {
 	}
 
 	private boolean gm() {
-		if (sender.isOp() || sender.hasPermission("iMine.gm")) {
+		if (sender.hasPermission("iMine.gm")) {
 			if (args.length > 0) {
 				GameMode set = null;
 				try {
@@ -481,7 +481,7 @@ public class CommandHandler {
 	}
 
 	private boolean gmx() {
-		if (sender.isOp() || sender.hasPermission("iMine.gm")) {
+		if (sender.hasPermission("iMine.gm")) {
 			GameMode set = null;
 			try {
 				int gm = Integer.parseInt(command.charAt(2) + "");
@@ -521,7 +521,7 @@ public class CommandHandler {
 	}
 
 	private boolean speed() {
-		if (sender.isOp() || sender.hasPermission("iMine.speed")) {
+		if (sender.hasPermission("iMine.speed")) {
 			if (sender instanceof Player) {
 				Player pl = ((Player) sender);
 				if (args.length > 0) {
@@ -579,7 +579,7 @@ public class CommandHandler {
 	}
 
 	private boolean msg() {
-		if (sender.isOp() || sender.hasPermission("iMine.msg")) {
+		if (sender.hasPermission("iMine.msg")) {
 			if (args.length > 1) {
 				Player target = PlayerGetter.getOnline(args[0]);
 				if (target != null) {
@@ -615,7 +615,7 @@ public class CommandHandler {
 	}
 
 	private boolean invsee() {
-		if (sender.isOp() || sender.hasPermission("iMine.invsee")) {
+		if (sender.hasPermission("iMine.invsee")) {
 			if (args.length == 1) {
 				Player target = PlayerGetter.getOnline(args[0]);
 				if (sender instanceof Player && target != null) {
@@ -634,7 +634,7 @@ public class CommandHandler {
 	}
 
 	private boolean endersee() {
-		if (sender.isOp() || sender.hasPermission("iMine.endersee")) {
+		if (sender.hasPermission("iMine.endersee")) {
 			if (args.length == 1) {
 				Player target = PlayerGetter.getOnline(args[0]);
 				if (sender instanceof Player && target != null) {
@@ -678,7 +678,7 @@ public class CommandHandler {
 	}
 
 	private boolean plr() {
-		if ((sender.isOp() || sender.hasPermission("iMine.dev")) && args.length > 0) {
+		if ((sender.hasPermission("iMine.dev")) && args.length > 0) {
 			new Thread(new ReloadPlugin(sender, args)).start();
 		} else {
 			return false;
@@ -687,7 +687,7 @@ public class CommandHandler {
 	}
 
 	private boolean _return() {
-		if (sender.isOp() || sender.hasPermission("iMine.return")) {
+		if (sender.hasPermission("iMine.return")) {
 			if (sender instanceof Player) {
 				Player sender = (Player) this.sender;
 				if (BukkitListener.TP_HISTORY.containsKey(sender.getUniqueId())) {
@@ -707,7 +707,7 @@ public class CommandHandler {
 	}
 
 	private boolean vanish() {
-		if (sender.isOp() || sender.hasPermission("iMine.vanish")) {
+		if (sender.hasPermission("iMine.vanish")) {
 			if (args.length == 0) {
 				if (sender instanceof Player) {
 					Player sender = (Player) this.sender;
@@ -744,7 +744,7 @@ public class CommandHandler {
 	}
 
 	private boolean kill() {
-		if (sender.isOp() || sender.hasPermission("iMine.kill")) {
+		if (sender.hasPermission("iMine.kill")) {
 			if (args.length == 0) {
 				if (sender instanceof Player) {
 					Player sender = (Player) this.sender;
@@ -769,7 +769,7 @@ public class CommandHandler {
 	}
 
 	private boolean reply() {
-		if (sender.isOp() || sender.hasPermission("iMine.reply")) {
+		if (sender.hasPermission("iMine.reply")) {
 			if (args.length > 0) {
 				if (LAST_SPOKE.containsKey(sender)) {
 					CommandSender target = LAST_SPOKE.get(sender);
@@ -805,7 +805,7 @@ public class CommandHandler {
 	}
 
 	private boolean me() {
-		if (sender.isOp() || sender.hasPermission("iMine.me")) {
+		if (sender.hasPermission("iMine.me")) {
 			if (args.length > 0) {
 				String msg = "";
 				for (int i = 0; i < args.length; i++) {
@@ -1228,7 +1228,7 @@ public class CommandHandler {
 
 		@Override
 		public void run() {
-			if (sender.isOp() || sender.hasPermission("iMine.git")) {
+			if (sender.hasPermission("iMine.git")) {
 				BukkitStarter.API.refreshData();
 				if (!BukkitStarter.API.canWork()) {
 					message("This server is outdated -> cant check on GitRepo's");
