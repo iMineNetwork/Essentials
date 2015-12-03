@@ -23,17 +23,17 @@ public class PlayerOptions {
 	public String getPermissionPrefix() {
 		String ret = "";
 		if (pl.hasPermission("iMine.tab.SU")) {
-			ret = "&c[SU]&r";
+			ret = "&1&c[SU]&r";
 		} else if (pl.hasPermission("iMine.tab.OP")) {
-			ret = "&c[OP]&r";
+			ret = "&2&c[OP]&r";
 		} else if (pl.hasPermission("iMine.tab.HELPER")) {
-			ret = "&2[H]&r";
+			ret = "&3&2[H]&r";
 		} else if (pl.hasPermission("iMine.tab.CHATMOD")) {
-			ret = "&2[c]&r";
+			ret = "&4&2[c]&r";
 		} else if (pl.hasPermission("iMine.tab.VIP+")) {
-			ret = "&6[+]&r";
+			ret = "&5&6[+]&r";
 		} else if (pl.hasPermission("iMine.tab.VIP")) {
-			ret = "&7[+]&r";
+			ret = "&6&7[+]&r";
 		} else if (pl.hasPermission("iMine.tab.BUILDER")) {
 			ret = "&7[b]&r";
 		}
