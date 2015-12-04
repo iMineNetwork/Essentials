@@ -16,6 +16,9 @@ import nl.makertim.hubessentials.BukkitStarter;
 
 public class PlayerGetter {
 
+	private PlayerGetter() {
+	}
+
 	public static List<String> getNamesLike(String name) {
 		List<String> ret = PlayerGetter.getAllNames(name);
 		if (!ret.isEmpty()) {
@@ -34,7 +37,7 @@ public class PlayerGetter {
 		return ret;
 	}
 
-	public List<UUID> getUuidsLike(String name) {
+	public static List<UUID> getUuidsLike(String name) {
 		List<UUID> ret = new ArrayList<>();
 		List<OfflinePlayer> offlinePlayers = PlayerGetter.getAll(name);
 		if (!offlinePlayers.isEmpty()) {
