@@ -1,5 +1,6 @@
 package nl.makertim.hubessentials.api;
 
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -10,7 +11,27 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
+import nl.makertim.hubessentials.BukkitStarter;
+
 public class PlayerGetter {
+
+	public static List<String> getNamesLike(String name) {
+		List<String> ret = PlayerGetter.getAllNames(name);
+		if (!ret.isEmpty()) {
+			return ret;
+		}
+		name = DatabaseManager.prepareString(name);
+		try {
+			ResultSet rs = BukkitStarter.plugin.getDB()
+					.doQuery("SELECT * FROM UUID_Table WHERE LastName LIKE '%" + name + "%';");
+			while (rs.next()) {
+				ret.add(rs.getString("LastName"));
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return ret;
+	}
 
 	@CheckForNull
 	public static OfflinePlayer get(String name) {
