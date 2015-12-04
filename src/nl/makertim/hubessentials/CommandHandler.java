@@ -979,8 +979,8 @@ public class CommandHandler {
 							"&6 Name: '&c" + name + "&6' changed " + MKTUtils.timeUntilNow(d) + " ago."));
 				}
 			} else {
-				sender.sendMessage(ColorFormatter.replaceColors("&6Getting al old playernames from '&c"
-						+ uuid.toString() + "&6'" + (name != null ? " AKA &c'" + name + "'" : "")));
+				sender.sendMessage(
+						ColorFormatter.replaceColors("&6Getting al old playernames from '&c'" + name + "&6'."));
 				return;
 			}
 		}
