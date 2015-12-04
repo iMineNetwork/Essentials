@@ -962,6 +962,9 @@ public class CommandHandler {
 							sendNameInfo(nameObj.get("name").getAsString(), 0L);
 						}
 					}
+					if(nameChange.size() == 1){
+						sender.sendMessage(ColorFormatter.replaceColors("&7 Name has never changed since."));
+					}
 				}
 			} catch (Exception ex) {
 				ex.printStackTrace();
@@ -980,7 +983,7 @@ public class CommandHandler {
 				}
 			} else {
 				sender.sendMessage(
-						ColorFormatter.replaceColors("&6Getting al old playernames from '&c'" + name + "&6'."));
+						ColorFormatter.replaceColors("&6Getting al old playernames from '&c" + name + "&6'."));
 				return;
 			}
 		}
