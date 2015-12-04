@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 import javax.annotation.CheckForNull;
 
@@ -23,9 +24,31 @@ public class PlayerGetter {
 		name = DatabaseManager.prepareString(name);
 		try {
 			ResultSet rs = BukkitStarter.plugin.getDB()
-					.doQuery("SELECT * FROM UUID_Table WHERE LastName LIKE '%" + name + "%';");
+					.doQuery("SELECT LastName FROM UUID_Table WHERE LastName LIKE '%" + name + "%';");
 			while (rs.next()) {
 				ret.add(rs.getString("LastName"));
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return ret;
+	}
+
+	public List<UUID> getUuidsLike(String name) {
+		List<UUID> ret = new ArrayList<>();
+		List<OfflinePlayer> offlinePlayers = PlayerGetter.getAll(name);
+		if (!offlinePlayers.isEmpty()) {
+			for (OfflinePlayer opl : offlinePlayers) {
+				ret.add(opl.getUniqueId());
+			}
+			return ret;
+		}
+		name = DatabaseManager.prepareString(name);
+		try {
+			ResultSet rs = BukkitStarter.plugin.getDB()
+					.doQuery("SELECT UUID FROM UUID_Table WHERE LastName LIKE '%" + name + "%';");
+			while (rs.next()) {
+				ret.add(UUID.fromString(rs.getString("UUID")));
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
