@@ -927,15 +927,8 @@ public class CommandHandler {
 	private static class NameLookup implements Runnable {
 		private final UUID uuid;
 		private final CommandSender sender;
-		private final String name;
 
 		public NameLookup(UUID uuid, CommandSender sender) {
-			OfflinePlayer opl = Bukkit.getOfflinePlayer(uuid);
-			if (opl == null) {
-				this.name = uuid.toString();
-			} else {
-				this.name = opl.getName();
-			}
 			this.uuid = uuid;
 			this.sender = sender;
 		}
@@ -958,17 +951,22 @@ public class CommandHandler {
 			}
 			try {
 				JsonArray nameChange = new JsonParser().parse(request).getAsJsonArray();
-				sender.sendMessage(
-						ColorFormatter.replaceColors("&6Getting al old playernames from '&c" + name + "&6'"));
+				OfflinePlayer opl = Bukkit.getOfflinePlayer(uuid);
+				String username = null;
+				if (opl != null) {
+					username = opl.getName();
+				}
+				sender.sendMessage(ColorFormatter.replaceColors("&6Getting al old playernames from '&c"
+						+ uuid.toString() + "&6'" + (username != null ? " AKA &c'" + username + "'" : "")));
 				if (nameChange.size() == 0) {
 					sendNameInfo(null, 0L);
 				} else {
 					for (JsonElement nameInfo : nameChange) {
-						JsonObject name = nameInfo.getAsJsonObject();
-						if (name.has("changedToAt")) {
-							sendNameInfo(name.get("name").getAsString(), name.get("changedToAt").getAsLong());
+						JsonObject nameObj = nameInfo.getAsJsonObject();
+						if (nameObj.has("changedToAt")) {
+							sendNameInfo(nameObj.get("name").getAsString(), nameObj.get("changedToAt").getAsLong());
 						} else {
-							sendNameInfo(name.get("name").getAsString(), 0);
+							sendNameInfo(nameObj.get("name").getAsString(), 0);
 						}
 					}
 				}
@@ -987,7 +985,7 @@ public class CommandHandler {
 			if (d == null) {
 				since = " is his first name";
 			} else {
-				since = " since " + MKTUtils.timeUntilNow(d) + " ago.";
+				since = " since " + MKTUtils.timeUntilNow(d) + ".";
 			}
 			if (name == null) {
 				sender.sendMessage(ColorFormatter.replaceColors("&c This player has no other names"));
