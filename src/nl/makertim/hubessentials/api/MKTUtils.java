@@ -57,6 +57,9 @@ public class MKTUtils {
 	public static String timeUntilNow(Date until) {
 		String ret = "";
 		long secondsBetween = (long) Math.ceil(((until.getTime() - new Date().getTime()) / 1000));
+		if (secondsBetween < 0) {
+			secondsBetween *= -1L;
+		}
 		double minus = 0;
 		if (secondsBetween >= YEARS_IN_SECONDS) {
 			minus = Math.floor(secondsBetween / YEARS_IN_SECONDS);
@@ -90,6 +93,8 @@ public class MKTUtils {
 		}
 		if (ret.endsWith(", ")) {
 			ret = ret.substring(0, ret.length() - 2);
+		} else if (ret.length() == 0) {
+			ret = "Any minute";
 		}
 		return ret;
 	}
