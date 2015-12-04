@@ -985,7 +985,7 @@ public class CommandHandler {
 			if (d == null) {
 				since = " is his first name";
 			} else {
-				since = " since " + MKTUtils.timeUntilNow(d) + ".";
+				since = " changed " + MKTUtils.timeUntilNow(d) + " ago.";
 			}
 			if (name == null) {
 				sender.sendMessage(ColorFormatter.replaceColors("&c This player has no other names"));
