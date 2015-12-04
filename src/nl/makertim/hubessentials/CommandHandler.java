@@ -1,13 +1,18 @@
 package nl.makertim.hubessentials;
 
 import java.io.File;
+import java.io.InputStream;
 import java.lang.reflect.Method;
+import java.net.URL;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.Set;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,6 +33,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -38,6 +47,7 @@ import nl.makertim.hubessentials.GitLabAPI.GitProject;
 import nl.makertim.hubessentials.MapCountSorter.Sort;
 import nl.makertim.hubessentials.api.ColorFormatter;
 import nl.makertim.hubessentials.api.DatabaseManager;
+import nl.makertim.hubessentials.api.MKTUtils;
 import nl.makertim.hubessentials.api.PlayerGetter;
 
 public class CommandHandler {
@@ -81,6 +91,8 @@ public class CommandHandler {
 			return invsee();
 		} else if (command.equalsIgnoreCase("endersee")) {
 			return endersee();
+		} else if (command.equalsIgnoreCase("mchistory")) {
+			return mchistory();
 		} else if (command.equalsIgnoreCase("git")) {
 			return git();
 		} else if (command.equalsIgnoreCase("plr")) {
@@ -113,6 +125,21 @@ public class CommandHandler {
 			return true;
 		}
 		return false;
+	}
+
+	private boolean mchistory() {
+		if (sender.hasPermission("iMine.mchistory")) {
+			if (args.length > 0) {
+				List<UUID> uuidsLike = PlayerGetter.getUuidsLike(args[0]);
+				for (final UUID foundUUID : uuidsLike) {
+					Bukkit.getScheduler().runTaskAsynchronously(BukkitStarter.plugin,
+							new NameLookup(foundUUID, sender));
+				}
+			} else {
+				sender.sendMessage(ChatColor.RED + "Need player to lookup");
+			}
+		}
+		return true;
 	}
 
 	private boolean tab() {
@@ -209,21 +236,21 @@ public class CommandHandler {
 	private boolean hub() {
 		if (args.length == 0) {
 			if (sender instanceof Player) {
-				MktUtils.sendPlayerToServer((Player) sender, "hub");
+				MKTUtils.sendPlayerToServer((Player) sender, "hub");
 			} else {
 				sender.sendMessage("Player only!");
 			}
 		} else if (sender.hasPermission("iMine.hub")) {
 			if (args.length == 1) {
 				if (sender instanceof Player) {
-					MktUtils.sendPlayerToServer((Player) sender, args[0]);
+					MKTUtils.sendPlayerToServer((Player) sender, args[0]);
 				} else {
 					sender.sendMessage("Player only!");
 				}
 			} else if (args.length == 2) {
 				Player pl = PlayerGetter.getOnline(args[1]);
 				if (pl != null) {
-					MktUtils.sendPlayerToServer(pl, args[0]);
+					MKTUtils.sendPlayerToServer(pl, args[0]);
 				} else {
 					sender.sendMessage("That player... is not online");
 				}
@@ -241,7 +268,7 @@ public class CommandHandler {
 				sender.sendMessage("Devolpermodus is now enabled!");
 				for (Player pl : new ArrayList<>(Bukkit.getOnlinePlayers())) {
 					if (!pl.hasPermission("iMine.dev")) {
-						MktUtils.sendPlayerToServer(pl, "hub");
+						MKTUtils.sendPlayerToServer(pl, "hub");
 					}
 				}
 				for (Player pl : new ArrayList<>(Bukkit.getOnlinePlayers())) {
@@ -844,6 +871,8 @@ public class CommandHandler {
 					ret.add(arg);
 				}
 			}
+		} else if (command.equalsIgnoreCase("mchistory") && args.length == 1) {
+			ret = PlayerGetter.getNamesLike(args[args.length - 1]);
 		} else if (command.equalsIgnoreCase("git")) {
 			String[] argumenten = { "-v", "-q", "projects" };
 			for (String arg : argumenten) {
@@ -895,8 +924,80 @@ public class CommandHandler {
 		}
 	}
 
-	private static class ServerReporter implements Runnable {
+	private static class NameLookup implements Runnable {
+		private final UUID uuid;
+		private final CommandSender sender;
+		private final String name;
 
+		public NameLookup(UUID uuid, CommandSender sender) {
+			OfflinePlayer opl = Bukkit.getOfflinePlayer(uuid);
+			if (opl == null) {
+				this.name = uuid.toString();
+			} else {
+				this.name = opl.getName();
+			}
+			this.uuid = uuid;
+			this.sender = sender;
+		}
+
+		public void run() {
+			String request = "";
+			try {
+				URL url = new URL(
+						"https://api.mojang.com/user/profiles/" + uuid.toString().replaceAll("-", "") + "/names");
+				InputStream is = url.openStream();
+				Scanner in = new Scanner(is);
+				while (in.hasNextLine()) {
+					request += in.nextLine();
+				}
+				in.close();
+				is.close();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				return;
+			}
+			try {
+				JsonArray nameChange = new JsonParser().parse(request).getAsJsonArray();
+				sender.sendMessage(
+						ColorFormatter.replaceColors("&6Getting al old playernames from '&c" + name + "&6'"));
+				if (nameChange.size() == 0) {
+					sendNameInfo(null, 0L);
+				} else {
+					for (JsonElement nameInfo : nameChange) {
+						JsonObject name = nameInfo.getAsJsonObject();
+						if (name.has("changedToAt")) {
+							sendNameInfo(name.get("name").getAsString(), name.get("changedToAt").getAsLong());
+						} else {
+							sendNameInfo(name.get("name").getAsString(), 0);
+						}
+					}
+				}
+				System.out.println(nameChange.size());
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+
+		private void sendNameInfo(String name, long time) {
+			Date d = null;
+			if (time > 0L) {
+				d = new Date(time);
+			}
+			String since = "";
+			if (d == null) {
+				since = " is his first name";
+			} else {
+				since = " since " + MKTUtils.timeUntilNow(d) + " ago.";
+			}
+			if (name == null) {
+				sender.sendMessage(ColorFormatter.replaceColors("&c This player has no other names"));
+			} else {
+				sender.sendMessage(ColorFormatter.replaceColors("&6 Name: '&c" + name + "&6'" + since));
+			}
+		}
+	}
+
+	private static class ServerReporter implements Runnable {
 		private static final String FORMAT_MESSAGE = String.format("%s%s[%s%sREPORT%s%s] %s%s%s %s\u00BB%s %s",
 				ChatColor.RESET, ChatColor.BOLD, ChatColor.RED, ChatColor.BOLD, ChatColor.RESET, ChatColor.BOLD,
 				ChatColor.RESET, ChatColor.GRAY, "%s", ChatColor.BOLD, ChatColor.RED, "%s");

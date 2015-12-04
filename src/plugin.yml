@@ -19,6 +19,10 @@ commands:
     description: Kan iemand dit kind uitzetten?
     usage: /mute [player]
     aliases: [stil, aufgedonderd]
+  mchistory:
+    description: Username info
+    usage: /mchistory [player]
+    aliases: [oldname, lastname, namehistory, oldmc]
   fly:
     description: We vliegen er in! PATAT
     usage: /fly <player>
