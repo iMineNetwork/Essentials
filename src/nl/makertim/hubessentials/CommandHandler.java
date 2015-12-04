@@ -970,7 +970,6 @@ public class CommandHandler {
 						}
 					}
 				}
-				System.out.println(nameChange.size());
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
