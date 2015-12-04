@@ -951,13 +951,6 @@ public class CommandHandler {
 			}
 			try {
 				JsonArray nameChange = new JsonParser().parse(request).getAsJsonArray();
-				OfflinePlayer opl = Bukkit.getOfflinePlayer(uuid);
-				String username = null;
-				if (opl != null) {
-					username = opl.getName();
-				}
-				sender.sendMessage(ColorFormatter.replaceColors("&6Getting al old playernames from '&c"
-						+ uuid.toString() + "&6'" + (username != null ? " AKA &c'" + username + "'" : "")));
 				if (nameChange.size() == 0) {
 					sendNameInfo(null, 0L);
 				} else {
@@ -966,7 +959,7 @@ public class CommandHandler {
 						if (nameObj.has("changedToAt")) {
 							sendNameInfo(nameObj.get("name").getAsString(), nameObj.get("changedToAt").getAsLong());
 						} else {
-							sendNameInfo(nameObj.get("name").getAsString(), 0);
+							sendNameInfo(nameObj.get("name").getAsString(), 0L);
 						}
 					}
 				}
@@ -979,17 +972,16 @@ public class CommandHandler {
 			Date d = null;
 			if (time > 0L) {
 				d = new Date(time);
-			}
-			String since = "";
-			if (d == null) {
-				since = " is his first name";
+				if (name == null) {
+					sender.sendMessage(ColorFormatter.replaceColors("&c This player has no other names"));
+				} else {
+					sender.sendMessage(ColorFormatter.replaceColors(
+							"&6 Name: '&c" + name + "&6' changed " + MKTUtils.timeUntilNow(d) + " ago."));
+				}
 			} else {
-				since = " changed " + MKTUtils.timeUntilNow(d) + " ago.";
-			}
-			if (name == null) {
-				sender.sendMessage(ColorFormatter.replaceColors("&c This player has no other names"));
-			} else {
-				sender.sendMessage(ColorFormatter.replaceColors("&6 Name: '&c" + name + "&6'" + since));
+				sender.sendMessage(ColorFormatter.replaceColors("&6Getting al old playernames from '&c"
+						+ uuid.toString() + "&6'" + (name != null ? " AKA &c'" + name + "'" : "")));
+				return;
 			}
 		}
 	}
