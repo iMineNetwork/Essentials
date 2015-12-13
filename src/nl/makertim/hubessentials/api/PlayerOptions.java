@@ -39,7 +39,7 @@ public class PlayerOptions {
 		}
 		return ColorFormatter.replaceColors(ret);
 	}
-
+	
 	public void updateTabPrefix() {
 		pl.setPlayerListName(getPermissionPrefix() + pl.getDisplayName());
 	}
