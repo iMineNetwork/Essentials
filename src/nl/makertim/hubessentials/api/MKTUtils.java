@@ -114,4 +114,18 @@ public class MKTUtils {
 			pl.sendMessage("You " + " have not been sended to " + serverID + " because of " + ex.getMessage());
 		}
 	}
+
+	public static void kickPlayer(final Player pl, final String message) {
+		try {
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			DataOutputStream dos = new DataOutputStream(baos);
+			dos.writeUTF("KickPlayer");
+			dos.writeUTF(pl.getName());
+			dos.writeUTF(message);
+			pl.sendPluginMessage(BukkitStarter.plugin, "BungeeCord", baos.toByteArray());
+			baos.close();
+			dos.close();
+		} catch (Exception ex) {
+		}
+	}
 }
