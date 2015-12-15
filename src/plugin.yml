@@ -22,7 +22,7 @@ commands:
   mchistory:
     description: Username info
     usage: /mchistory [player]
-    aliases: [oldname, lastname, namehistory, oldmc]
+    aliases: [mcname, mcnaam, naammc, namemc, oldname, lastname, namehistory, oldmc]
   fly:
     description: We vliegen er in! PATAT
     usage: /fly <player>
