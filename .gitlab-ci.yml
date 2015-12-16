@@ -29,13 +29,13 @@ distributefase:
 # Sudo su
     - "echo $gitcipass|sudo -S bash"
 # Copy files to there locations
-    - "cp -f ../dist/$1 /home/minecraft/multicraft/servers/server3/plugins/update"
-    - "cp -f ../dist/$1 /home/minecraft/multicraft/servers/server4/plugins/update"
-    - "cp -f ../dist/$1 /home/minecraft/multicraft/servers/server5/plugins/update"
-    - "cp -f ../dist/$1 /home/minecraft/multicraft/servers/server8/plugins/update"
-    - "cp -f ../dist/$1 /home/minecraft/multicraft/servers/server9/plugins/update"
-    - "cp -f ../dist/$1 /home/minecraft/multicraft/servers/server10/plugins/update"
-    - "cp -f ../dist/$1 /home/minecraft/multicraft/servers/server14/plugins/update"
+    - "sudo cp -f ../dist/$1 /home/minecraft/multicraft/servers/server3/plugins/update"
+    - "sudo cp -f ../dist/$1 /home/minecraft/multicraft/servers/server4/plugins/update"
+    - "sudo cp -f ../dist/$1 /home/minecraft/multicraft/servers/server5/plugins/update"
+    - "sudo cp -f ../dist/$1 /home/minecraft/multicraft/servers/server8/plugins/update"
+    - "sudo cp -f ../dist/$1 /home/minecraft/multicraft/servers/server9/plugins/update"
+    - "sudo cp -f ../dist/$1 /home/minecraft/multicraft/servers/server10/plugins/update"
+    - "sudo cp -f ../dist/$1 /home/minecraft/multicraft/servers/server14/plugins/update"
 stages:
   - build
   - deploy
