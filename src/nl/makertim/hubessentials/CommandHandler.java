@@ -1326,6 +1326,8 @@ public class CommandHandler {
 						prosessData();
 					}
 				}).start();
+			}else {
+				sender.sendMessage(ChatColor.RED + "No permission.");
 			}
 		}
 	}
