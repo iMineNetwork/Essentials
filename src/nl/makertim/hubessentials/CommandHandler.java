@@ -41,6 +41,7 @@ import com.google.gson.JsonParser;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.HoverEvent.Action;
 import net.md_5.bungee.api.chat.TextComponent;
 import nl.makertim.hubessentials.GitLabAPI.Commit;
 import nl.makertim.hubessentials.GitLabAPI.GitProject;
@@ -962,7 +963,7 @@ public class CommandHandler {
 							sendNameInfo(nameObj.get("name").getAsString(), 0L);
 						}
 					}
-					if(nameChange.size() == 1){
+					if (nameChange.size() == 1) {
 						sender.sendMessage(ColorFormatter.replaceColors("&7 Name has never changed since."));
 					}
 				}
@@ -1119,27 +1120,35 @@ public class CommandHandler {
 
 		private final CommandSender sender;
 		// 01 = debug, 10 = stil
-		private final byte verbose;
+		private final byte quietVerbose;
 		private final List<Plugin> toUpdate;
 
 		public GitCheckRunnalbe(CommandSender sender, byte verbose) {
 			this.sender = sender;
-			this.verbose = verbose;
+			this.quietVerbose = verbose;
 			this.toUpdate = new ArrayList<>();
 		}
 
 		private void verboseMessage(String msg) {
-			if ((verbose & 0b01) == 1) {
+			if ((quietVerbose & 0b01) == 1) {
 				sender.sendMessage("  " + ChatColor.GRAY + msg);
 			}
 		}
 
-		private boolean shouldSend() {
-			return (verbose & 0b10) == 0;
+		private boolean quietSend() {
+			return (quietVerbose & 0b10) == 0;
 		}
 
 		private void message(String msg) {
 			sender.sendMessage(msg);
+		}
+
+		private void sendTextComponent(TextComponent text) {
+			if (sender instanceof Player) {
+				((Player) sender).spigot().sendMessage(text);
+			} else {
+				sender.sendMessage(text.toPlainText());
+			}
 		}
 
 		private void checkPlugin(Plugin plugin) {
@@ -1231,12 +1240,8 @@ public class CommandHandler {
 							String.format("%s[%d]%s ", ChatColor.RESET, commits.size(), ChatColor.RESET));
 					message.addExtra(extra);
 				}
-				if (shouldSend()) {
-					if (sender instanceof Player) {
-						((Player) sender).spigot().sendMessage(message);
-					} else {
-						sender.sendMessage(message.toPlainText());
-					}
+				if (quietSend()) {
+					sendTextComponent(message);
 				}
 			}
 		}
@@ -1245,75 +1250,55 @@ public class CommandHandler {
 			for (final Plugin plugin : Bukkit.getPluginManager().getPlugins()) {
 				checkPlugin(plugin);
 			}
-			if (toUpdate.size() > 0) {
-				verboseMessage("update found");
-				if (shouldSend()) {
-					if (sender instanceof Player) {
-						TextComponent extra, message = new TextComponent("");
-						extra = new TextComponent(
-								"Files to update: [" + BukkitStarter.UPDATE_DIR.listFiles().length + "]");
-						message.addExtra(extra);
-						boolean noUpdate = BukkitStarter.UPDATE_DIR.listFiles().length == 0;
-						extra = new TextComponent(
-								String.format("  %s%s[%sRELOAD SERVER%s%s]%s ", ChatColor.RESET, ChatColor.BOLD,
-										ChatColor.DARK_GREEN + (noUpdate ? ChatColor.STRIKETHROUGH.toString() : ""),
-										ChatColor.RESET, ChatColor.BOLD, ChatColor.RESET));
-						extra.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/reload"));
-						extra.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-								new ComponentBuilder("Click to reload server").create()));
-						message.addExtra(extra);
-
-						extra = new TextComponent(String.format("%s%s[%sREBOOT SERVER%s%s]", ChatColor.RESET,
-								ChatColor.BOLD, ChatColor.RED + (noUpdate ? ChatColor.STRIKETHROUGH.toString() : ""),
-								ChatColor.RESET, ChatColor.BOLD));
-						extra.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/restart"));
-						extra.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-								new ComponentBuilder(ChatColor.RED + "WARNING, will shutdown server!\n"
-										+ ChatColor.RESET + "Click to reboot server").create()));
-						message.addExtra(extra);
-						((Player) sender).spigot().sendMessage(message);
-					} else {
-						message("There is an update - Reload recommended!");
-					}
-				} else {
-					TextComponent extra, message = new TextComponent("");
-					boolean noUpdate = BukkitStarter.UPDATE_DIR.listFiles().length == 0;
-					extra = new TextComponent(noUpdate ? ChatColor.RED + " No plugins are ready to update"
-							: ChatColor.GREEN + " " + BukkitStarter.UPDATE_DIR.listFiles().length
-									+ " plugins are ready to update!");
-					ComponentBuilder cb = new ComponentBuilder("Plugins to update: \n");
-					for (Plugin pl : toUpdate) {
-						cb.append(ChatColor.GRAY + " " + pl.getName() + "\n");
-					}
-					extra.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, cb.create()));
-					message.addExtra(extra);
-					if (sender instanceof Player) {
-						((Player) sender).spigot().sendMessage(message);
-					} else {
-						message(message.toPlainText());
-					}
-
-					message = new TextComponent("");
-					extra = new TextComponent(String.format("  %s%s[%sRELOAD SERVER%s%s]%s ", ChatColor.RESET,
-							ChatColor.BOLD, ChatColor.DARK_GREEN + (noUpdate ? ChatColor.STRIKETHROUGH.toString() : ""),
-							ChatColor.RESET, ChatColor.BOLD, ChatColor.RESET));
-					extra.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/reload"));
-					extra.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-							new ComponentBuilder("Click to reload server").create()));
-					message.addExtra(extra);
-
-					extra = new TextComponent(String.format("%s%s[%sREBOOT SERVER%s%s]", ChatColor.RESET,
-							ChatColor.BOLD, ChatColor.RED + (noUpdate ? ChatColor.STRIKETHROUGH.toString() : ""),
-							ChatColor.RESET, ChatColor.BOLD));
-					extra.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/restart"));
-					extra.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-							new ComponentBuilder(ChatColor.RED + "WARNING, will shutdown server!\n" + ChatColor.RESET
-									+ "Click to reboot server").create()));
-					message.addExtra(extra);
-					if (sender instanceof Player) {
-						((Player) sender).spigot().sendMessage(message);
-					}
+			int gitUpdates = toUpdate.size();
+			int updates = BukkitStarter.UPDATE_DIR.listFiles().length;
+			if (gitUpdates > 0 || updates > 0) {
+				verboseMessage("Update found");
+				if (gitUpdates > 0) {
+					verboseMessage("  - Git");
+				} else if (updates > 0) {
+					verboseMessage("  - Random update");
 				}
+				TextComponent extra, message = new TextComponent("");
+				// Files to update: #
+				extra = new TextComponent(ChatColor.YELLOW + "Files to update: " + updates);
+				extra.setColor(net.md_5.bungee.api.ChatColor.YELLOW);
+				ComponentBuilder cb = new ComponentBuilder("");
+				for (File newFile : BukkitStarter.UPDATE_DIR.listFiles()) {
+					cb.append(ChatColor.GOLD + " " + newFile.getName() + "\n");
+				}
+				message.setHoverEvent(new HoverEvent(Action.SHOW_TEXT, cb.create()));
+				message.addExtra(extra);
+				// GitRepos to update: #
+				extra = new TextComponent(ChatColor.AQUA + "  GitRepos to update: " + gitUpdates);
+				extra.setColor(net.md_5.bungee.api.ChatColor.AQUA);
+				cb = new ComponentBuilder("");
+				for (Plugin plugin : toUpdate) {
+					cb.append(ChatColor.DARK_AQUA + " " + plugin.getName() + "\n");
+				}
+				message.setHoverEvent(new HoverEvent(Action.SHOW_TEXT, cb.create()));
+				message.addExtra(extra);
+				sendTextComponent(message);
+
+				message = new TextComponent("");
+				// [RELOAD SERVER]
+				extra = new TextComponent(String.format(" %s%s[%sReload Server%s%s]%s ", ChatColor.RESET,
+						ChatColor.BOLD, ChatColor.DARK_GREEN + (updates == 0 ? ChatColor.STRIKETHROUGH.toString() : ""),
+						ChatColor.RESET, ChatColor.BOLD, ChatColor.RESET));
+				extra.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/reload"));
+				extra.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+						new ComponentBuilder("Click to reload server").create()));
+				message.addExtra(extra);
+				// [REBOOT SERVER]
+				extra = new TextComponent(String.format("%s%s[%sReboot Server%s%s]", ChatColor.RESET, ChatColor.BOLD,
+						ChatColor.RED + (updates == 0 ? ChatColor.STRIKETHROUGH.toString() : ""), ChatColor.RESET,
+						ChatColor.BOLD));
+				extra.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/restart"));
+				extra.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(
+						ChatColor.RED + "WARNING, will shutdown server!\n" + ChatColor.RESET + "Click to reboot server")
+								.create()));
+				message.addExtra(extra);
+				sendTextComponent(message);
 			} else {
 				message(ChatColor.GRAY + " No updates found!");
 			}
