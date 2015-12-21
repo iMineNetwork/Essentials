@@ -1265,18 +1265,27 @@ public class CommandHandler {
 				extra.setColor(net.md_5.bungee.api.ChatColor.YELLOW);
 				ComponentBuilder cb = new ComponentBuilder("");
 				for (File newFile : BukkitStarter.UPDATE_DIR.listFiles()) {
-					cb.append(ChatColor.GOLD + " " + newFile.getName() + "\n");
+					String append = ChatColor.GOLD + " " + newFile.getName();
+					if (BukkitStarter.UPDATE_DIR.listFiles()[BukkitStarter.UPDATE_DIR.listFiles().length
+							- 1] != newFile) {
+						append += "\n";
+					}
+					cb.append(append);
 				}
-				message.setHoverEvent(new HoverEvent(Action.SHOW_TEXT, cb.create()));
+				extra.setHoverEvent(new HoverEvent(Action.SHOW_TEXT, cb.create()));
 				message.addExtra(extra);
 				// GitRepos to update: #
 				extra = new TextComponent(ChatColor.AQUA + "  GitRepos to update: " + gitUpdates);
 				extra.setColor(net.md_5.bungee.api.ChatColor.AQUA);
 				cb = new ComponentBuilder("");
 				for (Plugin plugin : toUpdate) {
-					cb.append(ChatColor.DARK_AQUA + " " + plugin.getName() + "\n");
+					String append = ChatColor.DARK_AQUA + " " + plugin.getName();
+					if (toUpdate.get(toUpdate.size() - 1) != plugin) {
+						append += "\n";
+					}
+					cb.append(append);
 				}
-				message.setHoverEvent(new HoverEvent(Action.SHOW_TEXT, cb.create()));
+				extra.setHoverEvent(new HoverEvent(Action.SHOW_TEXT, cb.create()));
 				message.addExtra(extra);
 				sendTextComponent(message);
 
