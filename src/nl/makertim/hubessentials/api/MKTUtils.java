@@ -2,7 +2,9 @@ package nl.makertim.hubessentials.api;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -32,6 +34,46 @@ public class MKTUtils {
 			timeDic.put('y', Calendar.YEAR);
 		}
 		return timeDic.get(c);
+	}
+
+	public static boolean deleteDirectory(File directory) {
+		if (directory.exists()) {
+			File[] files = directory.listFiles();
+			if (null != files) {
+				for (int i = 0; i < files.length; i++) {
+					if (files[i].isDirectory()) {
+						deleteDirectory(files[i]);
+					} else {
+						files[i].delete();
+					}
+				}
+			}
+		}
+		return (directory.delete());
+	}
+	
+	public static boolean isEqual(Player pl, Player pl2) {
+		return pl.getUniqueId().equals(pl2.getUniqueId());
+	}
+	
+	public static <T> boolean contains(Collection<T> list, T item) {
+		boolean b = false;
+		for (T listItem : list) {
+			if (listItem.equals(item)) {
+				b = true;
+			}
+		}
+		return b;
+	}
+	
+	public static <T> boolean contains(T[] list, T item) {
+		boolean b = false;
+		for (T listItem : list) {
+			if (listItem.equals(item)) {
+				b = true;
+			}
+		}
+		return b;
 	}
 
 	public static Date fromShortString(String str) {
