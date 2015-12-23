@@ -36,6 +36,10 @@ public class MKTUtils {
 		return timeDic.get(c);
 	}
 
+	public static void updateTab() {
+		BukkitStarter.plugin.getTLH().updateAll();
+	}
+
 	public static boolean deleteDirectory(File directory) {
 		if (directory.exists()) {
 			File[] files = directory.listFiles();
