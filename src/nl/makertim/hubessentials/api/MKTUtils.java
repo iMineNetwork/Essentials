@@ -51,11 +51,11 @@ public class MKTUtils {
 		}
 		return (directory.delete());
 	}
-	
+
 	public static boolean isEqual(Player pl, Player pl2) {
 		return pl.getUniqueId().equals(pl2.getUniqueId());
 	}
-	
+
 	public static <T> boolean contains(Collection<T> list, T item) {
 		boolean b = false;
 		for (T listItem : list) {
@@ -65,7 +65,7 @@ public class MKTUtils {
 		}
 		return b;
 	}
-	
+
 	public static <T> boolean contains(T[] list, T item) {
 		boolean b = false;
 		for (T listItem : list) {
@@ -94,6 +94,29 @@ public class MKTUtils {
 
 	public static Date combine(Date first, Date toAdd) {
 		return new Date(first.getTime() + toAdd.getTime());
+	}
+
+	public static String readableEnum(Enum<?> e) {
+		return readableVar(e.toString());
+	}
+
+	public static String readableVar(String javaName) {
+		javaName = javaName.toString().toLowerCase().replaceAll("_", "\\s+");
+		String ret = "";
+		boolean CASE = true;
+		for (char c : javaName.toString().toCharArray()) {
+			if (!Character.isLetter(c) && !Character.isSpaceChar(c)) {
+				CASE = true;
+				continue;
+			}
+			if (CASE) {
+				ret += Character.toUpperCase(c);
+				CASE = false;
+			} else {
+				ret += Character.toLowerCase(c);
+			}
+		}
+		return ret;
 	}
 
 	public static String timeUntilNow(Date until) {
