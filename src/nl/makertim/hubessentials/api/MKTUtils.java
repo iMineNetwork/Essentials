@@ -101,11 +101,15 @@ public class MKTUtils {
 	}
 
 	public static String readableVar(String javaName) {
-		javaName = javaName.toString().toLowerCase().replaceAll("_", "\\s+");
+		javaName = javaName.toString().toLowerCase().replaceAll("_", " ");
 		String ret = "";
 		boolean CASE = true;
 		for (char c : javaName.toString().toCharArray()) {
-			if (!Character.isLetter(c) && !Character.isSpaceChar(c)) {
+			if (Character.isSpaceChar(c)) {
+				ret += c;
+				continue;
+			}
+			if (!Character.isLetter(c)) {
 				CASE = true;
 				continue;
 			}
