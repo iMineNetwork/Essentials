@@ -36,6 +36,17 @@ public class MKTUtils {
 		return timeDic.get(c);
 	}
 
+	public static boolean isNumber(String num) {
+		boolean ret = false;
+		try {
+			Double.parseDouble(num);
+			ret = true;
+		} catch (Exception ex) {
+			ret = false;
+		}
+		return ret;
+	}
+
 	public static void updateTab() {
 		BukkitStarter.plugin.getTLH().updateAll();
 	}
