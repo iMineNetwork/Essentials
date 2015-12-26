@@ -40,6 +40,14 @@ public class BukkitListener implements Listener {
 		}
 	}
 
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onMinecraftCommand(PlayerCommandPreprocessEvent pcpe) {
+		if (pcpe.getMessage().contains("minecraft:")
+				&& !pcpe.getPlayer().hasPermission("iMine.command.minecraft.bypass")) {
+			pcpe.setCancelled(true);
+		}
+	}
+
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onTP(PlayerTeleportEvent pte) {
 		if (!pte.isCancelled()) {
