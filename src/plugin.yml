@@ -88,6 +88,10 @@ commands:
     description: Back to base
     usage: /return 
     aliases: [back]
+  banrichtlijn:
+    description: Ban richtlijn
+    usage: /banrichtlijn 
+    aliases: [banhelp, banmaatstaaf, maatstaafban]
   vanish:
     description: GHOSTMODE
     usage: /vanish 

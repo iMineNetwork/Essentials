@@ -86,6 +86,8 @@ public class CommandHandler {
 			return gmx();
 		} else if (command.equalsIgnoreCase("speed")) {
 			return speed();
+		} else if (command.equalsIgnoreCase("banrichtlijn")) {
+			return banrichtlijn();
 		} else if (command.equalsIgnoreCase("msg")) {
 			return msg();
 		} else if (command.equalsIgnoreCase("invsee")) {
@@ -126,6 +128,21 @@ public class CommandHandler {
 			return true;
 		}
 		return false;
+	}
+
+	private boolean banrichtlijn() {
+		sender.sendMessage(ColorFormatter.replaceColors("&4&lBanRichtlijn"));
+		sender.sendMessage(ColorFormatter.replaceColors("   "));
+		sender.sendMessage(ColorFormatter.replaceColors("&3Griefing &6- &2Permanent ban"));
+		sender.sendMessage(ColorFormatter.replaceColors("&3Hacks &6- &2Permanent ban"));
+		sender.sendMessage(ColorFormatter.replaceColors("&3Extreem schelden &6- &248 uur ban "));
+		sender.sendMessage(
+				ColorFormatter.replaceColors("&3Schelden &6- &2Waarschuwing (kick), daarna 2 tot 4 uur ban"));
+		sender.sendMessage(ColorFormatter.replaceColors("&3Spam &6- &2Waarschuwing (kick), daarna 2 tot 4 uur ban"));
+		sender.sendMessage(ColorFormatter.replaceColors("   "));
+		sender.sendMessage(
+				ColorFormatter.replaceColors("&eBedenk je ban verstandig en zet er een DUIDELIJKE reden bij."));
+		return true;
 	}
 
 	private boolean mchistory() {
@@ -1326,7 +1343,7 @@ public class CommandHandler {
 						prosessData();
 					}
 				}).start();
-			}else {
+			} else {
 				sender.sendMessage(ChatColor.RED + "No permission.");
 			}
 		}
