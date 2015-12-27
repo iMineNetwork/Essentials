@@ -23,7 +23,7 @@ public class PlayerOptions {
 	public String getPermissionPrefix() {
 		String ret = "";
 		if (pl.hasPermission("iMine.tab.SU")) {
-			ret = "&1&c[SU]&r ";
+			ret = "&1&4[SU] &c";
 		} else if (pl.hasPermission("iMine.tab.OP")) {
 			ret = "&2&c[OP]&r ";
 		} else if (pl.hasPermission("iMine.tab.HELPER")) {
@@ -39,7 +39,7 @@ public class PlayerOptions {
 		}
 		return ColorFormatter.replaceColors(ret);
 	}
-	
+
 	public void updateTabPrefix() {
 		pl.setPlayerListName(getPermissionPrefix() + pl.getDisplayName());
 	}
