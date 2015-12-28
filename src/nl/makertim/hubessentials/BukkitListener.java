@@ -29,6 +29,7 @@ public class BukkitListener implements Listener {
 
 	private static final String[] SHOP_FORMAT = { "shop", "kost", "duur", "kopen", "whitelist", "vip" };
 	private static final String[] BUGS_FORMAT = { "help", "bug", "fout", "error" };
+	private static final String[] TS_FORMAT = { "ts", "teamspeak", "team", "speak" };
 	private static final Set<UUID> MUTED = new HashSet<>();
 	public static final Map<UUID, List<Location>> TP_HISTORY = new HashMap<>();
 	public static final List<UUID> VANISH = new ArrayList<>();
@@ -137,15 +138,23 @@ public class BukkitListener implements Listener {
 								+ "Do you like to purchase one of our fine VIP ranks or a whitelist? Click here "
 								+ ChatColor.BLUE + ChatColor.UNDERLINE + "shop.iMine.nl");
 			}
+
 			sendMssg = false;
 			for (String bgs : BUGS_FORMAT) {
 				if (mssg.toLowerCase().contains(bgs)) {
 					sendMssg = true;
 				}
 			}
+
+			sendMssg = false;
+			for (String ts : TS_FORMAT) {
+				if (mssg.toLowerCase().contains(ts)) {
+					sendMssg = true;
+				}
+			}
 			if (sendMssg) {
-				apce.getPlayer().sendMessage(ChatColor.RED + ChatColor.BOLD.toString() + "Found a bug? Report it to "
-						+ ChatColor.BLUE + ChatColor.UNDERLINE + "bugs.iMine.nl");
+				apce.getPlayer().sendMessage(ChatColor.AQUA + ChatColor.BOLD.toString() + "Teamspeak ip: "
+						+ ChatColor.BLUE + ChatColor.UNDERLINE + "ts.imine.nl");
 			}
 		}
 	}
