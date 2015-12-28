@@ -34,7 +34,7 @@ public class BukkitListener implements Listener {
 
 	private static final String[] SHOP_FORMAT = { "shop", "kost", "duur", "kopen", "whitelist", "vip" };
 	private static final String[] BUGS_FORMAT = { "help", "bug", "fout", "error" };
-	private static final String[] TS_FORMAT = { "ts", "teamspeak", "team", "speak" };
+	private static final String[] TS_FORMAT = { " ts", "teamspeak", "team", "speak" };
 	private static final Set<UUID> MUTED = new HashSet<>();
 	public static final Map<UUID, List<Location>> TP_HISTORY = new HashMap<>();
 	public static final List<UUID> VANISH = new ArrayList<>();
