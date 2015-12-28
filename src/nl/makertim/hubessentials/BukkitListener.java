@@ -23,6 +23,7 @@ import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
+import nl.makertim.hubessentials.api.ColorFormatter;
 import nl.makertim.hubessentials.api.DatabaseManager;
 
 public class BukkitListener implements Listener {
@@ -153,8 +154,9 @@ public class BukkitListener implements Listener {
 				}
 			}
 			if (sendMssg) {
-				apce.getPlayer().sendMessage(ChatColor.AQUA + ChatColor.BOLD.toString() + "Teamspeak ip: "
-						+ ChatColor.BLUE + ChatColor.UNDERLINE + "ts.imine.nl");
+				// ts3server://ts.imine.nl
+				apce.getPlayer().sendMessage(ColorFormatter.replaceColors(
+						"&b&lTeamspeak ip: &9&nts.imine.nl  &6OF direct via: &9&nts3server://ts.imine.nl"));
 			}
 		}
 	}
