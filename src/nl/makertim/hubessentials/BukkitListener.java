@@ -23,6 +23,10 @@ import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import nl.makertim.hubessentials.api.ColorFormatter;
 import nl.makertim.hubessentials.api.DatabaseManager;
 
@@ -154,9 +158,27 @@ public class BukkitListener implements Listener {
 				}
 			}
 			if (sendMssg) {
-				// ts3server://ts.imine.nl
-				apce.getPlayer().sendMessage(ColorFormatter.replaceColors(
-						"&b&lTeamspeak ip: &9&nts.imine.nl  &6OF direct via: &9&nts3server://ts.imine.nl"));
+				TextComponent extra, message = new TextComponent("");
+
+				extra = new TextComponent(ColorFormatter.replaceColors("&b&lTeamspeak ip: "));
+				message.addExtra(extra);
+
+				extra = new TextComponent(ColorFormatter.replaceColors("&9&nts.imine.nl"));
+				extra.setHoverEvent(
+						new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("iMine ip").create()));
+				extra.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "ts.imine.nl"));
+				message.addExtra(extra);
+
+				extra = new TextComponent(ColorFormatter.replaceColors("&6  OF direct via: "));
+				message.addExtra(extra);
+
+				extra = new TextComponent(ColorFormatter.replaceColors("&9&nts3server://ts.imine.nl"));
+				extra.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, "ts3server://ts.imine.nl"));
+				extra.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+						new ComponentBuilder("open direct in TeamSpeak3").create()));
+				message.addExtra(extra);
+
+				apce.getPlayer().spigot().sendMessage(message);
 			}
 		}
 	}
