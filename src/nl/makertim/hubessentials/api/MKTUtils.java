@@ -65,6 +65,14 @@ public class MKTUtils {
 		return in.toArray();
 	}
 
+	public static String repeat(int x, String toRepeat) {
+		String str = "";
+		for (int i = 0; i < x; i++) {
+			str += toRepeat;
+		}
+		return str;
+	}
+
 	public static boolean deleteDirectory(File directory) {
 		if (directory.exists()) {
 			File[] files = directory.listFiles();
