@@ -3,10 +3,12 @@ package nl.makertim.hubessentials.api;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.bukkit.entity.Player;
@@ -49,6 +51,18 @@ public class MKTUtils {
 
 	public static void updateTab() {
 		BukkitStarter.plugin.getTLH().updateAll();
+	}
+
+	public static <T> List<T> toList(T[] in) {
+		List<T> ret = new ArrayList<>();
+		for (T t : in) {
+			ret.add(t);
+		}
+		return ret;
+	}
+
+	public static <T> Object[] toArray(List<T> in) {
+		return in.toArray();
 	}
 
 	public static boolean deleteDirectory(File directory) {
