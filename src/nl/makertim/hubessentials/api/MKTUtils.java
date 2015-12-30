@@ -8,6 +8,7 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -47,6 +48,17 @@ public class MKTUtils {
 			ret = false;
 		}
 		return ret;
+	}
+
+	public static <T extends Iterable<String>> T filter(T list, String filter) {
+		Iterator<String> strI = list.iterator();
+		while (strI.hasNext()) {
+			String str = strI.next();
+			if (!str.toLowerCase().contains(filter.toLowerCase())) {
+				strI.remove();
+			}
+		}
+		return list;
 	}
 
 	public static void updateTab() {
