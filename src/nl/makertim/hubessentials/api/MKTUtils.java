@@ -50,7 +50,7 @@ public class MKTUtils {
 		return ret;
 	}
 
-	public static <T extends Iterable<String>> T filter(T list, String filter) {
+	public static <T extends Iterable<String>> void filter(T list, String filter) {
 		Iterator<String> strI = list.iterator();
 		while (strI.hasNext()) {
 			String str = strI.next();
@@ -58,7 +58,6 @@ public class MKTUtils {
 				strI.remove();
 			}
 		}
-		return list;
 	}
 
 	public static void updateTab() {
