@@ -38,6 +38,7 @@ public class BukkitListener implements Listener {
 	private static final Set<UUID> MUTED = new HashSet<>();
 	public static final Map<UUID, List<Location>> TP_HISTORY = new HashMap<>();
 	public static final List<UUID> VANISH = new ArrayList<>();
+	public static boolean VANISH_ABLE = true;
 
 	@EventHandler
 	public void onJoin(PlayerLoginEvent ple) {
@@ -97,6 +98,9 @@ public class BukkitListener implements Listener {
 	}
 
 	public static void updateVanish() {
+		if (!VANISH_ABLE) {
+			return;
+		}
 		List<Player> nonHidden = new ArrayList<Player>(Bukkit.getOnlinePlayers());
 		for (Player pl : Bukkit.getOnlinePlayers()) {
 			for (UUID vanished : VANISH) {
@@ -114,7 +118,9 @@ public class BukkitListener implements Listener {
 
 	@EventHandler
 	public void updateVanish(PlayerJoinEvent pje) {
-		updateVanish();
+		if (VANISH_ABLE) {
+			updateVanish();
+		}
 	}
 
 	@EventHandler
