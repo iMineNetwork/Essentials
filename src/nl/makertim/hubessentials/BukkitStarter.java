@@ -16,7 +16,7 @@ public class BukkitStarter extends JavaPlugin {
 	public static final GitLabAPI API = new GitLabAPI();
 	public static final File UPDATE_DIR = new File("plugins/update/");
 	private static final Long PEX_DELAY = 20L * 60L * 13L; // Try to random
-	
+
 	public static BukkitStarter plugin;
 
 	private DatabaseManager dm;
@@ -26,6 +26,7 @@ public class BukkitStarter extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		plugin = this;
+		new NewYear();
 		dm = new DatabaseManager(Credentials.getDatabase(), Credentials.getUsername(), Credentials.getPassword());
 		setupConfig();
 		getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
