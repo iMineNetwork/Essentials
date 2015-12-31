@@ -16,7 +16,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class NewYear implements Listener, Runnable {
 
-	private static final long DELAY = 20 * 15;
+	private static final long DELAY = 20 * 5;
 	private static final Random RAND = new Random();
 
 	public NewYear() {
