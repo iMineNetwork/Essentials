@@ -26,7 +26,7 @@ public class BukkitStarter extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		plugin = this;
-		new NewYear();
+		//new NewYear();
 		dm = new DatabaseManager(Credentials.getDatabase(), Credentials.getUsername(), Credentials.getPassword());
 		setupConfig();
 		getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
