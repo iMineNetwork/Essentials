@@ -32,7 +32,9 @@ public class DatabaseManager {
 
 	public boolean closeConnection() {
 		try {
-			connection.close();
+			if (connection != null) {
+				connection.close();
+			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			return false;
