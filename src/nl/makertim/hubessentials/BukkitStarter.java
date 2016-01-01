@@ -15,7 +15,7 @@ public class BukkitStarter extends JavaPlugin {
 
 	public static final GitLabAPI API = new GitLabAPI();
 	public static final File UPDATE_DIR = new File("plugins/update/");
-	private static final Long PEX_DELAY = 20L * 60L * 13L; // Try to random
+	private static final Long PEX_DELAY = 20L * 60L * 4L; // Try to random
 
 	public static BukkitStarter plugin;
 
