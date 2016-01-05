@@ -1,4 +1,4 @@
-package nl.makertim.hubessentials;
+package nl.makertim.essentials;
 
 import java.io.InputStream;
 import java.net.URL;

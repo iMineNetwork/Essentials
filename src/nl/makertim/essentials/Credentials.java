@@ -1,4 +1,4 @@
-package nl.makertim.hubessentials;
+package nl.makertim.essentials;
 
 public class Credentials {
 	private static final String USERNAME = "iMine";

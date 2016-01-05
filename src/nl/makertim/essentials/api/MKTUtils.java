@@ -1,4 +1,4 @@
-package nl.makertim.hubessentials.api;
+package nl.makertim.essentials.api;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
@@ -14,7 +14,7 @@ import java.util.Map;
 
 import org.bukkit.entity.Player;
 
-import nl.makertim.hubessentials.BukkitStarter;
+import nl.makertim.essentials.BukkitStarter;
 
 public class MKTUtils {
 	private static Map<Character, Integer> timeDic;

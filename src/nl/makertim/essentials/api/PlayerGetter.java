@@ -1,4 +1,4 @@
-package nl.makertim.hubessentials.api;
+package nl.makertim.essentials.api;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
-import nl.makertim.hubessentials.BukkitStarter;
+import nl.makertim.essentials.BukkitStarter;
 
 public class PlayerGetter {
 

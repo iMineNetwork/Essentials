@@ -1,4 +1,4 @@
-package nl.makertim.hubessentials;
+package nl.makertim.essentials;
 
 import java.io.File;
 import java.io.InputStream;
@@ -43,14 +43,14 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.HoverEvent.Action;
+import nl.makertim.essentials.GitLabAPI.Commit;
+import nl.makertim.essentials.GitLabAPI.GitProject;
+import nl.makertim.essentials.MapCountSorter.Sort;
+import nl.makertim.essentials.api.ColorFormatter;
+import nl.makertim.essentials.api.DatabaseManager;
+import nl.makertim.essentials.api.MKTUtils;
+import nl.makertim.essentials.api.PlayerGetter;
 import net.md_5.bungee.api.chat.TextComponent;
-import nl.makertim.hubessentials.GitLabAPI.Commit;
-import nl.makertim.hubessentials.GitLabAPI.GitProject;
-import nl.makertim.hubessentials.MapCountSorter.Sort;
-import nl.makertim.hubessentials.api.ColorFormatter;
-import nl.makertim.hubessentials.api.DatabaseManager;
-import nl.makertim.hubessentials.api.MKTUtils;
-import nl.makertim.hubessentials.api.PlayerGetter;
 
 public class CommandHandler {
 

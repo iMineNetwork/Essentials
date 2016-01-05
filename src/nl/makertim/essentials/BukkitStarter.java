@@ -1,4 +1,4 @@
-package nl.makertim.hubessentials;
+package nl.makertim.essentials;
 
 import java.io.File;
 import java.util.List;
@@ -9,7 +9,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import nl.makertim.hubessentials.api.DatabaseManager;
+import nl.makertim.essentials.api.DatabaseManager;
 
 public class BukkitStarter extends JavaPlugin {
 

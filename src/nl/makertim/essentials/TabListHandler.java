@@ -1,4 +1,4 @@
-package nl.makertim.hubessentials;
+package nl.makertim.essentials;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -7,8 +7,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
-import nl.makertim.hubessentials.api.ColorFormatter;
-import nl.makertim.hubessentials.api.PlayerOptions;
+import nl.makertim.essentials.api.ColorFormatter;
+import nl.makertim.essentials.api.PlayerOptions;
 
 public class TabListHandler implements Listener {
 

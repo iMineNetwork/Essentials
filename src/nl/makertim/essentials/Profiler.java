@@ -1,11 +1,11 @@
-package nl.makertim.hubessentials;
+package nl.makertim.essentials;
 
 import java.util.Calendar;
 
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 
-import nl.makertim.hubessentials.api.DatabaseManager;
+import nl.makertim.essentials.api.DatabaseManager;
 
 public class Profiler implements Listener, Runnable {
 

@@ -1,4 +1,4 @@
-package nl.makertim.hubessentials;
+package nl.makertim.essentials;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,8 +27,8 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
-import nl.makertim.hubessentials.api.ColorFormatter;
-import nl.makertim.hubessentials.api.DatabaseManager;
+import nl.makertim.essentials.api.ColorFormatter;
+import nl.makertim.essentials.api.DatabaseManager;
 
 public class BukkitListener implements Listener {
 

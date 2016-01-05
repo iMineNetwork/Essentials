@@ -1,4 +1,4 @@
-package nl.makertim.hubessentials;
+package nl.makertim.essentials;
 
 import java.util.ArrayList;
 import java.util.Collections;
