@@ -6,8 +6,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-import javax.annotation.CheckForNull;
-
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -59,7 +57,6 @@ public class PlayerGetter {
 		return ret;
 	}
 
-	@CheckForNull
 	public static OfflinePlayer get(String name) {
 		OfflinePlayer ret = getOnline(name);
 		if (ret == null) {
@@ -90,7 +87,6 @@ public class PlayerGetter {
 		return ret;
 	}
 
-	@CheckForNull
 	public static OfflinePlayer get(String name, Player pls) {
 		OfflinePlayer ret = getOnline(name, pls);
 		if (ret == null) {
@@ -121,7 +117,6 @@ public class PlayerGetter {
 		return ret;
 	}
 
-	@CheckForNull
 	public static Player getOnline(String name) {
 		List<Player> ret = getAllOnline(name);
 		if (ret.isEmpty()) {
@@ -151,7 +146,6 @@ public class PlayerGetter {
 		return ret;
 	}
 
-	@CheckForNull
 	public static Player getOnline(String name, Player pls) {
 		List<Player> ret = getAllOnline(name, pls);
 		if (ret.isEmpty()) {
@@ -185,7 +179,6 @@ public class PlayerGetter {
 		return ret;
 	}
 
-	@CheckForNull
 	public static OfflinePlayer getOflline(String name) {
 		List<OfflinePlayer> ret = getAllOffline(name);
 		if (ret.isEmpty()) {
