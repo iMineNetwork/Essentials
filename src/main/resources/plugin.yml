@@ -1,6 +1,6 @@
 name: iMine_Essemtials
 main: nl.makertim.essentials.BukkitStarter
-version: 1.CI_BUILD_ID CI_BUILD_REF
+version: ${git.commit.id.abbrev}
 
 commands:
   hub:
