@@ -43,14 +43,14 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.HoverEvent.Action;
+import net.md_5.bungee.api.chat.TextComponent;
+import nl.imine.api.db.DatabaseManager;
+import nl.imine.api.util.ColorUtil;
+import nl.imine.api.util.MktUtil;
+import nl.imine.api.util.PlayerUtil;
 import nl.makertim.essentials.GitLabAPI.Commit;
 import nl.makertim.essentials.GitLabAPI.GitProject;
 import nl.makertim.essentials.MapCountSorter.Sort;
-import nl.makertim.essentials.api.ColorFormatter;
-import nl.makertim.essentials.api.DatabaseManager;
-import nl.makertim.essentials.api.MKTUtils;
-import nl.makertim.essentials.api.PlayerGetter;
-import net.md_5.bungee.api.chat.TextComponent;
 
 public class CommandHandler {
 
@@ -132,27 +132,25 @@ public class CommandHandler {
 	}
 
 	private boolean banrichtlijn() {
-		sender.sendMessage(ColorFormatter.replaceColors("&4&lBanRichtlijn"));
-		sender.sendMessage(ColorFormatter.replaceColors("   "));
-		sender.sendMessage(ColorFormatter.replaceColors("&3Griefing &6- &2Permanent ban"));
-		sender.sendMessage(ColorFormatter.replaceColors("&3Hacks &6- &2Permanent ban"));
-		sender.sendMessage(ColorFormatter.replaceColors("&3Bedrijgen &6- &22weken ban "));
-		sender.sendMessage(ColorFormatter.replaceColors("&3Extreem schelden &6- &248 uur ban "));
-		sender.sendMessage(ColorFormatter
-				.replaceColors("&3Ongepast taalgebruik &6- &2Waarschuwing (kick), daarna 2 tot 4 uur ban"));
-		sender.sendMessage(ColorFormatter.replaceColors("&3Spam &6- &2Waarschuwing (kick), daarna 2 tot 4 uur ban"));
-		sender.sendMessage(ColorFormatter.replaceColors("   "));
+		sender.sendMessage(ColorUtil.replaceColors("&4&lBanRichtlijn"));
+		sender.sendMessage(ColorUtil.replaceColors("   "));
+		sender.sendMessage(ColorUtil.replaceColors("&3Griefing &6- &2Permanent ban"));
+		sender.sendMessage(ColorUtil.replaceColors("&3Hacks &6- &2Permanent ban"));
+		sender.sendMessage(ColorUtil.replaceColors("&3Bedrijgen &6- &22weken ban "));
+		sender.sendMessage(ColorUtil.replaceColors("&3Extreem schelden &6- &248 uur ban "));
 		sender.sendMessage(
-				ColorFormatter.replaceColors("&eBedenk je ban verstandig en zet er een DUIDELIJKE reden bij."));
-		sender.sendMessage(
-				ColorFormatter.replaceColors("&7Mocht je dit niet kunnen, geef dit door aan je leidinggevende!"));
+				ColorUtil.replaceColors("&3Ongepast taalgebruik &6- &2Waarschuwing (kick), daarna 2 tot 4 uur ban"));
+		sender.sendMessage(ColorUtil.replaceColors("&3Spam &6- &2Waarschuwing (kick), daarna 2 tot 4 uur ban"));
+		sender.sendMessage(ColorUtil.replaceColors("   "));
+		sender.sendMessage(ColorUtil.replaceColors("&eBedenk je ban verstandig en zet er een DUIDELIJKE reden bij."));
+		sender.sendMessage(ColorUtil.replaceColors("&7Mocht je dit niet kunnen, geef dit door aan je leidinggevende!"));
 		return true;
 	}
 
 	private boolean mchistory() {
 		if (sender.hasPermission("iMine.mchistory")) {
 			if (args.length > 0) {
-				List<UUID> uuidsLike = PlayerGetter.getUuidsLike(args[0]);
+				List<UUID> uuidsLike = PlayerUtil.getUuidsLike(args[0]);
 				for (final UUID foundUUID : uuidsLike) {
 					Bukkit.getScheduler().runTaskAsynchronously(BukkitStarter.plugin,
 							new NameLookup(foundUUID, sender));
@@ -173,7 +171,7 @@ public class CommandHandler {
 					msg += args[i] + " ";
 				}
 				msg = msg.substring(0, msg.length() - 1);
-				msg = ColorFormatter.replaceColors(msg);
+				msg = ColorUtil.replaceColors(msg);
 				if (args[0].equalsIgnoreCase("top")) {
 					tlh.updateTop(msg);
 					sender.sendMessage(ChatColor.GOLD + "Tab top updated to " + ChatColor.RESET + msg);
@@ -196,7 +194,7 @@ public class CommandHandler {
 			if (args.length == 0 && sender instanceof Player) {
 				pl = (Player) sender;
 			} else {
-				pl = PlayerGetter.getOnline(args[0]);
+				pl = PlayerUtil.getOnline(args[0]);
 			}
 			if (pl != null) {
 				pl.setAllowFlight(!pl.getAllowFlight());
@@ -243,7 +241,7 @@ public class CommandHandler {
 
 	private boolean mute() {
 		if (args.length != 0 && sender.hasPermission("iMine.mute")) {
-			OfflinePlayer pl = PlayerGetter.get(args[0]);
+			OfflinePlayer pl = PlayerUtil.getOflline(args[0]);
 			if (pl != null) {
 				BukkitListener.toggleMuted(pl);
 				sender.sendMessage(ChatColor.GOLD + pl.getName() + " is now "
@@ -258,21 +256,21 @@ public class CommandHandler {
 	private boolean hub() {
 		if (args.length == 0) {
 			if (sender instanceof Player) {
-				MKTUtils.sendPlayerToServer((Player) sender, "hub");
+				MktUtil.sendPlayerToServer(BukkitStarter.plugin, (Player) sender, "hub");
 			} else {
 				sender.sendMessage("Player only!");
 			}
 		} else if (sender.hasPermission("iMine.hub")) {
 			if (args.length == 1) {
 				if (sender instanceof Player) {
-					MKTUtils.sendPlayerToServer((Player) sender, args[0]);
+					MktUtil.sendPlayerToServer(BukkitStarter.plugin, (Player) sender, args[0]);
 				} else {
 					sender.sendMessage("Player only!");
 				}
 			} else if (args.length == 2) {
-				Player pl = PlayerGetter.getOnline(args[1]);
+				Player pl = PlayerUtil.getOnline(args[1]);
 				if (pl != null) {
-					MKTUtils.sendPlayerToServer(pl, args[0]);
+					MktUtil.sendPlayerToServer(BukkitStarter.plugin, pl, args[0]);
 				} else {
 					sender.sendMessage("That player... is not online");
 				}
@@ -290,11 +288,8 @@ public class CommandHandler {
 				sender.sendMessage("Devolpermodus is now enabled!");
 				for (Player pl : new ArrayList<>(Bukkit.getOnlinePlayers())) {
 					if (!pl.hasPermission("iMine.dev")) {
-						MKTUtils.sendPlayerToServer(pl, "hub");
+						MktUtil.sendPlayerToServer(BukkitStarter.plugin, pl, "hub");
 					}
-				}
-				for (Player pl : new ArrayList<>(Bukkit.getOnlinePlayers())) {
-					pl.kickPlayer("DEV MODE ONLY");
 				}
 			} else {
 				sender.sendMessage("Server now public");
@@ -351,7 +346,7 @@ public class CommandHandler {
 					}
 				} else {
 					Map<Class<? extends Entity>, List<Entity>> countMap = new HashMap<>();
-					List<Player> argsPlayers = PlayerGetter.getAllOnline(args[0]);
+					List<Player> argsPlayers = PlayerUtil.getAllOnline(args[0]);
 					for (World w : Bukkit.getWorlds()) {
 						for (Entity e : w.getEntities()) {
 							double distance = Math.pow(10D, 4D);
@@ -388,7 +383,7 @@ public class CommandHandler {
 		if (sender.hasPermission("iMine.tp")) {
 			if (args.length == 1) {
 				if (sender instanceof Player) {
-					Player pl = PlayerGetter.getOnline(args[0]);
+					Player pl = PlayerUtil.getOnline(args[0]);
 					if (pl != null) {
 						((Player) sender).teleport(pl);
 						sender.sendMessage(ChatColor.GOLD + "Teleporting to " + ChatColor.RED + pl.getName()
@@ -400,8 +395,8 @@ public class CommandHandler {
 					sender.sendMessage(ChatColor.RED + "Only for players!");
 				}
 			} else if (args.length == 2) {
-				Player who = PlayerGetter.getOnline(args[0]);
-				Player target = PlayerGetter.getOnline(args[1]);
+				Player who = PlayerUtil.getOnline(args[0]);
+				Player target = PlayerUtil.getOnline(args[1]);
 				if (who != null) {
 					if (target != null) {
 						who.teleport(target);
@@ -426,7 +421,7 @@ public class CommandHandler {
 				}
 				try {
 					if (faultArg == 0 && args.length == 4) {
-						Player target = PlayerGetter.getOnline(args[0]);
+						Player target = PlayerUtil.getOnline(args[0]);
 						if (target != null) {
 							target.teleport(new Location(target.getWorld(), coords[1], coords[2], coords[3],
 									target.getLocation().getYaw(), target.getLocation().getPitch()));
@@ -502,7 +497,7 @@ public class CommandHandler {
 						sender.sendMessage(ChatColor.RED + "Only for players!");
 					}
 				} else if (args.length == 2) {
-					Player who = PlayerGetter.getOnline(args[1]);
+					Player who = PlayerUtil.getOnline(args[1]);
 					if (who != null) {
 						if (set != null) {
 							who.setGameMode(set);
@@ -551,7 +546,7 @@ public class CommandHandler {
 					sender.sendMessage(ChatColor.RED + "Only for players!");
 				}
 			} else if (args.length == 1) {
-				Player who = PlayerGetter.getOnline(args[0]);
+				Player who = PlayerUtil.getOnline(args[0]);
 				if (who != null) {
 					who.setGameMode(set);
 					who.sendMessage(ChatColor.GOLD + "Set gamemode to " + ChatColor.RED + set.name().toLowerCase());
@@ -598,7 +593,7 @@ public class CommandHandler {
 							sender.sendMessage(ChatColor.GOLD + "Walk speed set to " + args[0]);
 						}
 					} else if (args.length == 3) {
-						Player who = PlayerGetter.getOnline(args[2]);
+						Player who = PlayerUtil.getOnline(args[2]);
 						if (who != null) {
 							if (args[1].toLowerCase().contains("f")) {
 								who.setFlySpeed(speed);
@@ -630,13 +625,13 @@ public class CommandHandler {
 	private boolean msg() {
 		if (sender.hasPermission("iMine.msg")) {
 			if (args.length > 1) {
-				Player target = PlayerGetter.getOnline(args[0]);
+				Player target = PlayerUtil.getOnline(args[0]);
 				if (target != null) {
 					String msg = "";
 					for (int i = 1; i < args.length; i++) {
 						msg += args[i] + " ";
 					}
-					msg = ColorFormatter.replaceColors(msg);
+					msg = ColorUtil.replaceColors(msg);
 					target.sendMessage(ChatColor.DARK_GRAY.toString() + ChatColor.ITALIC + "Received message from "
 							+ ChatColor.RED + sender.getName() + ChatColor.DARK_GRAY + ChatColor.BOLD + " \u00BB "
 							+ ChatColor.RESET + ChatColor.GRAY + msg);
@@ -666,7 +661,7 @@ public class CommandHandler {
 	private boolean invsee() {
 		if (sender.hasPermission("iMine.invsee")) {
 			if (args.length == 1) {
-				Player target = PlayerGetter.getOnline(args[0]);
+				Player target = PlayerUtil.getOnline(args[0]);
 				if (sender instanceof Player && target != null) {
 					Player pl = (Player) sender;
 					pl.openInventory(target.getInventory());
@@ -685,7 +680,7 @@ public class CommandHandler {
 	private boolean endersee() {
 		if (sender.hasPermission("iMine.endersee")) {
 			if (args.length == 1) {
-				Player target = PlayerGetter.getOnline(args[0]);
+				Player target = PlayerUtil.getOnline(args[0]);
 				if (sender instanceof Player && target != null) {
 					Player pl = (Player) sender;
 					pl.openInventory(target.getEnderChest());
@@ -771,7 +766,7 @@ public class CommandHandler {
 					sender.sendMessage(ChatColor.RED + "Player only");
 				}
 			} else {
-				Player target = PlayerGetter.getOnline(args[0]);
+				Player target = PlayerUtil.getOnline(args[0]);
 				if (target != null) {
 					if (BukkitListener.VANISH.contains(target.getUniqueId())) {
 						BukkitListener.VANISH.remove(target.getUniqueId());
@@ -803,7 +798,7 @@ public class CommandHandler {
 					sender.sendMessage(ChatColor.RED + "Player only");
 				}
 			} else {
-				Player target = PlayerGetter.getOnline(args[0]);
+				Player target = PlayerUtil.getOnline(args[0]);
 				if (target != null) {
 					target.setHealth(0D);
 					sender.sendMessage(ChatColor.GOLD + "Assassinated!");
@@ -826,7 +821,7 @@ public class CommandHandler {
 					for (int i = 0; i < args.length; i++) {
 						msg += args[i] + " ";
 					}
-					msg = ColorFormatter.replaceColors(msg);
+					msg = ColorUtil.replaceColors(msg);
 					target.sendMessage(ChatColor.DARK_GRAY.toString() + ChatColor.ITALIC + "Received message from "
 							+ ChatColor.RED + sender.getName() + ChatColor.DARK_GRAY + ChatColor.BOLD + " \u00BB "
 							+ ChatColor.RESET + ChatColor.GRAY + msg);
@@ -861,7 +856,7 @@ public class CommandHandler {
 					msg += args[i] + " ";
 				}
 				msg = msg.substring(0, msg.length() - 1);
-				msg = ColorFormatter.replaceColors(msg);
+				msg = ColorUtil.replaceColors(msg);
 				Bukkit.broadcastMessage(
 						ChatColor.GOLD + "* " + ChatColor.GRAY + sender.getName() + " " + ChatColor.WHITE + msg);
 			} else {
@@ -884,7 +879,7 @@ public class CommandHandler {
 					}
 				}
 			} else if (args.length == 2) {
-				ret.addAll(PlayerGetter.getAllOnlineNames(args[args.length - 1], sender));
+				ret.addAll(PlayerUtil.getAllOnlineNames(args[args.length - 1], sender));
 			}
 		} else if (command.equalsIgnoreCase("tab") && args.length == 1) {
 			String[] argumenten = { "top", "bottom", "update" };
@@ -894,7 +889,7 @@ public class CommandHandler {
 				}
 			}
 		} else if (command.equalsIgnoreCase("mchistory") && args.length == 1) {
-			ret = PlayerGetter.getNamesLike(args[args.length - 1]);
+			ret = PlayerUtil.getNamesLike(args[args.length - 1]);
 		} else if (command.equalsIgnoreCase("git")) {
 			String[] argumenten = { "-v", "-q", "projects" };
 			for (String arg : argumenten) {
@@ -918,20 +913,20 @@ public class CommandHandler {
 				|| (command.equalsIgnoreCase("kill") && args.length == 1) || (command.equalsIgnoreCase("reply"))
 				|| (command.equalsIgnoreCase("endersee") && args.length == 1) || (command.equalsIgnoreCase("msg"))
 				|| (command.equalsIgnoreCase("speed") && args.length > 1) || (command.equalsIgnoreCase("me"))) {
-			ret.addAll(PlayerGetter.getAllOnlineNames(args[args.length - 1], sender));
+			ret.addAll(PlayerUtil.getAllOnlineNames(args[args.length - 1], sender));
 		} else if (command.equalsIgnoreCase("update")) {
 		} else if (command.equalsIgnoreCase("lagdebug")) {
 			if ("players".contains(args[args.length - 1])) {
 				ret.add("players");
 			}
-			ret.addAll(PlayerGetter.getAllOnlineNames(args[args.length - 1], sender));
+			ret.addAll(PlayerUtil.getAllOnlineNames(args[args.length - 1], sender));
 		}
 		return ret;
 	}
 
 	private static void globalAdminMessage(Player sender, String message) {
 		DatabaseManager db = BukkitStarter.plugin.getDB();
-		ResultSet rs = db.doQuery("SELECT UUID_Table.LastName FROM AdminRegister JOIN UUID_Table "
+		ResultSet rs = db.selectQuery("SELECT UUID_Table.LastName FROM AdminRegister JOIN UUID_Table "
 				+ "ON UUID_Table.UUID = AdminRegister.UUID;");
 		try {
 			while (rs.next()) {
@@ -985,7 +980,7 @@ public class CommandHandler {
 						}
 					}
 					if (nameChange.size() == 1) {
-						sender.sendMessage(ColorFormatter.replaceColors("&7 Name has never changed since."));
+						sender.sendMessage(ColorUtil.replaceColors("&7 Name has never changed since."));
 					}
 				}
 			} catch (Exception ex) {
@@ -998,14 +993,13 @@ public class CommandHandler {
 			if (time > 0L) {
 				d = new Date(time);
 				if (name == null) {
-					sender.sendMessage(ColorFormatter.replaceColors("&c This player has no other names"));
+					sender.sendMessage(ColorUtil.replaceColors("&c This player has no other names"));
 				} else {
-					sender.sendMessage(ColorFormatter.replaceColors(
-							"&6 Name: '&c" + name + "&6' changed " + MKTUtils.timeUntilNow(d) + " ago."));
+					sender.sendMessage(ColorUtil
+							.replaceColors("&6 Name: '&c" + name + "&6' changed " + MktUtil.timeUntilNow(d) + " ago."));
 				}
 			} else {
-				sender.sendMessage(
-						ColorFormatter.replaceColors("&6Getting al old playernames from '&c" + name + "&6'."));
+				sender.sendMessage(ColorUtil.replaceColors("&6Getting al old playernames from '&c" + name + "&6'."));
 				return;
 			}
 		}
@@ -1039,7 +1033,7 @@ public class CommandHandler {
 			for (String str : args) {
 				message += str + " ";
 			}
-			message = ColorFormatter.replaceColors(message);
+			message = ColorUtil.replaceColors(message);
 			if (message.matches("^\\s*$")) {
 				sender.sendMessage(ChatColor.RED + "/Report [Message]");
 				return;
@@ -1081,7 +1075,7 @@ public class CommandHandler {
 			for (String str : args) {
 				message += str + " ";
 			}
-			message = ColorFormatter.replaceColors(message);
+			message = ColorUtil.replaceColors(message);
 			if (message.matches("^\\s*$")) {
 				sender.sendMessage(ChatColor.RED + "/Admin [Message]");
 				return;
@@ -1285,7 +1279,7 @@ public class CommandHandler {
 				extra = new TextComponent(ChatColor.YELLOW + "Files to update: " + updates);
 				extra.setColor(net.md_5.bungee.api.ChatColor.YELLOW);
 				ComponentBuilder cb = new ComponentBuilder("");
-				Iterator<File> newFileI = MKTUtils.toList(BukkitStarter.UPDATE_DIR.listFiles()).iterator();
+				Iterator<File> newFileI = MktUtil.toList(BukkitStarter.UPDATE_DIR.listFiles()).iterator();
 				while (newFileI.hasNext()) {
 					File newFile = newFileI.next();
 					String append = ChatColor.GOLD + newFile.getName();

@@ -7,8 +7,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
-import nl.makertim.essentials.api.ColorFormatter;
-import nl.makertim.essentials.api.PlayerOptions;
+import nl.imine.api.util.ColorUtil;
+import nl.imine.api.util.PlayerUtil;
 
 public class TabListHandler implements Listener {
 
@@ -29,8 +29,8 @@ public class TabListHandler implements Listener {
 			config.set("tab.bottom", "&f&liMine.nl");
 			BukkitStarter.plugin.saveConfig();
 		}
-		top = ColorFormatter.replaceColors(config.getString("tab.top"));
-		bottom = ColorFormatter.replaceColors(config.getString("tab.bottom"));
+		top = ColorUtil.replaceColors(config.getString("tab.top"));
+		bottom = ColorUtil.replaceColors(config.getString("tab.bottom"));
 	}
 
 	public void updateTop(String newTop) {
@@ -49,9 +49,8 @@ public class TabListHandler implements Listener {
 
 	public void updateAll() {
 		for (Player pl : Bukkit.getOnlinePlayers()) {
-			PlayerOptions po = new PlayerOptions(pl);
-			po.updateTabPrefix();
-			po.setTabTitle(top, bottom);
+			PlayerUtil.updatePlayerListName(pl);
+			PlayerUtil.setTabTitle(pl, top, bottom);
 		}
 	}
 

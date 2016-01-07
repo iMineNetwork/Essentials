@@ -5,7 +5,7 @@ import java.util.Calendar;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 
-import nl.makertim.essentials.api.DatabaseManager;
+import nl.imine.api.db.DatabaseManager;
 
 public class Profiler implements Listener, Runnable {
 

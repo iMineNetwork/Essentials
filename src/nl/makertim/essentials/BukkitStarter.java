@@ -9,7 +9,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import nl.makertim.essentials.api.DatabaseManager;
+import nl.imine.api.db.DatabaseManager;
 
 public class BukkitStarter extends JavaPlugin {
 
