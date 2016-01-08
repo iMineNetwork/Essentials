@@ -1,4 +1,4 @@
-name: iMine_Essemtials
+name: iMine_Essentials
 main: nl.makertim.essentials.BukkitStarter
 version: ${git.commit.id.abbrev}
 
