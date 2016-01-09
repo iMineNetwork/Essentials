@@ -256,21 +256,21 @@ public class CommandHandler {
 	private boolean hub() {
 		if (args.length == 0) {
 			if (sender instanceof Player) {
-				MktUtil.sendPlayerToServer((Player) sender, "hub");
+				PlayerUtil.sendPlayerToServer((Player) sender, "hub");
 			} else {
 				sender.sendMessage("Player only!");
 			}
 		} else if (sender.hasPermission("iMine.hub")) {
 			if (args.length == 1) {
 				if (sender instanceof Player) {
-					MktUtil.sendPlayerToServer((Player) sender, args[0]);
+					PlayerUtil.sendPlayerToServer((Player) sender, args[0]);
 				} else {
 					sender.sendMessage("Player only!");
 				}
 			} else if (args.length == 2) {
 				Player pl = PlayerUtil.getOnline(args[1]);
 				if (pl != null) {
-					MktUtil.sendPlayerToServer(pl, args[0]);
+					PlayerUtil.sendPlayerToServer(pl, args[0]);
 				} else {
 					sender.sendMessage("That player... is not online");
 				}
@@ -288,7 +288,7 @@ public class CommandHandler {
 				sender.sendMessage("Devolpermodus is now enabled!");
 				for (Player pl : new ArrayList<>(Bukkit.getOnlinePlayers())) {
 					if (!pl.hasPermission("iMine.dev")) {
-						MktUtil.sendPlayerToServer(pl, "hub");
+						PlayerUtil.sendPlayerToServer(pl, "hub");
 					}
 				}
 			} else {
