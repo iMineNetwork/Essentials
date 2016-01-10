@@ -46,8 +46,7 @@ public class GitLabAPI {
 
 	public void refreshData() {
 		try {
-			JsonArray je = new JsonParser()
-					.parse(WebUtil.getResponseFromURL(new URL(String.format(URL_USERS, PRIVATE_TOKEN))))
+			JsonArray je = new JsonParser().parse(WebUtil.getResponse(new URL(String.format(URL_USERS, PRIVATE_TOKEN))))
 					.getAsJsonArray();
 			projects = new HashMap<>();
 			ids = new ArrayList<>();
@@ -58,8 +57,7 @@ public class GitLabAPI {
 					continue;
 				}
 				JsonArray projectsFromUser = new JsonParser()
-						.parse(WebUtil
-								.getResponseFromURL(new URL(String.format(URL_PROJECTS, PRIVATE_TOKEN, username))))
+						.parse(WebUtil.getResponse(new URL(String.format(URL_PROJECTS, PRIVATE_TOKEN, username))))
 						.getAsJsonArray();
 				for (int j = 0; j < projectsFromUser.size(); j++) {
 					JsonObject project = projectsFromUser.get(j).getAsJsonObject();
@@ -73,8 +71,8 @@ public class GitLabAPI {
 						}
 
 						JsonArray commitsJson = new JsonParser()
-								.parse(WebUtil.getResponseFromURL(
-										new URL(String.format(URL_COMMITS, projectId, PRIVATE_TOKEN))))
+								.parse(WebUtil
+										.getResponse(new URL(String.format(URL_COMMITS, projectId, PRIVATE_TOKEN))))
 								.getAsJsonArray();
 						Commit[] commits = new Commit[commitsJson.size()];
 						for (int k = 0; k < commitsJson.size(); k++) {
