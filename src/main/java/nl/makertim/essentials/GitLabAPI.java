@@ -98,6 +98,7 @@ public class GitLabAPI {
 			ex.printStackTrace();
 		} catch (Error er) {
 			canWork = false;
+			System.err.println(er.getMessage());
 		}
 	}
 
