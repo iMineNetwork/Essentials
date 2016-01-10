@@ -1,6 +1,5 @@
 package nl.makertim.essentials;
 
-import java.io.InputStream;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -9,7 +8,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
@@ -17,6 +15,8 @@ import org.bukkit.Bukkit;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+
+import nl.imine.api.util.WebUtil;
 
 public class GitLabAPI {
 
@@ -46,7 +46,8 @@ public class GitLabAPI {
 
 	public void refreshData() {
 		try {
-			JsonArray je = new JsonParser().parse(getResponseFromURL(new URL(String.format(URL_USERS, PRIVATE_TOKEN))))
+			JsonArray je = new JsonParser()
+					.parse(WebUtil.getResponseFromURL(new URL(String.format(URL_USERS, PRIVATE_TOKEN))))
 					.getAsJsonArray();
 			projects = new HashMap<>();
 			ids = new ArrayList<>();
@@ -57,7 +58,8 @@ public class GitLabAPI {
 					continue;
 				}
 				JsonArray projectsFromUser = new JsonParser()
-						.parse(getResponseFromURL(new URL(String.format(URL_PROJECTS, PRIVATE_TOKEN, username))))
+						.parse(WebUtil
+								.getResponseFromURL(new URL(String.format(URL_PROJECTS, PRIVATE_TOKEN, username))))
 						.getAsJsonArray();
 				for (int j = 0; j < projectsFromUser.size(); j++) {
 					JsonObject project = projectsFromUser.get(j).getAsJsonObject();
@@ -71,7 +73,7 @@ public class GitLabAPI {
 						}
 
 						JsonArray commitsJson = new JsonParser()
-								.parse(getResponseFromURL(
+								.parse(WebUtil.getResponseFromURL(
 										new URL(String.format(URL_COMMITS, projectId, PRIVATE_TOKEN))))
 								.getAsJsonArray();
 						Commit[] commits = new Commit[commitsJson.size()];
@@ -148,23 +150,6 @@ public class GitLabAPI {
 			}
 		}
 		return null;
-	}
-
-	private String getResponseFromURL(URL url) {
-		String ret = "";
-		try {
-			InputStream is = url.openStream();
-			Scanner in = new Scanner(is);
-			while (in.hasNextLine()) {
-				ret += in.nextLine();
-			}
-
-			in.close();
-			is.close();
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		return ret;
 	}
 
 	public static class Commit {
