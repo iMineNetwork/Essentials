@@ -24,16 +24,7 @@
 			<name>iMine Network Release Repository</name>
 			<url>http://mvn.iMine.nl</url>
 		</repository>
-		<repository>
-			<id>spigot-hub-snapshots</id>
-			<name>SpigotMC Snapshot Maven Repository</name>
-			<url>https://hub.spigotmc.org/nexus/content/repositories/snapshots</url>
-		</repository>
 	</repositories>
-
-	<properties>
-		<jdk.version>1.8</jdk.version>
-	</properties>
 
 	<distributionManagement>
 		<repository>
@@ -42,10 +33,14 @@
 		</repository>
 	</distributionManagement>
 
+	<properties>
+		<jdk.version>1.8</jdk.version>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.spigotmc</groupId>
-			<artifactId>spigot-api</artifactId>
+			<artifactId>spigot</artifactId>
 			<version>1.8.8-R0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
