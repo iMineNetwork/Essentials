@@ -1134,10 +1134,12 @@ public class CommandHandler {
 				sender.sendMessage(String.format(FORMAT,
 						pl.getName() + " is now disabled [" + pl.getDescription().getVersion() + "]"));
 				try {
-					Thread.sleep(3000L);
+					Thread.sleep(1500L);
 					Method m = JavaPlugin.class.getDeclaredMethod("getFile");
 					m.setAccessible(true);
 					File f = (File) m.invoke(pl);
+					BukkitStarter.plugin.updatePlugins();
+					Thread.sleep(500L);
 					pl = Bukkit.getPluginManager().loadPlugin(f);
 					sender.sendMessage(String.format(FORMAT,
 							pl.getName() + " is now reloaded! [" + pl.getDescription().getVersion() + "]"));

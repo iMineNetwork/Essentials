@@ -68,18 +68,28 @@ public class BukkitStarter extends JavaPlugin {
 		File[] directoryListing = UPDATE_DIR.listFiles();
 		if (directoryListing != null) {
 			for (File child : directoryListing) {
-				File newFile = new File("plugins/" + child.getName());
-				boolean del = newFile.delete();
-				if (child.renameTo(newFile)) {
-					System.out.println("[UPDATELOG] +" + child.getName());
-				} else {
-					System.out.println("[UPDATELOG] !" + child.getName() + " failed to update"
-							+ (del ? "" : ", couldn't find old file!"));
+				try {
+					updatePlugin(child);
+				} catch (Exception ex) {
+					ex.printStackTrace();
 				}
 			}
 		} else {
 			System.out.println("plugins updatefolder not found!");
 			UPDATE_DIR.mkdirs();
+		}
+	}
+
+	public boolean updatePlugin(File child) {
+		File newFile = new File("plugins/" + child.getName());
+		boolean del = newFile.delete();
+		if (child.renameTo(newFile)) {
+			System.out.println("[UPDATELOG] +" + child.getName());
+			return true;
+		} else {
+			System.out.println(
+					"[UPDATELOG] !" + child.getName() + " failed to update" + (del ? "" : ", couldn't find old file!"));
+			return false;
 		}
 	}
 
