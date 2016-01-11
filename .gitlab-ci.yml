@@ -4,7 +4,7 @@ buildfase:
   stage: build
   script:
     - set $(git remote show -n origin | grep Fetch | sed 's%^.*/\([^/]*\)\.git$%\1%g')
-    - mvn clean install
+    - mvn clean deploy
     - mkdir -p ../dist
     - cp target/$1.jar ../dist/$1.jar
   only:
