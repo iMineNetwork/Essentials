@@ -46,6 +46,7 @@ import net.md_5.bungee.api.chat.HoverEvent.Action;
 import net.md_5.bungee.api.chat.TextComponent;
 import nl.imine.api.db.DatabaseManager;
 import nl.imine.api.util.ColorUtil;
+import nl.imine.api.util.DateUtil;
 import nl.imine.api.util.MktUtil;
 import nl.imine.api.util.PlayerUtil;
 import nl.makertim.essentials.GitLabAPI.Commit;
@@ -1025,7 +1026,7 @@ public class CommandHandler {
 					sender.sendMessage(ColorUtil.replaceColors("&c This player has no other names"));
 				} else {
 					sender.sendMessage(ColorUtil
-							.replaceColors("&6 Name: '&c" + name + "&6' changed " + MktUtil.timeUntilNow(d) + " ago."));
+							.replaceColors("&6 Name: '&c" + name + "&6' changed " + DateUtil.timeUntilNow(d) + " ago."));
 				}
 			} else {
 				sender.sendMessage(ColorUtil.replaceColors("&6Getting al old playernames from '&c" + name + "&6'."));
