@@ -115,10 +115,14 @@ public class CommandHandler {
 				|| command.equalsIgnoreCase("plugins")) {
 			return plugin();
 		} else if (command.equalsIgnoreCase("report")) {
-			new Thread(new ServerReporter(sender, args)).start();
+			Bukkit.getScheduler().runTaskAsynchronously(BukkitStarter.plugin, () -> {
+				new ServerReporter(sender, args);
+			});
 			return true;
 		} else if (command.equalsIgnoreCase("admin")) {
-			new Thread(new AdminChat(sender, args)).start();
+			Bukkit.getScheduler().runTaskAsynchronously(BukkitStarter.plugin, () -> {
+				new AdminChat(sender, args);
+			});
 			return true;
 		} else if (command.equalsIgnoreCase("update")) {
 			if (sender instanceof Player) {
@@ -735,13 +739,15 @@ public class CommandHandler {
 		}
 		sender.sendMessage(String.format("%s%s[%s%sGIT%s%s]%s Checking all git repos...", ChatColor.RESET,
 				ChatColor.BOLD, ChatColor.GOLD, ChatColor.BOLD, ChatColor.RESET, ChatColor.BOLD, ChatColor.RESET));
-		new Thread(new GitCheckRunnalbe(sender, b)).start();
+		Bukkit.getScheduler().runTaskAsynchronously(BukkitStarter.plugin, new GitCheckRunnalbe(sender, b));
 		return true;
 	}
 
 	private boolean plr() {
 		if ((sender.hasPermission("iMine.dev")) && args.length > 0) {
-			new Thread(new ReloadPlugin(sender, args)).start();
+			Bukkit.getScheduler().runTaskAsynchronously(BukkitStarter.plugin, () -> {
+				new ReloadPlugin(sender, args);
+			});
 		} else {
 			noPermission();
 		}
@@ -1362,11 +1368,9 @@ public class CommandHandler {
 					message("This server is outdated -> cant check on GitRepo's");
 					return;
 				}
-				new Thread(new Runnable() {
-					public void run() {
-						prosessData();
-					}
-				}).start();
+				Bukkit.getScheduler().runTaskAsynchronously(BukkitStarter.plugin, () -> {
+					prosessData();
+				});
 			} else {
 				sender.sendMessage(ChatColor.RED + "No permission.");
 			}
