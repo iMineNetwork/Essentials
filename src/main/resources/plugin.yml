@@ -2,6 +2,8 @@ name: iMine_Essentials
 main: nl.makertim.essentials.BukkitStarter
 version: ${git.commit.id.abbrev}
 
+depend: [iMineAPI]
+
 commands:
   hub:
     description: Go to the hub server
