@@ -158,6 +158,8 @@ public class CommandHandler {
 			} else {
 				sender.sendMessage(ChatColor.RED + "Need player to lookup");
 			}
+		} else {
+			noPermission();
 		}
 		return true;
 	}
@@ -184,6 +186,8 @@ public class CommandHandler {
 			} else {
 				sender.sendMessage(ChatColor.RED + "Need more args!");
 			}
+		} else {
+			noPermission();
 		}
 		return true;
 	}
@@ -199,9 +203,17 @@ public class CommandHandler {
 			if (pl != null) {
 				pl.setAllowFlight(!pl.getAllowFlight());
 				pl.setFlying(pl.getAllowFlight());
+				sender.sendMessage(ColorUtil.replaceColors("&7Player &c" + pl.getName() + "&7 "
+						+ (pl.getAllowFlight() ? "&6can" : "&4can't") + "&7 fly now."));
+				if (sender != pl) {
+					pl.sendMessage(ColorUtil
+							.replaceColors("&7You " + (pl.getAllowFlight() ? "&6can" : "&4can't") + "&7 fly now."));
+				}
 			} else {
 				sender.sendMessage(ChatColor.RED + "No player with fly powers");
 			}
+		} else {
+			noPermission();
 		}
 		return true;
 	}
@@ -249,6 +261,8 @@ public class CommandHandler {
 			} else {
 				sender.sendMessage(ChatColor.RED + "No player by name " + args[0]);
 			}
+		} else {
+			noPermission();
 		}
 		return true;
 	}
@@ -276,7 +290,7 @@ public class CommandHandler {
 				}
 			}
 		} else {
-			sender.sendMessage(ChatColor.RED + "You have no acces to this command");
+			noPermission();
 		}
 		return true;
 	}
@@ -294,6 +308,8 @@ public class CommandHandler {
 			} else {
 				sender.sendMessage("Server now public");
 			}
+		} else {
+			noPermission();
 		}
 		return true;
 	}
@@ -375,6 +391,8 @@ public class CommandHandler {
 					}
 				}
 			}
+		} else {
+			noPermission();
 		}
 		return true;
 	}
@@ -459,7 +477,7 @@ public class CommandHandler {
 				sender.sendMessage(ChatColor.RED + "No target to teleport to.");
 			}
 		} else {
-			sender.sendMessage(ChatColor.RED + "No permission.");
+			noPermission();
 		}
 		return true;
 	}
@@ -519,7 +537,7 @@ public class CommandHandler {
 				sender.sendMessage(ChatColor.RED + "No gamemode to be set.");
 			}
 		} else {
-			sender.sendMessage(ChatColor.RED + "No permission.");
+			noPermission();
 		}
 		return true;
 	}
@@ -559,7 +577,7 @@ public class CommandHandler {
 				sender.sendMessage(ChatColor.RED + "No idea what to do");
 			}
 		} else {
-			sender.sendMessage(ChatColor.RED + "No permission.");
+			noPermission();
 		}
 		return true;
 	}
@@ -617,7 +635,7 @@ public class CommandHandler {
 				sender.sendMessage(ChatColor.RED + "Only for players.");
 			}
 		} else {
-			sender.sendMessage(ChatColor.RED + "No permission.");
+			noPermission();
 		}
 		return true;
 	}
@@ -653,7 +671,7 @@ public class CommandHandler {
 				sender.sendMessage(ChatColor.RED + "Need a player and a message.");
 			}
 		} else {
-			sender.sendMessage(ChatColor.RED + "No permission.");
+			noPermission();
 		}
 		return true;
 	}
@@ -672,7 +690,7 @@ public class CommandHandler {
 				sender.sendMessage(ChatColor.RED + "Need a player.");
 			}
 		} else {
-			sender.sendMessage(ChatColor.RED + "No permission.");
+			noPermission();
 		}
 		return true;
 	}
@@ -691,7 +709,7 @@ public class CommandHandler {
 				sender.sendMessage(ChatColor.RED + "Need a player.");
 			}
 		} else {
-			sender.sendMessage(ChatColor.RED + "No permission.");
+			noPermission();
 		}
 		return true;
 	}
@@ -725,7 +743,7 @@ public class CommandHandler {
 		if ((sender.hasPermission("iMine.dev")) && args.length > 0) {
 			new Thread(new ReloadPlugin(sender, args)).start();
 		} else {
-			return false;
+			noPermission();
 		}
 		return true;
 	}
@@ -745,7 +763,7 @@ public class CommandHandler {
 				sender.sendMessage(ChatColor.RED + "Player only.");
 			}
 		} else {
-			sender.sendMessage(ChatColor.RED + "No permission.");
+			noPermission();
 		}
 		return true;
 	}
@@ -782,7 +800,7 @@ public class CommandHandler {
 			}
 			BukkitListener.updateVanish();
 		} else {
-			sender.sendMessage(ChatColor.RED + "No permission.");
+			noPermission();
 		}
 		return true;
 	}
@@ -807,7 +825,7 @@ public class CommandHandler {
 				}
 			}
 		} else {
-			sender.sendMessage(ChatColor.RED + "No permission.");
+			noPermission();
 		}
 		return true;
 	}
@@ -843,7 +861,7 @@ public class CommandHandler {
 				sender.sendMessage(ChatColor.RED + "Need a message to tell.");
 			}
 		} else {
-			sender.sendMessage(ChatColor.RED + "No permission.");
+			noPermission();
 		}
 		return true;
 	}
@@ -863,9 +881,14 @@ public class CommandHandler {
 				sender.sendMessage(ChatColor.RED + "Need a message to tell.");
 			}
 		} else {
-			sender.sendMessage(ChatColor.RED + "No permission.");
+			noPermission();
 		}
 		return true;
+	}
+
+	private void noPermission() {
+		sender.sendMessage(
+				ColorUtil.replaceColors("&cYou do not have permission to execute '&6" + command + "&c' command!"));
 	}
 
 	public static List<String> onTabComplete(Player sender, String command, String[] args) {

@@ -28,6 +28,9 @@ commands:
   fly:
     description: We vliegen er in! PATAT
     usage: /fly <player>
+  whois:
+    description: Playerinfo
+    usage: /whois [player]
   report:
     description: Report to all admins a issue
     usage: /report <issue>
