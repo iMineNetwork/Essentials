@@ -116,7 +116,7 @@ public class CommandHandler {
 				|| command.equalsIgnoreCase("plugins")) {
 			return plugin();
 		} else if (command.equalsIgnoreCase("report")) {
-			Bukkit.getScheduler().runTaskAsynchronously(BukkitStarter.plugin, new ServerReporter(sender, args));
+			Bukkit.getScheduler().runTaskAsynchronously(BukkitStarter.plugin, new ServerReporter());
 			return true;
 		} else if (command.equalsIgnoreCase("admin")) {
 			Bukkit.getScheduler().runTaskAsynchronously(BukkitStarter.plugin, () -> {
@@ -1033,22 +1033,12 @@ public class CommandHandler {
 		}
 	}
 
-	private static class ServerReporter implements Runnable {
-		private static final String FORMAT_MESSAGE = String.format("%s%s[%s%sREPORT%s%s] %s%s%s %s\u00BB%s %s",
-				ChatColor.RESET, ChatColor.BOLD, ChatColor.RED, ChatColor.BOLD, ChatColor.RESET, ChatColor.BOLD,
-				ChatColor.RESET, ChatColor.GRAY, "%s", ChatColor.BOLD, ChatColor.RED, "%s");
+	private class ServerReporter implements Runnable {
+		private final String formatMessage = String.format("%s%s[%s%sREPORT%s%s] %s%s%s %s\u00BB%s %s", ChatColor.RESET,
+				ChatColor.BOLD, ChatColor.RED, ChatColor.BOLD, ChatColor.RESET, ChatColor.BOLD, ChatColor.RESET,
+				ChatColor.GRAY, "%s", ChatColor.BOLD, ChatColor.RED, "%s");
 
-		private final Player sender;
-		private final String[] args;
-
-		public ServerReporter(CommandSender sender, String[] args) {
-			if (sender instanceof Player) {
-				this.sender = (Player) sender;
-			} else {
-				sender.sendMessage("Player-only");
-				this.sender = null;
-			}
-			this.args = args;
+		public ServerReporter() {
 		}
 
 		@Override
@@ -1067,7 +1057,12 @@ public class CommandHandler {
 				return;
 			}
 			sender.sendMessage(ChatColor.GOLD + "Message reported!");
-			CommandHandler.globalAdminMessage(sender, String.format(FORMAT_MESSAGE, sender.getName(), message));
+			if (sender instanceof Player) {
+				CommandHandler.globalAdminMessage((Player) sender,
+						String.format(formatMessage, sender.getName(), message));
+			} else {
+				sender.sendMessage("Player-only");
+			}
 		}
 	}
 
