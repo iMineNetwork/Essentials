@@ -116,13 +116,11 @@ public class CommandHandler {
 				|| command.equalsIgnoreCase("plugins")) {
 			return plugin();
 		} else if (command.equalsIgnoreCase("report")) {
-			Bukkit.getScheduler().runTaskAsynchronously(BukkitStarter.plugin, () -> {
-				new ServerReporter(sender, args);
-			});
+			Bukkit.getScheduler().runTaskAsynchronously(BukkitStarter.plugin, new ServerReporter(sender, args));
 			return true;
 		} else if (command.equalsIgnoreCase("admin")) {
 			Bukkit.getScheduler().runTaskAsynchronously(BukkitStarter.plugin, () -> {
-				new AdminChat(sender, args);
+				new AdminChat();
 			});
 			return true;
 		} else if (command.equalsIgnoreCase("update")) {
@@ -1025,8 +1023,8 @@ public class CommandHandler {
 				if (name == null) {
 					sender.sendMessage(ColorUtil.replaceColors("&c This player has no other names"));
 				} else {
-					sender.sendMessage(ColorUtil
-							.replaceColors("&6 Name: '&c" + name + "&6' changed " + DateUtil.timeUntilNow(d) + " ago."));
+					sender.sendMessage(ColorUtil.replaceColors(
+							"&6 Name: '&c" + name + "&6' changed " + DateUtil.timeUntilNow(d) + " ago."));
 				}
 			} else {
 				sender.sendMessage(ColorUtil.replaceColors("&6Getting al old playernames from '&c" + name + "&6'."));
@@ -1073,30 +1071,21 @@ public class CommandHandler {
 		}
 	}
 
-	private static class AdminChat implements Runnable {
+	private class AdminChat {
 
-		private static final String FORMAT_MESSAGE = String.format("%s%s[%s%sADMIN%s%s] %s%s%s %s\u00BB%s %s",
-				ChatColor.RESET, ChatColor.BOLD, ChatColor.GREEN, ChatColor.BOLD, ChatColor.RESET, ChatColor.BOLD,
-				ChatColor.RESET, ChatColor.GRAY, "%s", ChatColor.BOLD, ChatColor.RESET, "%s");
+		private final String formatMessage = String.format("%s%s[%s%sADMIN%s%s] %s%s%s %s\u00BB%s %s", ChatColor.RESET,
+				ChatColor.BOLD, ChatColor.GREEN, ChatColor.BOLD, ChatColor.RESET, ChatColor.BOLD, ChatColor.RESET,
+				ChatColor.GRAY, "%s", ChatColor.BOLD, ChatColor.RESET, "%s");
 
-		private final Player sender;
-		private final String[] args;
-
-		public AdminChat(CommandSender sender, String[] args) {
-			if (sender instanceof Player) {
-				this.sender = (Player) sender;
+		public AdminChat() {
+			if (!(sender instanceof Player)) {
+				sender.sendMessage(ColorUtil.replaceColors("&cPlayer Only"));
 			} else {
-				sender.sendMessage("Player-only");
-				this.sender = null;
+				send();
 			}
-			this.args = args;
 		}
 
-		@Override
-		public void run() {
-			if (sender == null) {
-				return;
-			}
+		public void send() {
 			if (!sender.hasPermission("iMine.adminChat") || args.length == 0) {
 				sender.sendMessage(ChatColor.RED + "/Admin [Message]");
 				return;
@@ -1110,7 +1099,7 @@ public class CommandHandler {
 				sender.sendMessage(ChatColor.RED + "/Admin [Message]");
 				return;
 			}
-			CommandHandler.globalAdminMessage(sender, String.format(FORMAT_MESSAGE, sender.getName(), message));
+			CommandHandler.globalAdminMessage((Player) sender, String.format(formatMessage, sender.getName(), message));
 		}
 	}
 
