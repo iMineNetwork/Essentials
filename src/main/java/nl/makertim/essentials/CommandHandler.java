@@ -136,7 +136,7 @@ public class CommandHandler {
 
 	private boolean banrichtlijn() {
 		sender.sendMessage(ColorUtil.replaceColors("&4&lBanRichtlijn"));
-		sender.sendMessage(ColorUtil.replaceColors("   "));
+		sender.sendMessage("   ");
 		sender.sendMessage(ColorUtil.replaceColors("&3Griefing &6- &2Permanent ban"));
 		sender.sendMessage(ColorUtil.replaceColors("&3Hacks &6- &2Permanent ban"));
 		sender.sendMessage(ColorUtil.replaceColors("&3Bedrijgen &6- &22weken ban "));
@@ -144,7 +144,7 @@ public class CommandHandler {
 		sender.sendMessage(
 				ColorUtil.replaceColors("&3Ongepast taalgebruik &6- &2Waarschuwing (kick), daarna 2 tot 4 uur ban"));
 		sender.sendMessage(ColorUtil.replaceColors("&3Spam &6- &2Waarschuwing (kick), daarna 2 tot 4 uur ban"));
-		sender.sendMessage(ColorUtil.replaceColors("   "));
+		sender.sendMessage("   ");
 		sender.sendMessage(ColorUtil.replaceColors("&eBedenk je ban verstandig en zet er een DUIDELIJKE reden bij."));
 		sender.sendMessage(ColorUtil.replaceColors("&7Mocht je dit niet kunnen, geef dit door aan je leidinggevende!"));
 		return true;
@@ -206,11 +206,11 @@ public class CommandHandler {
 			if (pl != null) {
 				pl.setAllowFlight(!pl.getAllowFlight());
 				pl.setFlying(pl.getAllowFlight());
-				sender.sendMessage(ColorUtil.replaceColors("&7Player &c" + pl.getName() + "&7 "
-						+ (pl.getAllowFlight() ? "&6can" : "&4can't") + "&7 fly now."));
+				sender.sendMessage(ColorUtil.replaceColors("&7Player &c%s&7 %s&7 fly now.", pl.getName(),
+						(pl.getAllowFlight() ? "&6can" : "&4can't")));
 				if (sender != pl) {
-					pl.sendMessage(ColorUtil
-							.replaceColors("&7You " + (pl.getAllowFlight() ? "&6can" : "&4can't") + "&7 fly now."));
+					pl.sendMessage(ColorUtil.replaceColors("&7You %s&7 fly now.",
+							(pl.getAllowFlight() ? "&6can" : "&4can't")));
 				}
 			} else {
 				sender.sendMessage(ChatColor.RED + "No player with fly powers");
@@ -879,9 +879,8 @@ public class CommandHandler {
 					msg += args[i] + " ";
 				}
 				msg = msg.substring(0, msg.length() - 1);
-				msg = ColorUtil.replaceColors(msg);
-				Bukkit.broadcastMessage(
-						ChatColor.GOLD + "* " + ChatColor.GRAY + sender.getName() + " " + ChatColor.WHITE + msg);
+				msg = ColorUtil.replaceColors("&6* &7%s &r" + msg, sender.getName());
+				Bukkit.broadcastMessage(msg);
 			} else {
 				sender.sendMessage(ChatColor.RED + "Need a message to tell.");
 			}
@@ -893,7 +892,7 @@ public class CommandHandler {
 
 	private void noPermission() {
 		sender.sendMessage(
-				ColorUtil.replaceColors("&cYou do not have permission to execute '&6" + command + "&c' command!"));
+				ColorUtil.replaceColors("&cYou do not have permission to execute '&6%s&c' command!", command));
 	}
 
 	public static List<String> onTabComplete(Player sender, String command, String[] args) {
@@ -1023,11 +1022,11 @@ public class CommandHandler {
 				if (name == null) {
 					sender.sendMessage(ColorUtil.replaceColors("&c This player has no other names"));
 				} else {
-					sender.sendMessage(ColorUtil.replaceColors(
-							"&6 Name: '&c" + name + "&6' changed " + DateUtil.timeUntilNow(d) + " ago."));
+					sender.sendMessage(ColorUtil.replaceColors("&6 Name: '&c%s&6' changed %s ago.", name,
+							DateUtil.timeUntilNow(d)));
 				}
 			} else {
-				sender.sendMessage(ColorUtil.replaceColors("&6Getting al old playernames from '&c" + name + "&6'."));
+				sender.sendMessage(ColorUtil.replaceColors("&6Getting al old playernames from '&c%s&6'.", name));
 				return;
 			}
 		}

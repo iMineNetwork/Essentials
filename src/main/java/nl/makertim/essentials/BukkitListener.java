@@ -137,6 +137,7 @@ public class BukkitListener implements Listener {
 	public void chat(AsyncPlayerChatEvent apce) {
 		String mssg = apce.getMessage();
 		if (!apce.getPlayer().hasPermission("iMine.helpOverride")) {
+			// TODO fix dit
 			boolean sendMssg = false;
 			for (String shp : SHOP_FORMAT) {
 				if (mssg.toLowerCase().contains(shp)) {
