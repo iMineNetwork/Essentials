@@ -162,9 +162,9 @@ public class BukkitListener implements Listener {
 				pl.sendMessage(
 						ColorUtil.replaceColors("&c&lInstead of calling someone a hacker, report it to admins."));
 				pl.sendMessage(
-						ColorUtil.replaceColors("&c&oI mean, they can do wayyyyy more nastier things then u can >;3"));
+						ColorUtil.replaceColors("&4&oI mean, they can do wayyyyy more nastier things then u can >;3"));
 				pl.sendMessage(ColorUtil.replaceColors(
-						"&6To report: use '&c/report %s&6'. &6{All admins on all servers get this message - abuse is not reccomended}",
+						"&6To report: use '&c/report %s&6'. &6&o{All admins on all servers get this message - abuse is not reccomended}",
 						mssg));
 				apce.setCancelled(true);
 				break;
