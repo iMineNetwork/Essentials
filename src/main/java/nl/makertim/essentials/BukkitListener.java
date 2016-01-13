@@ -160,9 +160,9 @@ public class BukkitListener implements Listener {
 		for (String ts : REPORT_FORMAT) {
 			if (mssg.toLowerCase().contains(ts)) {
 				pl.sendMessage(
-						ColorUtil.replaceColors("&c&lInstead of calling someone a hacker, report it to admins."));
+						ColorUtil.replaceColors("&c&lInstead of calling someone a hacker, report it to the admins."));
 				pl.sendMessage(
-						ColorUtil.replaceColors("&4&oI mean, they can do wayyyyy more nastier things then u can >;3"));
+						ColorUtil.replaceColors("&4&oI mean, they can do wayyyyy nastier things then u can >;3"));
 				pl.sendMessage(ColorUtil.replaceColors(
 						"&6To report: use '&c/report %s&6'. &6&o{All admins on all servers get this message - abuse is not reccomended}",
 						mssg));
