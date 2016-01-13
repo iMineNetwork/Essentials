@@ -9,7 +9,6 @@ import java.util.Set;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -23,10 +22,6 @@ import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.TextComponent;
 import nl.imine.api.db.DatabaseManager;
 import nl.imine.api.util.ColorUtil;
 
@@ -35,6 +30,8 @@ public class BukkitListener implements Listener {
 	private static final String[] SHOP_FORMAT = { "shop", "kost", "duur", "kopen", "whitelist", "vip" };
 	private static final String[] BUGS_FORMAT = { "help", "bug", "fout", "error" };
 	private static final String[] TS_FORMAT = { " ts", "teamspeak", "team", "speak" };
+	private static final String[] REPORT_FORMAT = { "hax", "report", "hack", "hex", "h@x", "h3x", "hAck", "h3ck",
+			"flyh" };
 	private static final Set<UUID> MUTED = new HashSet<>();
 	public static final Map<UUID, List<Location>> TP_HISTORY = new HashMap<>();
 	public static final List<UUID> VANISH = new ArrayList<>();
@@ -135,57 +132,42 @@ public class BukkitListener implements Listener {
 
 	@EventHandler
 	public void chat(AsyncPlayerChatEvent apce) {
+		Player pl = apce.getPlayer();
 		String mssg = apce.getMessage();
-		if (!apce.getPlayer().hasPermission("iMine.helpOverride")) {
-			// TODO fix dit
-			boolean sendMssg = false;
+		if (!pl.hasPermission("iMine.helpOverride")) {
 			for (String shp : SHOP_FORMAT) {
 				if (mssg.toLowerCase().contains(shp)) {
-					sendMssg = true;
+					pl.sendMessage(ColorUtil.replaceColors(
+							"&6&lDo you like to purchase one of our fine VIP ranks or a whitelist? Click here &9&nshop.iMine.nl&6."));
+					break;
 				}
 			}
-			if (sendMssg) {
-				apce.getPlayer()
-						.sendMessage(ChatColor.GOLD + ChatColor.BOLD.toString()
-								+ "Do you like to purchase one of our fine VIP ranks or a whitelist? Click here "
-								+ ChatColor.BLUE + ChatColor.UNDERLINE + "shop.iMine.nl");
-			}
-
-			sendMssg = false;
 			for (String bgs : BUGS_FORMAT) {
 				if (mssg.toLowerCase().contains(bgs)) {
-					sendMssg = true;
+					pl.sendMessage(ColorUtil.replaceColors(
+							"&6&lFound a bug or something else to report? Post it here &9&nbugs.iMine.nl&6."));
+					break;
 				}
 			}
-
-			sendMssg = false;
 			for (String ts : TS_FORMAT) {
 				if (mssg.toLowerCase().contains(ts)) {
-					sendMssg = true;
+					pl.sendMessage(
+							ColorUtil.replaceColors("&6&lUse our official TeamSpeak3 server: &9&nts.iMine.nl&6."));
+					break;
 				}
 			}
-			if (sendMssg) {
-				TextComponent extra, message = new TextComponent("");
-
-				extra = new TextComponent(ColorUtil.replaceColors("&b&lTeamspeak ip: "));
-				message.addExtra(extra);
-
-				extra = new TextComponent(ColorUtil.replaceColors("&9&nts.imine.nl"));
-				extra.setHoverEvent(
-						new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("iMine ip").create()));
-				extra.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "ts.imine.nl"));
-				message.addExtra(extra);
-
-				extra = new TextComponent(ColorUtil.replaceColors("&6  OF direct via: "));
-				message.addExtra(extra);
-
-				extra = new TextComponent(ColorUtil.replaceColors("&9&nts3server://ts.imine.nl"));
-				extra.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, "ts3server://ts.imine.nl"));
-				extra.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-						new ComponentBuilder("open direct in TeamSpeak3").create()));
-				message.addExtra(extra);
-
-				apce.getPlayer().spigot().sendMessage(message);
+		}
+		for (String ts : REPORT_FORMAT) {
+			if (mssg.toLowerCase().contains(ts)) {
+				pl.sendMessage(
+						ColorUtil.replaceColors("&c&lInstead of calling someone a hacker, report it to admins."));
+				pl.sendMessage(
+						ColorUtil.replaceColors("&c&oI mean, they can do wayyyyy more nastier things then u can >;3"));
+				pl.sendMessage(ColorUtil.replaceColors(
+						"&6To report: use '&c/report %s&6'. &6{All admins on all servers get this message - abuse is not reccomended}",
+						mssg));
+				apce.setCancelled(true);
+				break;
 			}
 		}
 	}
