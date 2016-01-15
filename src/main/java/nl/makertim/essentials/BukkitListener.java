@@ -30,12 +30,12 @@ public class BukkitListener implements Listener {
 	private static final String[] SHOP_FORMAT = { "shop", "kost", "duur", "kopen", "whitelist", "vip" };
 	private static final String[] BUGS_FORMAT = { "help", "bug", "fout", "error" };
 	private static final String[] TS_FORMAT = { " ts", "teamspeak", "team", "speak" };
-	private static final String[] REPORT_FORMAT = { "hax", "report", "hack", "hex", "h@x", "h3x", "hAck", "h3ck",
-			"flyh" };
+	private static final String[] REPORT_FORMAT = { "hax", "hack", "hex", "h@x", "h3x", "hAck", "h3ck", "flyh" };
 	private static final Set<UUID> MUTED = new HashSet<>();
 	public static final Map<UUID, List<Location>> TP_HISTORY = new HashMap<>();
 	public static final List<UUID> VANISH = new ArrayList<>();
-	public static boolean VANISH_ABLE = true;
+
+	public static boolean vanishAble = true;
 
 	@EventHandler
 	public void onJoin(PlayerLoginEvent ple) {
@@ -95,7 +95,7 @@ public class BukkitListener implements Listener {
 	}
 
 	public static void updateVanish() {
-		if (!VANISH_ABLE) {
+		if (!vanishAble) {
 			return;
 		}
 		List<Player> nonHidden = new ArrayList<Player>(Bukkit.getOnlinePlayers());
@@ -115,7 +115,7 @@ public class BukkitListener implements Listener {
 
 	@EventHandler
 	public void updateVanish(PlayerJoinEvent pje) {
-		if (VANISH_ABLE) {
+		if (vanishAble) {
 			updateVanish();
 		}
 	}
@@ -161,12 +161,8 @@ public class BukkitListener implements Listener {
 			if (mssg.toLowerCase().contains(ts)) {
 				pl.sendMessage(
 						ColorUtil.replaceColors("&c&lInstead of calling someone a hacker, report it to the admins."));
-				pl.sendMessage(
-						ColorUtil.replaceColors("&4&oI mean, they can do wayyyyy nastier things then u can >;3"));
 				pl.sendMessage(ColorUtil.replaceColors(
-						"&6To report: use '&c/report %s&6'. &6&o{All admins on all servers get this message - abuse is not reccomended}",
-						mssg));
-				apce.setCancelled(true);
+						"&6To report: use '&c/report %s&6'. &6&o{Works even when admins are not online}", mssg));
 				break;
 			}
 		}
