@@ -159,8 +159,8 @@ public class BukkitListener implements Listener {
 		}
 		for (String ts : REPORT_FORMAT) {
 			if (mssg.toLowerCase().contains(ts)) {
-				pl.sendMessage(
-						ColorUtil.replaceColors("&c&lInstead of calling someone a hacker, report it to the admins."));
+				pl.sendMessage(ColorUtil
+						.replaceColors("&c&lInstead of calling someone a hacker, report it to our moderation team."));
 				pl.sendMessage(ColorUtil.replaceColors(
 						"&6To report: use '&c/report %s&6'. &6&o{Works even when admins are not online}", mssg));
 				break;

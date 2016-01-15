@@ -681,7 +681,13 @@ public class CommandHandler {
 
 	private boolean invsee() {
 		if (sender.hasPermission("iMine.invsee")) {
-			if (args.length == 1) {
+			if (args.length == 0) {
+				if (sender instanceof Player) {
+					((Player) sender).openInventory(((Player) sender).getInventory());
+				} else {
+					sender.sendMessage(ColorUtil.replaceColors("&cYou need to be a player!"));
+				}
+			} else if (args.length == 1) {
 				Player target = PlayerUtil.getOnline(args[0]);
 				if (sender instanceof Player && target != null) {
 					Player pl = (Player) sender;
@@ -700,7 +706,13 @@ public class CommandHandler {
 
 	private boolean endersee() {
 		if (sender.hasPermission("iMine.endersee")) {
-			if (args.length == 1) {
+			if (args.length == 0) {
+				if (sender instanceof Player) {
+					((Player) sender).openInventory(((Player) sender).getEnderChest());
+				} else {
+					sender.sendMessage(ColorUtil.replaceColors("&cYou need to be a player!"));
+				}
+			} else if (args.length == 1) {
 				Player target = PlayerUtil.getOnline(args[0]);
 				if (sender instanceof Player && target != null) {
 					Player pl = (Player) sender;
@@ -816,7 +828,7 @@ public class CommandHandler {
 				if (sender instanceof Player) {
 					Player sender = (Player) this.sender;
 					sender.setHealth(0D);
-					sender.sendMessage(ChatColor.GOLD + "Suisided");
+					sender.sendMessage(ChatColor.GOLD + "Suicided");
 				} else {
 					sender.sendMessage(ChatColor.RED + "Player only");
 				}
