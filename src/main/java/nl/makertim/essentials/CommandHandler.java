@@ -1042,7 +1042,7 @@ public class CommandHandler {
 			}
 			sender.sendMessage(ChatColor.GOLD + "Message reported!");
 			if (sender instanceof Player) {
-				PlayerUtil.sendGlobalAdmin((Player) sender, String.format(formatMessage, sender.getName(), message));
+				PlayerUtil.sendGlobalAdmin(String.format(formatMessage, sender.getName(), message));
 			} else {
 				sender.sendMessage("Player-only");
 			}
@@ -1077,7 +1077,7 @@ public class CommandHandler {
 				sender.sendMessage(ChatColor.RED + "/Admin [Message]");
 				return;
 			}
-			PlayerUtil.sendGlobalAdmin((Player) sender, String.format(formatMessage, sender.getName(), message));
+			PlayerUtil.sendGlobalAdmin(String.format(formatMessage, sender.getName(), message));
 		}
 	}
 
