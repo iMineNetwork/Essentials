@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.net.URL;
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -32,8 +31,6 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.UnknownDependencyException;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -44,7 +41,6 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.HoverEvent.Action;
 import net.md_5.bungee.api.chat.TextComponent;
-import nl.imine.api.db.DatabaseManager;
 import nl.imine.api.util.ColorUtil;
 import nl.imine.api.util.DateUtil;
 import nl.imine.api.util.MktUtil;
@@ -116,12 +112,10 @@ public class CommandHandler {
 				|| command.equalsIgnoreCase("plugins")) {
 			return plugin();
 		} else if (command.equalsIgnoreCase("report")) {
-			Bukkit.getScheduler().runTaskAsynchronously(BukkitStarter.plugin, new ServerReporter());
+			new ServerReporter();
 			return true;
 		} else if (command.equalsIgnoreCase("admin")) {
-			Bukkit.getScheduler().runTaskAsynchronously(BukkitStarter.plugin, () -> {
-				new AdminChat();
-			});
+			new AdminChat();
 			return true;
 		} else if (command.equalsIgnoreCase("update")) {
 			if (sender instanceof Player) {
@@ -963,23 +957,6 @@ public class CommandHandler {
 		return ret;
 	}
 
-	private static void globalAdminMessage(Player sender, String message) {
-		DatabaseManager db = BukkitStarter.plugin.getDB();
-		ResultSet rs = db.selectQuery("SELECT UUID_Table.LastName FROM AdminRegister JOIN UUID_Table "
-				+ "ON UUID_Table.UUID = AdminRegister.UUID;");
-		try {
-			while (rs.next()) {
-				ByteArrayDataOutput out = ByteStreams.newDataOutput();
-				out.writeUTF("Message");
-				out.writeUTF(rs.getString(1));
-				out.writeUTF(message);
-				sender.sendPluginMessage(BukkitStarter.plugin, "BungeeCord", out.toByteArray());
-			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-	}
-
 	private static class NameLookup implements Runnable {
 		private final UUID uuid;
 		private final CommandSender sender;
@@ -1044,16 +1021,12 @@ public class CommandHandler {
 		}
 	}
 
-	private class ServerReporter implements Runnable {
+	private class ServerReporter {
 		private final String formatMessage = String.format("%s%s[%s%sREPORT%s%s] %s%s%s %s\u00BB%s %s", ChatColor.RESET,
 				ChatColor.BOLD, ChatColor.RED, ChatColor.BOLD, ChatColor.RESET, ChatColor.BOLD, ChatColor.RESET,
 				ChatColor.GRAY, "%s", ChatColor.BOLD, ChatColor.RED, "%s");
 
 		public ServerReporter() {
-		}
-
-		@Override
-		public void run() {
 			if (args.length == 0) {
 				sender.sendMessage(ChatColor.RED + "/Report [Message]");
 				return;
@@ -1069,8 +1042,7 @@ public class CommandHandler {
 			}
 			sender.sendMessage(ChatColor.GOLD + "Message reported!");
 			if (sender instanceof Player) {
-				CommandHandler.globalAdminMessage((Player) sender,
-						String.format(formatMessage, sender.getName(), message));
+				PlayerUtil.sendGlobalAdmin((Player) sender, String.format(formatMessage, sender.getName(), message));
 			} else {
 				sender.sendMessage("Player-only");
 			}
@@ -1105,7 +1077,7 @@ public class CommandHandler {
 				sender.sendMessage(ChatColor.RED + "/Admin [Message]");
 				return;
 			}
-			CommandHandler.globalAdminMessage((Player) sender, String.format(formatMessage, sender.getName(), message));
+			PlayerUtil.sendGlobalAdmin((Player) sender, String.format(formatMessage, sender.getName(), message));
 		}
 	}
 
