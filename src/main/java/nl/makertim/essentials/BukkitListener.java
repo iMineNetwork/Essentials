@@ -22,7 +22,6 @@ import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
-import nl.imine.api.db.DatabaseManager;
 import nl.imine.api.util.ColorUtil;
 
 public class BukkitListener implements Listener {
@@ -170,15 +169,8 @@ public class BukkitListener implements Listener {
 
 	@EventHandler
 	public void onJoining(PlayerJoinEvent pje) {
-		DatabaseManager db = BukkitStarter.plugin.getDB();
-		db.insertQuery("DELETE FROM `iMine_Bans`.`AdminRegister` WHERE `AdminRegister`.`UUID` = '"
-				+ pje.getPlayer().getUniqueId() + "';");
 		if (pje.getPlayer().hasPermission("iMine.autoGit")) {
 			pje.getPlayer().performCommand("git -q");
-		}
-		if (pje.getPlayer().hasPermission("iMine.adminChat")) {
-			db.insertQuery("INSERT INTO `iMine_Bans`.`AdminRegister` (`UUID`, `isAdmin`) VALUES ('"
-					+ pje.getPlayer().getUniqueId() + "', '1');");
 		}
 	}
 }
