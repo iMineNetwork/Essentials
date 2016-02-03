@@ -1218,14 +1218,23 @@ public class CommandHandler {
                  *
                  * groetjes Tim
                  */
+                
+                /**
+                 * Lief dagboek,
+                 * 
+                 * Ik zag dat Tim iets had gemaakt waar hij zelf een mooiere manier voor heeft geschreven.
+                 * Zonde als dat niet gebruitk zou worden hè? ;)
+                 * 
+                 * groetjes Sander
+                 */
+                
                 // newestversion: %gitshort% [RELOAD SERVER]
                 TextComponent extra, message = new TextComponent("");
                 // [GIT]
-                extra = new TextComponent(String.format("%s%s[%s%sGIT%s%s]%s ", ChatColor.RESET, ChatColor.BOLD,
-                        ChatColor.GOLD, ChatColor.BOLD, ChatColor.RESET, ChatColor.BOLD, ChatColor.RESET));
+                extra = new TextComponent(ColorUtil.replaceColors("&r&l[&6&lGIT&r&l]&r "));
                 message.addExtra(extra);
                 // %plugin naam%
-                extra = new TextComponent(String.format("%s%s%s ", ChatColor.GREEN, plugin.getName(), ChatColor.RESET));
+                extra = new TextComponent(ColorUtil.replaceColors("&a%s&r ", plugin.getName()));
                 extra.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, git.getWebUrl()));
                 extra.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
                         new ComponentBuilder(git.getDescription())
@@ -1247,8 +1256,8 @@ public class CommandHandler {
                     commits.add(commit);
                 }
                 extra = new TextComponent(
-                        String.format("%s%s%s ", ChatColor.GOLD, (current == null ? ChatColor.RED + "not found"
-                                        : current.getTitle().replaceAll(" ", " " + ChatColor.GOLD)), ChatColor.RESET));
+                        ColorUtil.replaceColors("&6%s&6 ", (current == null ? ChatColor.RED + "not found"
+                                        : current.getTitle().replaceAll(" ", " " + ChatColor.GOLD))));
                 extra.setColor(net.md_5.bungee.api.ChatColor.GOLD);
                 extra.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, git.getWebUrl() + "/commit/"
                         + (current == null ? "master" : current.getLongId()) + "?view=parallel"));
@@ -1266,8 +1275,7 @@ public class CommandHandler {
                     extra = new TextComponent(String.format("%snewest version: ", ChatColor.RESET));
                     message.addExtra(extra);
                     // %git short new version%
-                    extra = new TextComponent(String.format("%s%s%s ", ChatColor.GOLD,
-                            git.getCommits()[0].getTitle().replaceAll(" ", " " + ChatColor.GOLD), ChatColor.RESET));
+                    extra = new TextComponent(ColorUtil.replaceColors("&6%s&r ", git.getCommits()[0].getTitle().replaceAll(" ", " " + ChatColor.GOLD)));
                     extra.setColor(net.md_5.bungee.api.ChatColor.GOLD);
                     extra.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, git.getWebUrl() + "/compare/"
                             + (current == null ? "master" : current.getShortId()) + "...master?view=parallel"));
@@ -1284,7 +1292,7 @@ public class CommandHandler {
                     message.addExtra(extra);
                     // versions behind [#]:
                     extra = new TextComponent(
-                            String.format("%s[%d]%s ", ChatColor.RESET, commits.size(), ChatColor.RESET));
+                            ColorUtil.replaceColors("&r[%d]&r ", commits.size()));
                     message.addExtra(extra);
                 }
                 if (quietSend()) {
