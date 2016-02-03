@@ -989,7 +989,7 @@ public class CommandHandler {
 				if (world != null) {
 					player.teleport(world.getSpawnLocation(), PlayerTeleportEvent.TeleportCause.COMMAND);
 				} else {
-					player.sendMessage(ColorUtil.replaceColors("&6No world with the name \"&c%s&6\" exists."));
+					player.sendMessage(ColorUtil.replaceColors("&6No world with the name \"&c%s&6\" exists.", args[0]));
 				}
 			}
 		}
