@@ -121,3 +121,6 @@ commands:
   plugins:
     description: List plugin
     usage: /plugins
+  world:
+    description: Load a world or travel to it.
+    usage: /world [worldname]
