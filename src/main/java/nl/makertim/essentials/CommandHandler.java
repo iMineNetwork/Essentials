@@ -48,6 +48,7 @@ import nl.imine.api.util.PlayerUtil;
 import nl.makertim.essentials.GitLabAPI.Commit;
 import nl.makertim.essentials.GitLabAPI.GitProject;
 import nl.makertim.essentials.MapCountSorter.Sort;
+import org.bukkit.WorldCreator;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
 public class CommandHandler {
@@ -940,7 +941,7 @@ public class CommandHandler {
 				}
 			}
 		} else if (command.equalsIgnoreCase("world")) {
-			for(World w : Bukkit.getWorlds()){
+			for (World w : Bukkit.getWorlds()) {
 				ret.add(w.getName());
 			}
 		} else if ((command.startsWith("gm") && command.length() == 3)
@@ -979,9 +980,16 @@ public class CommandHandler {
 					world = Bukkit.getWorlds().get(Integer.parseInt(args[0]));
 				} catch (NumberFormatException e) {
 					world = Bukkit.getWorld(args[0]);
+					if (world == null) {
+						if (new File(args[0], Bukkit.getWorldContainer().getPath()).exists()) {
+							world = Bukkit.createWorld(new WorldCreator(args[0]));
+						}
+					}
 				}
 				if (world != null) {
 					player.teleport(world.getSpawnLocation(), PlayerTeleportEvent.TeleportCause.COMMAND);
+				} else {
+					player.sendMessage(ColorUtil.replaceColors("&6No world with the name \"&c%s&6\" exists."));
 				}
 			}
 		}
@@ -1218,16 +1226,14 @@ public class CommandHandler {
 				 *
 				 * groetjes Tim
 				 */
-				
+
 				/**
 				 * Lief dagboek,
-				 * 
-				 * Ik zag dat Tim iets had gemaakt waar hij zelf een mooiere manier voor heeft geschreven.
-				 * Zonde als dat niet gebruitk zou worden hè? ;)
-				 * 
+				 *
+				 * Ik zag dat Tim iets had gemaakt waar hij zelf een mooiere manier voor heeft geschreven. Zonde als dat niet gebruitk zou worden hè? ;)
+				 *
 				 * groetjes Sander
 				 */
-				
 				// newestversion: %gitshort% [RELOAD SERVER]
 				TextComponent extra, message = new TextComponent("");
 				// [GIT]
