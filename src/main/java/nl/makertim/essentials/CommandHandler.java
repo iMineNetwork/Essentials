@@ -939,6 +939,10 @@ public class CommandHandler {
                     ret.add(plugin.getName());
                 }
             }
+        } else if (command.equalsIgnoreCase("world")) {
+            for(World w : Bukkit.getWorlds()){
+                ret.add(w.getName());
+            }
         } else if ((command.startsWith("gm") && command.length() == 3)
                 || (command.equalsIgnoreCase("gm") && args.length == 2)
                 || (command.equalsIgnoreCase("mute") && args.length == 1)
@@ -967,7 +971,7 @@ public class CommandHandler {
                 player.sendMessage(ColorUtil.replaceColors("&6Current World: &c%s", player.getWorld().getName()));
                 player.sendMessage(ColorUtil.replaceColors("&6Availible worlds:"));
                 Bukkit.getWorlds().stream().forEach(w -> {
-                    player.sendMessage(ColorUtil.replaceColors("    &c%s", w.getName()));
+                    player.sendMessage(ColorUtil.replaceColors("  &c%s", w.getName()));
                 });
             } else if (args.length == 1) {
                 World world;
