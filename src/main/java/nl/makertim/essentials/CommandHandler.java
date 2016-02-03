@@ -967,7 +967,7 @@ public class CommandHandler {
                 player.sendMessage(ColorUtil.replaceColors("&6Current World: &c%s", player.getWorld().getName()));
                 player.sendMessage(ColorUtil.replaceColors("&6Availible worlds:"));
                 Bukkit.getWorlds().stream().forEach(w -> {
-                    player.sendMessage(ColorUtil.replaceColors("\t&c%s", w.getName()));
+                    player.sendMessage(ColorUtil.replaceColors("    &c%s", w.getName()));
                 });
             } else if (args.length == 1) {
                 World world;
