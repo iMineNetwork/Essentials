@@ -977,7 +977,7 @@ public class CommandHandler {
                 World world;
                 try {
                     world = Bukkit.getWorlds().get(Integer.parseInt(args[0]));
-                } catch (Exception e) {
+                } catch (NumberFormatException e) {
                     world = Bukkit.getWorld(args[0]);
                 }
                 if (world != null) {
