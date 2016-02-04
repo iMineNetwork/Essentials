@@ -652,6 +652,8 @@ public class CommandHandler {
 					msg = ColorUtil.replaceColors(msg);
 					target.sendMessage(ColorUtil.replaceColors("&8&oReceived message from &c%s&8&l \u00BB &r&7%s",
 							sender.getName(), msg));
+					sender.sendMessage(ColorUtil.replaceColors("&8&oSend message to &c%s&8&l \u00BB &r&7%s",
+							sender.getName(), msg));
 					if (LAST_SPOKE.containsKey(target)) {
 						LAST_SPOKE.remove(target);
 					}
