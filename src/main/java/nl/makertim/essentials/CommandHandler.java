@@ -467,11 +467,11 @@ public class CommandHandler {
 				who.sendMessage(ColorUtil.replaceColors("&7Teleporting"));
 				if (who == sender) {
 					who.teleport(new Location(world, coords[0], coords[1], coords[2]));
-					sender.sendMessage(ColorUtil.replaceColors("&7Teleported to %d,%d,%d in World %s", coords[0],
+					sender.sendMessage(ColorUtil.replaceColors("&7Teleported to %f,%f,%f in World %s", coords[0],
 							coords[1], coords[2], world.getName()));
 				} else {
 					who.teleport(new Location(world, coords[1], coords[2], coords[3]));
-					sender.sendMessage(ColorUtil.replaceColors("&7Teleported %s to %d,%d,%d in World %s", who.getName(),
+					sender.sendMessage(ColorUtil.replaceColors("&7Teleported %s to %f,%f,%f in World %s", who.getName(),
 							coords[0], coords[1], coords[2], world.getName()));
 				}
 			} else {
@@ -591,7 +591,7 @@ public class CommandHandler {
 					try {
 						speed = Math.min(Math.abs(Float.parseFloat(args[0]) * 0.2F), 1F);
 					} catch (Exception ex) {
-						sender.sendMessage(ColorUtil.replaceColors("&c%d is no number.", args[0]));
+						sender.sendMessage(ColorUtil.replaceColors("&c%s is no number.", args[0]));
 						return false;
 					}
 					if (args.length == 1) {
