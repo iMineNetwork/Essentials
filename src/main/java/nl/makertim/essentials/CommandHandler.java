@@ -452,7 +452,7 @@ public class CommandHandler {
 					return true;
 				}
 				World world = who.getWorld();
-				if (args.length == 4) {
+				if ((args.length == 4 && faultArg == -1) || (args.length == 5 && faultArg == 0)) {
 					try {
 						if (who == sender) {
 							world = Bukkit.getWorlds().get((int) coords[3]);
