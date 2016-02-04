@@ -56,6 +56,8 @@ public class TabListHandler implements Listener {
 
 	@EventHandler
 	public void onJoin(PlayerJoinEvent pje) {
-		updateAll();
+		Bukkit.getScheduler().scheduleSyncDelayedTask(BukkitStarter.plugin, () -> {
+			updateAll();
+		});
 	}
 }
