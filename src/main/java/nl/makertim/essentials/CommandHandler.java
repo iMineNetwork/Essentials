@@ -707,7 +707,7 @@ public class CommandHandler {
 				for (int i = 1; i < args.length; i++) {
 					msg += args[i] + " ";
 				}
-				msg = ColorUtil.replaceColors(msg);
+				msg = ColorUtil.replaceColors(msg).trim();
 				Player pl = PlayerUtil.getOnline(target);
 				if (pl != null) {
 					if (LAST_SPOKE.containsKey(pl)) {
@@ -1136,8 +1136,8 @@ public class CommandHandler {
 					m.setAccessible(true);
 					File f = (File) m.invoke(pl);
 					BukkitStarter.plugin.updatePlugins();
-					Thread.sleep(500L);
-					pl = Bukkit.getPluginManager().loadPlugin(f);
+					Thread.sleep(1500L);
+					pl = Bukkit.getPluginManager().loadPlugin(new File(f.getAbsolutePath()));
 					sender.sendMessage(String.format(format,
 							pl.getName() + " is now reloaded! [" + pl.getDescription().getVersion() + "]"));
 				} catch (UnknownDependencyException ex) {
