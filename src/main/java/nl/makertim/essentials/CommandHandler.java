@@ -56,8 +56,8 @@ import nl.makertim.essentials.GitLabAPI.GitProject;
 
 public class CommandHandler {
 
-	private final String adminChatFormat = ColorUtil.replaceColors("&r&l[&a&lADMIN&r&l]&r&7%s &r&l\u00BB &r%s");
-	private final String reportChatFormat = ColorUtil.replaceColors("&r&l[&c&lREPORT&r&l]&r&7%s &r&l\u00BB &r%s");
+	private final String adminChatFormat = ColorUtil.replaceColors("&r&l[&a&lADMIN&r&l] &r&7%s &r&l\u00BB &r%s");
+	private final String reportChatFormat = ColorUtil.replaceColors("&r&l[&c&lREPORT&r&l] &r&7%s &r&l\u00BB &r%s");
 
 	private static final Map<CommandSender, CommandSender> LAST_SPOKE = new HashMap<>();
 
@@ -72,101 +72,78 @@ public class CommandHandler {
 	}
 
 	public boolean onCommand() {
+		String finalAwsner = null;
 		if (command.equalsIgnoreCase("hub")) {
-			return hub();
+			finalAwsner = hub();
 		} else if (command.equalsIgnoreCase("dev")) {
-			return dev();
+			finalAwsner = dev();
 		} else if (command.equalsIgnoreCase("mute")) {
-			return mute();
+			finalAwsner = mute();
 		} else if (command.equalsIgnoreCase("tp")) {
-			return tp();
+			finalAwsner = tp();
 		} else if (command.equalsIgnoreCase("fly")) {
-			return fly();
+			finalAwsner = fly();
 		} else if (command.equalsIgnoreCase("tab")) {
-			return tab();
+			finalAwsner = tab();
 		} else if (command.equalsIgnoreCase("lagdebug")) {
-			return lagdebug();
+			finalAwsner = lagdebug();
 		} else if (command.equalsIgnoreCase("gm")) {
-			return gm();
+			finalAwsner = gm();
 		} else if (command.startsWith("gm") && command.length() == 3) {
-			return gmx();
+			finalAwsner = gmx();
 		} else if (command.equalsIgnoreCase("speed")) {
-			return speed();
+			finalAwsner = speed();
 		} else if (command.equalsIgnoreCase("banrichtlijn")) {
-			return banrichtlijn();
+			finalAwsner = banrichtlijn();
 		} else if (command.equalsIgnoreCase("msg")) {
-			return msg();
+			finalAwsner = msg();
 		} else if (command.equalsIgnoreCase("invsee")) {
-			return invsee();
+			finalAwsner = invsee();
 		} else if (command.equalsIgnoreCase("endersee")) {
-			return endersee();
+			finalAwsner = endersee();
 		} else if (command.equalsIgnoreCase("mchistory")) {
-			return mchistory();
+			finalAwsner = mchistory();
 		} else if (command.equalsIgnoreCase("git")) {
-			return git();
+			finalAwsner = git();
 		} else if (command.equalsIgnoreCase("plr")) {
-			return plr();
-		} else if (command.equalsIgnoreCase("return")) {
-			return returnTP();
+			finalAwsner = plr();
+		} else if (command.equalsIgnoreCase("returntp")) {
+			finalAwsner = returnTP();
 		} else if (command.equalsIgnoreCase("vanish")) {
-			return vanish();
+			finalAwsner = vanish();
 		} else if (command.equalsIgnoreCase("kill")) {
-			return kill();
+			finalAwsner = kill();
 		} else if (command.equalsIgnoreCase("reply")) {
-			return reply();
+			finalAwsner = reply();
 		} else if (command.equalsIgnoreCase("me")) {
-			return me();
+			finalAwsner = me();
 		} else if (command.equalsIgnoreCase("pl") || command.equalsIgnoreCase("plugin")
 				|| command.equalsIgnoreCase("plugins")) {
-			return plugin();
+			finalAwsner = plugin();
 		} else if (command.equalsIgnoreCase("world")) {
-			return world();
+			finalAwsner = world();
 		} else if (command.equalsIgnoreCase("report")) {
-			return reportChat();
+			finalAwsner = reportChat();
 		} else if (command.equalsIgnoreCase("admin")) {
-			return adminChat();
+			finalAwsner = adminChat();
 		} else if (command.equalsIgnoreCase("update")) {
 			if (sender instanceof Player) {
 				((Player) sender).performCommand("reload");
 			} else {
 				Bukkit.reload();
 			}
-			return true;
 		}
-		return false;
-	}
-
-	private boolean reportChat() {
-		if (args.length == 0) {
-			sender.sendMessage(ColorUtil.replaceColors("&c/Report [Message]"));
-			return true;
-		}
-		String message = "";
-		for (String str : args) {
-			message += str + " ";
-		}
-		message = ColorUtil.replaceColors(message);
-		if (message.matches("^\\s*$")) {
-			sender.sendMessage(ColorUtil.replaceColors("&c/Report [Message]"));
-			return true;
-		}
-		sender.sendMessage(ColorUtil.replaceColors("&7Message reported!"));
-		if (sender instanceof Player) {
-			PlayerUtil.sendGlobalAdmin(String.format(reportChatFormat, sender.getName(), message));
+		if (finalAwsner == null) {
+			return false;
 		} else {
-			sender.sendMessage("Player-only");
+			sender.sendMessage(finalAwsner);
+			return true;
 		}
-		return true;
 	}
 
-	private boolean adminChat() {
-		if (!sender.hasPermission("iMine.adminChat")) {
-			sender.sendMessage(ColorUtil.replaceColors("&cUse /report for contacting admins"));
-			return true;
-		}
+	private String reportChat() {
 		if (args.length == 0) {
-			sender.sendMessage(ColorUtil.replaceColors("&c/Admin [Message]"));
-			return true;
+			return ColorUtil.replaceColors("&c/Report [Message]");
 		}
 		String message = "";
 		for (String str : args) {
@@ -174,47 +151,65 @@ public class CommandHandler {
 		}
 		message = ColorUtil.replaceColors(message);
 		if (message.matches("^\\s*$")) {
-			sender.sendMessage(ColorUtil.replaceColors("&c/Admin [Message]"));
-			return true;
+			return ColorUtil.replaceColors("&c/Report [Message]");
+		}
+		PlayerUtil.sendGlobalAdmin(String.format(reportChatFormat, sender.getName(), message));
+		return ColorUtil.replaceColors("&7Message reported!");
+	}
+
+	private String adminChat() {
+		if (!sender.hasPermission("iMine.adminChat")) {
+			return ColorUtil.replaceColors("&cUse /report for contacting admins");
+		}
+		if (args.length == 0) {
+			return ColorUtil.replaceColors("&c/Admin [Message]");
+		}
+		String message = "";
+		for (String str : args) {
+			message += str + " ";
+		}
+		message = ColorUtil.replaceColors(message);
+		if (message.matches("^\\s*$")) {
+			return ColorUtil.replaceColors("&c/Admin [Message]");
 		}
 		PlayerUtil.sendGlobalAdmin(String.format(adminChatFormat, sender.getName(), message));
-		return true;
+		return "";
 	}
 
-	private boolean banrichtlijn() {
+	private String banrichtlijn() {
 		sender.sendMessage(ColorUtil.replaceColors("&4&lBanRichtlijn"));
 		sender.sendMessage("   ");
-		sender.sendMessage(ColorUtil.replaceColors("&3Griefing &6- &2Permanent ban"));
-		sender.sendMessage(ColorUtil.replaceColors("&3Hacks &6- &2Permanent ban"));
-		sender.sendMessage(ColorUtil.replaceColors("&3Bedrijgen &6- &22weken ban "));
-		sender.sendMessage(ColorUtil.replaceColors("&3Extreem schelden &6- &248 uur ban "));
+		sender.sendMessage(ColorUtil.replaceColors("&cGriefing &6- &aPermanent ban"));
+		sender.sendMessage(ColorUtil.replaceColors("&cHacks &6- &aPermanent ban"));
+		sender.sendMessage(ColorUtil.replaceColors("&cBedrijgen &6- &a2weken ban"));
+		sender.sendMessage(ColorUtil.replaceColors("&cExtreem schelden &6- &a48 uur ban"));
+		sender.sendMessage(ColorUtil.replaceColors("&cReclame maken &6- &a12-24 uur ban"));
 		sender.sendMessage(
-				ColorUtil.replaceColors("&3Ongepast taalgebruik &6- &2Waarschuwing (kick), daarna 2 - 4 uur ban"));
-		sender.sendMessage(ColorUtil.replaceColors("&3Spam &6- &2Waarschuwing (kick), daarna 2 - 4 uur ban"));
+				ColorUtil.replaceColors("&cOngepast taalgebruik &6- &aWaarschuwing (kick), daarna 2-4 uur ban"));
+		sender.sendMessage(ColorUtil.replaceColors("&cSpam &6- &aWaarschuwing (kick), daarna 2-4 uur ban"));
 		sender.sendMessage("   ");
 		sender.sendMessage(ColorUtil.replaceColors("&eBedenk je ban verstandig en zet er een DUIDELIJKE reden bij."));
 		sender.sendMessage(ColorUtil.replaceColors("&7Mocht je dit niet kunnen, geef dit door aan je leidinggevende!"));
-		sender.sendMessage("   ");
-		return true;
+		return "   ";
 	}
 
-	private boolean mchistory() {
+	private String mchistory() {
 		if (sender.hasPermission("iMine.mchistory")) {
 			if (args.length > 0) {
 				List<UUID> uuidsLike = PlayerUtil.getUuidsLike(args[0]);
 				for (final UUID foundUUID : uuidsLike) {
 					Bukkit.getScheduler().runTaskAsynchronously(BukkitStarter.plugin, new NameLookup(foundUUID));
 				}
+				return "   ";
 			} else {
-				sender.sendMessage(ColorUtil.replaceColors("&cNeed player to lookup"));
+				return ColorUtil.replaceColors("&cNeed player to lookup");
 			}
 		} else {
-			noPermission();
+			return noPermission();
 		}
-		return true;
 	}
 
-	private boolean tab() {
+	private String tab() {
 		if (sender.hasPermission("iMine.tabchange")) {
 			TabListHandler tlh = BukkitStarter.plugin.getTLH();
 			if (args.length > 1) {
@@ -222,55 +217,57 @@ public class CommandHandler {
 				for (int i = 1; i < args.length; i++) {
 					msg += args[i] + " ";
 				}
-				msg = msg.substring(0, msg.length() - 1);
+				msg = msg.trim();
 				msg = ColorUtil.replaceColors(msg);
 				if (args[0].equalsIgnoreCase("top")) {
 					tlh.updateTop(msg);
 				} else if (args[0].equalsIgnoreCase("bottom")) {
 					tlh.updateBottom(msg);
 				} else {
-					sender.sendMessage(ColorUtil.replaceColors("&cCant update '%s' to %s", args[0], args[1]));
-					return true;
+					return ColorUtil.replaceColors("&cCant update '%s' to %s", args[0], args[1]);
 				}
-				sender.sendMessage(ColorUtil.replaceColors("&6Tab %s updated to &r%s", args[0], msg));
+				return ColorUtil.replaceColors("&6Tab %s updated to &r%s", args[0], msg);
 			} else if (args.length == 1 && args[0].equalsIgnoreCase("update")) {
 				tlh.updateAll();
+				return ColorUtil.replaceColors("&7Tab updated!");
 			} else {
-				sender.sendMessage(ColorUtil.replaceColors("&cNeed more args!"));
+				return noOption();
 			}
 		} else {
-			noPermission();
+			return noPermission();
 		}
-		return true;
 	}
 
-	private boolean fly() {
+	private String fly() {
 		if (sender.hasPermission("iMine.fly")) {
 			Player pl = null;
-			if (args.length == 0 && sender instanceof Player) {
-				pl = (Player) sender;
+			if (args.length == 0) {
+				if (sender instanceof Player) {
+					pl = (Player) sender;
+				} else {
+					return noPlayer();
+				}
 			} else {
 				pl = PlayerUtil.getOnline(args[0]);
 			}
 			if (pl != null) {
 				pl.setAllowFlight(!pl.getAllowFlight());
 				pl.setFlying(pl.getAllowFlight());
-				sender.sendMessage(ColorUtil.replaceColors("&7Player &c%s&7 %s&7 fly now.", pl.getName(),
-						(pl.getAllowFlight() ? "&6can" : "&4can't")));
 				if (sender != pl) {
 					pl.sendMessage(ColorUtil.replaceColors("&7You %s&7 fly now.",
 							(pl.getAllowFlight() ? "&6can" : "&4can't")));
 				}
+				return ColorUtil.replaceColors("&7Player &c%s&7 %s&7 fly now.", pl.getName(),
+						(pl.getAllowFlight() ? "&6can" : "&4can't"));
 			} else {
-				sender.sendMessage(ColorUtil.replaceColors("&cNo player with fly powers"));
+				return noOnline(args[0]);
 			}
 		} else {
-			noPermission();
+			return noPermission();
 		}
-		return true;
 	}
 
-	private boolean plugin() {
+	private String plugin() {
 		Plugin[] plugins = Bukkit.getPluginManager().getPlugins();
 		TextComponent extra, message = new TextComponent("");
 		extra = new TextComponent("Plugins (" + plugins.length + "): ");
@@ -297,57 +294,60 @@ public class CommandHandler {
 		}
 		if (sender instanceof Player) {
 			((Player) sender).spigot().sendMessage(message);
+			return "";
 		} else {
-			sender.sendMessage(message.toPlainText());
+			return message.toPlainText();
 		}
-		return true;
 	}
 
-	private boolean mute() {
+	private String mute() {
 		if (args.length != 0 && sender.hasPermission("iMine.mute")) {
 			OfflinePlayer pl = PlayerUtil.getOflline(args[0]);
 			if (pl != null) {
 				BukkitListener.toggleMuted(pl);
-				sender.sendMessage(ColorUtil.replaceColors("&6%s&7 is now %s&7.", pl.getName(),
-						(BukkitListener.isMuted(pl) ? "&cmuted." : "&6unmuted.")));
+				return ColorUtil.replaceColors("&c%s&7 is now %s&7.", pl.getName(),
+						(BukkitListener.isMuted(pl) ? "&cmuted." : "&6unmuted."));
 			} else {
-				sender.sendMessage(ColorUtil.replaceColors("&cNo player found as '&6%s&c'.", args[0]));
+				return noOnline(args[0]);
 			}
 		} else {
-			noPermission();
+			return noPermission();
 		}
-		return true;
 	}
 
-	private boolean hub() {
+	private String hub() {
 		if (args.length == 0) {
 			if (sender instanceof Player) {
 				PlayerUtil.sendPlayerToServer((Player) sender, "hub");
+				return ColorUtil.replaceColors("&7To the hub!");
 			} else {
-				sender.sendMessage("Player only!");
+				return noPlayer();
 			}
 		} else if (sender.hasPermission("iMine.hub")) {
 			if (args.length == 1) {
 				if (sender instanceof Player) {
 					PlayerUtil.sendPlayerToServer((Player) sender, args[0]);
+					return ColorUtil.replaceColors("&7To the %s!", args[0]);
 				} else {
-					sender.sendMessage("Player only!");
+					return noPlayer();
 				}
 			} else if (args.length == 2) {
 				Player pl = PlayerUtil.getOnline(args[1]);
 				if (pl != null) {
 					PlayerUtil.sendPlayerToServer(pl, args[0]);
+					return ColorUtil.replaceColors("&7Sended '&c%s&7' to %s!", pl.getName(), args[0]);
 				} else {
-					sender.sendMessage("That player... is not online");
+					return noOnline(args[1]);
 				}
+			} else {
+				return noOption();
 			}
 		} else {
-			noPermission();
+			return noPermission();
 		}
-		return true;
 	}
 
-	private boolean dev() {
+	private String dev() {
 		if (sender.hasPermission("iMine.dev")) {
 			BukkitStarter.plugin.devMode = !BukkitStarter.plugin.devMode;
 			if (BukkitStarter.plugin.devMode) {
@@ -357,20 +357,20 @@ public class CommandHandler {
 						PlayerUtil.sendPlayerToServer(pl, "hub");
 					}
 				}
+				return ColorUtil.replaceColors("&7The server is now &cprivate&7.");
 			} else {
-				sender.sendMessage("Server now public");
+				return ColorUtil.replaceColors("&7The server is now &6public&7.");
 			}
 		} else {
-			noPermission();
+			return noPermission();
 		}
-		return true;
 	}
 
-	private boolean lagdebug() {
+	private String lagdebug() {
 		if (sender.hasPermission("iMine.lagdebug")) {
 			if (args.length == 0) {
 				for (World w : Bukkit.getWorlds()) {
-					sender.sendMessage(ColorUtil.replaceColors("&7Mobs in world '&6%s&7' [&c%d&7]", w.getName(),
+					sender.sendMessage(ColorUtil.replaceColors("&7Mobs in world '&e%s&7' [&c%d&7]", w.getName(),
 							w.getEntities().size()));
 					Map<Class<? extends Entity>, List<Entity>> countMap = new HashMap<>();
 					for (Entity e : w.getEntities()) {
@@ -384,6 +384,7 @@ public class CommandHandler {
 								entityClass.getSimpleName().replace("Craft", "")));
 					}
 				}
+				return ColorUtil.replaceColors("&7 ---------------");
 			} else {
 				if (args[0].equalsIgnoreCase("player")) {
 					Map<String, List<Class<? extends Entity>>> countMap = new HashMap<>();
@@ -412,6 +413,7 @@ public class CommandHandler {
 						sender.sendMessage(
 								ColorUtil.replaceColors("  &c%d &7- &6%ss", countMap.get(plName).size(), plName));
 					}
+					return ColorUtil.replaceColors("&7 ---------------");
 				} else {
 					Map<Class<? extends Entity>, List<Entity>> countMap = new HashMap<>();
 					List<Player> argsPlayers = PlayerUtil.getAllOnline(args[0]);
@@ -441,27 +443,27 @@ public class CommandHandler {
 						sender.sendMessage(ColorUtil.replaceColors("  &c%d &7- &6%ss", countMap.get(entityClass).size(),
 								entityClass.getSimpleName().replace("Craft", "")));
 					}
+					return ColorUtil.replaceColors("&7 ---------------");
 				}
 			}
 		} else {
-			noPermission();
+			return noPermission();
 		}
-		return true;
 	}
 
-	private boolean tp() {
+	private String tp() {
 		if (sender.hasPermission("iMine.tp")) {
 			if (args.length == 1) {
 				if (sender instanceof Player) {
 					Player pl = PlayerUtil.getOnline(args[0]);
 					if (pl != null) {
 						((Player) sender).teleport(pl);
-						sender.sendMessage(ColorUtil.replaceColors("&7Teleporting to &c%s&7.", pl.getName()));
+						return ColorUtil.replaceColors("&7Teleporting to &c%s&7.", pl.getName());
 					} else {
-						sender.sendMessage(ColorUtil.replaceColors("&cNo player with name %s.", args[0]));
+						return noOnline(args[0]);
 					}
 				} else {
-					sender.sendMessage(ColorUtil.replaceColors("&cOnly players can teleport to others..."));
+					return noPlayer();
 				}
 			} else if (args.length == 2) {
 				Player who = PlayerUtil.getOnline(args[0]);
@@ -470,13 +472,13 @@ public class CommandHandler {
 					if (target != null) {
 						who.teleport(target);
 						who.sendMessage(ColorUtil.replaceColors("&7Teleporting"));
-						sender.sendMessage(ColorUtil.replaceColors("&7Teleported &c%s&7 to &c%s&7.", who.getName(),
-								target.getName()));
+						return ColorUtil.replaceColors("&7Teleported &c%s&7 to &c%s&7.", who.getName(),
+								target.getName());
 					} else {
-						sender.sendMessage(ColorUtil.replaceColors("&cNo player with name %s.", args[1]));
+						return noOnline(args[1]);
 					}
 				} else {
-					sender.sendMessage(ColorUtil.replaceColors("&cNo player with name %s.", args[0]));
+					return noOnline(args[0]);
 				}
 			} else if (args.length == 3 || args.length == 4) {
 				int faultArg = -1;
@@ -489,14 +491,17 @@ public class CommandHandler {
 					}
 				}
 				Player who = null;
-				if (faultArg == -1 && sender instanceof Player) {
-					who = (Player) sender;
+				if (faultArg == -1) {
+					if (sender instanceof Player) {
+						who = (Player) sender;
+					} else {
+						return noPlayer();
+					}
 				} else if (faultArg == 0) {
 					who = PlayerUtil.getOnline(args[0]);
 				}
 				if (who == null) {
-					sender.sendMessage(ColorUtil.replaceColors("&cNo one to teleport"));
-					return true;
+					return noOnline(args[0]);
 				}
 				World world = who.getWorld();
 				if ((args.length == 4 && faultArg == -1) || (args.length == 5 && faultArg == 0)) {
@@ -507,30 +512,29 @@ public class CommandHandler {
 							world = Bukkit.getWorlds().get((int) coords[4]);
 						}
 					} catch (Exception ex) {
-						sender.sendMessage(ColorUtil.replaceColors("&cThere is no world with '%s'.", args[3]));
-						return true;
+						return ColorUtil.replaceColors("&cThere is no world with id '&c%s&7'.",
+								((who == sender) ? args[3] : args[4]));
 					}
 				}
 				who.sendMessage(ColorUtil.replaceColors("&7Teleporting"));
 				if (who == sender) {
 					who.teleport(new Location(world, coords[0], coords[1], coords[2]));
-					sender.sendMessage(ColorUtil.replaceColors("&7Teleported to %f,%f,%f in World %s", coords[0],
-							coords[1], coords[2], world.getName()));
+					return ColorUtil.replaceColors("&7Teleported to &e%f,%f,%f&7 in World &e%s&7.", coords[0],
+							coords[1], coords[2], world.getName());
 				} else {
 					who.teleport(new Location(world, coords[1], coords[2], coords[3]));
-					sender.sendMessage(ColorUtil.replaceColors("&7Teleported %s to %f,%f,%f in World %s", who.getName(),
-							coords[0], coords[1], coords[2], world.getName()));
+					return ColorUtil.replaceColors("&7Teleported &c%s&7 to &e%f,%f,%f&7 in World &e%s&7.",
+							who.getName(), coords[0], coords[1], coords[2], world.getName());
 				}
 			} else {
-				sender.sendMessage(ColorUtil.replaceColors("&cNo target to teleport to."));
+				return noOption();
 			}
 		} else {
-			noPermission();
+			return noPermission();
 		}
-		return true;
 	}
 
-	private boolean gm() {
+	private String gm() {
 		if (sender.hasPermission("iMine.gm")) {
 			if (args.length > 0) {
 				GameMode set = null;
@@ -554,42 +558,42 @@ public class CommandHandler {
 					if (sender instanceof Player) {
 						if (set != null) {
 							((Player) sender).setGameMode(set);
-							sender.sendMessage(
-									ColorUtil.replaceColors("&7Set gamemode to &6%s", MktUtil.readableEnum(set)));
+							return ColorUtil.replaceColors("&7Set gamemode to &e%s&7.", MktUtil.readableEnum(set));
 						} else {
-							sender.sendMessage(ColorUtil.replaceColors("&cNo gamemode found by that name."));
+							return ColorUtil.replaceColors("&cThere is no gamemode found with '&e%s&c'.", args[0]);
 						}
 					} else {
-						sender.sendMessage(ColorUtil.replaceColors("&cOnly for players!"));
+						return noPlayer();
 					}
 				} else if (args.length == 2) {
 					Player who = PlayerUtil.getOnline(args[1]);
 					if (who != null) {
 						if (set != null) {
 							who.setGameMode(set);
-							who.sendMessage(
-									ColorUtil.replaceColors("&7Set gamemode to &6%s", MktUtil.readableEnum(set)));
-							sender.sendMessage(ColorUtil.replaceColors("&7Set gamemode to &6%s&7 for &c%s&7.",
-									MktUtil.readableEnum(set), who.getName()));
+							if (sender != who) {
+								who.sendMessage(ColorUtil.replaceColors("&7Set gamemode to &e%s&7.",
+										MktUtil.readableEnum(set)));
+							}
+							return ColorUtil.replaceColors("&7Set gamemode to &e%s&7 for &c%s&7.",
+									MktUtil.readableEnum(set), who.getName());
 						} else {
-							sender.sendMessage(ColorUtil.replaceColors("&cNo gamemode found by that name."));
+							return ColorUtil.replaceColors("&cThere is no gamemode found with '&e%s&c'.", args[0]);
 						}
 					} else {
-						sender.sendMessage(ColorUtil.replaceColors("&cNo player with name " + args[0]));
+						return noOnline(args[0]);
 					}
 				} else {
-					sender.sendMessage(ColorUtil.replaceColors("&cNo idea what to do"));
+					return noOption();
 				}
 			} else {
-				sender.sendMessage(ColorUtil.replaceColors("&cNo gamemode to be set."));
+				return noOption();
 			}
 		} else {
-			noPermission();
+			return noPermission();
 		}
-		return true;
 	}
 
-	private boolean gmx() {
+	private String gmx() {
 		if (sender.hasPermission("iMine.gm")) {
 			GameMode set = null;
 			try {
@@ -601,185 +605,194 @@ public class CommandHandler {
 				}
 				set = GameMode.values()[gm];
 			} catch (Exception ex) {
-				sender.sendMessage(ColorUtil.replaceColors("&cThat is not a gamemode!"));
+				return ColorUtil.replaceColors("&cThat is not a gamemode!");
 			}
 			if (args.length == 0) {
 				if (sender instanceof Player) {
 					((Player) sender).setGameMode(set);
-					sender.sendMessage(ColorUtil.replaceColors("&7Set gamemode to &c%s&7.", MktUtil.readableEnum(set)));
+					return ColorUtil.replaceColors("&7Set gamemode to &e%s&7.", MktUtil.readableEnum(set));
 				} else {
-					sender.sendMessage(ColorUtil.replaceColors("&cOnly for players!"));
+					return noPlayer();
 				}
 			} else if (args.length == 1) {
 				Player who = PlayerUtil.getOnline(args[0]);
 				if (who != null) {
 					who.setGameMode(set);
-					who.sendMessage(ColorUtil.replaceColors("&7Set gamemode to &c%s&7.", MktUtil.readableEnum(set)));
-					sender.sendMessage(ColorUtil.replaceColors("&7Set gamemode to &c%s&7 for &c%s&7.",
-							MktUtil.readableEnum(set), who.getName()));
+					if (who != sender) {
+						who.sendMessage(
+								ColorUtil.replaceColors("&7Set gamemode to &e%s&7.", MktUtil.readableEnum(set)));
+					}
+					return ColorUtil.replaceColors("&7Set gamemode to &e%s&7 for &c%s&7.", MktUtil.readableEnum(set),
+							who.getName());
 				} else {
-					sender.sendMessage(ColorUtil.replaceColors("&cNo player with name %s.", args[0]));
+					return noOnline(args[0]);
 				}
 			} else {
-				sender.sendMessage(ColorUtil.replaceColors("&cNo idea what to do"));
+				return noOption();
 			}
 		} else {
-			noPermission();
+			return noPermission();
 		}
-		return true;
 	}
 
-	private boolean speed() {
+	private String speed() {
 		if (sender.hasPermission("iMine.speed")) {
-			if (sender instanceof Player) {
-				Player pl = ((Player) sender);
-				if (args.length > 0) {
-					float speed = 0;
-					try {
-						speed = Math.min(Math.abs(Float.parseFloat(args[0]) * 0.2F), 1F);
-					} catch (Exception ex) {
-						sender.sendMessage(ColorUtil.replaceColors("&c%s is no number.", args[0]));
-						return false;
-					}
-					if (args.length == 1) {
+			if (args.length > 0) {
+				float speed = 0;
+				try {
+					speed = Math.min(Math.abs(Float.parseFloat(args[0]) * 0.2F), 1F);
+				} catch (Exception ex) {
+					return ColorUtil.replaceColors("&c%s is not a number.", args[0]);
+				}
+				if (args.length == 1) {
+					if (sender instanceof Player) {
+						Player pl = ((Player) sender);
 						if (pl.isFlying()) {
 							pl.setFlySpeed(speed);
-							sender.sendMessage(ColorUtil.replaceColors("&7Fly speed set to %s&7.", args[0]));
+							return ColorUtil.replaceColors("&7Fly speed set to %s&7.", args[0]);
 						} else {
 							pl.setWalkSpeed(speed);
-							sender.sendMessage(ColorUtil.replaceColors("&7Walk speed set to %s&7.", args[0]));
-						}
-					} else if (args.length == 2) {
-						if (args[1].toLowerCase().contains("f")) {
-							pl.setFlySpeed(speed);
-							sender.sendMessage(ColorUtil.replaceColors("&7Fly speed set to %s&7.", args[0]));
-						} else {
-							pl.setWalkSpeed(speed);
-							sender.sendMessage(ColorUtil.replaceColors("&7Walk speed set to %s&7.", args[0]));
-						}
-					} else if (args.length == 3) {
-						Player who = PlayerUtil.getOnline(args[2]);
-						if (who != null) {
-							if (args[1].toLowerCase().contains("f")) {
-								who.setFlySpeed(speed);
-								sender.sendMessage(ColorUtil.replaceColors("&7Fly speed set to %s&7.", args[0]));
-								sender.sendMessage(ColorUtil.replaceColors("&7Speed set."));
-							} else {
-								who.setWalkSpeed(speed);
-								sender.sendMessage(ColorUtil.replaceColors("&7Walk speed set to %s&7.", args[0]));
-								sender.sendMessage(ColorUtil.replaceColors("&7Speed set."));
-							}
-						} else {
-							sender.sendMessage(ColorUtil.replaceColors("&cNo player with name %s", args[2]));
+							return ColorUtil.replaceColors("&7Walk speed set to %s&7.", args[0]);
 						}
 					} else {
-						sender.sendMessage(ColorUtil.replaceColors("&cI dont know what to do!"));
+						return noPlayer();
+					}
+				} else if (args.length == 2) {
+					if (sender instanceof Player) {
+						Player pl = ((Player) sender);
+						if (args[1].toLowerCase().contains("f")) {
+							pl.setFlySpeed(speed);
+							return ColorUtil.replaceColors("&7Fly speed set to %s&7.", args[0]);
+						} else {
+							pl.setWalkSpeed(speed);
+							return ColorUtil.replaceColors("&7Walk speed set to %s&7.", args[0]);
+						}
+					} else {
+						return noPlayer();
+					}
+				} else if (args.length == 3) {
+					Player who = PlayerUtil.getOnline(args[2]);
+					if (who != null) {
+						if (args[1].toLowerCase().contains("f")) {
+							who.setFlySpeed(speed);
+							who.sendMessage(ColorUtil.replaceColors("&7Speed set."));
+							return ColorUtil.replaceColors("&7Fly speed set to %s&7.", args[0]);
+						} else {
+							who.setWalkSpeed(speed);
+							who.sendMessage(ColorUtil.replaceColors("&7Speed set."));
+							return ColorUtil.replaceColors("&7Walk speed set to %s&7.", args[0]);
+						}
+					} else {
+						return noOnline(args[2]);
 					}
 				} else {
-					sender.sendMessage(ColorUtil.replaceColors("&cI dont know what to do!"));
+					return noOption();
 				}
 			} else {
-				sender.sendMessage(ColorUtil.replaceColors("&cOnly for players."));
+				return noOption();
 			}
 		} else {
-			noPermission();
+			return noPermission();
 		}
-		return true;
 	}
 
-	private boolean msg() {
+	private String msg() {
 		if (sender.hasPermission("iMine.msg")) {
 			if (args.length > 1) {
-				Player target = PlayerUtil.getOnline(args[0]);
-				if (target != null) {
-					String msg = "";
-					for (int i = 1; i < args.length; i++) {
-						msg += args[i] + " ";
+				String target = PlayerUtil.getNameLike(args[0]);
+				if (target == null) {
+					return noOnline(args[0]);
+				}
+				String msg = "";
+				for (int i = 1; i < args.length; i++) {
+					msg += args[i] + " ";
+				}
+				msg = ColorUtil.replaceColors(msg);
+				Player pl = PlayerUtil.getOnline(target);
+				if (pl != null) {
+					if (LAST_SPOKE.containsKey(pl)) {
+						LAST_SPOKE.remove(pl);
 					}
-					msg = ColorUtil.replaceColors(msg);
-					target.sendMessage(ColorUtil.replaceColors("&8&oReceived message from &c%s&8&l \u00BB &r&7%s",
-							sender.getName(), msg));
-					sender.sendMessage(ColorUtil.replaceColors("&8&oSend message to &c%s&8&l \u00BB &r&7%s",
-							target.getName(), msg));
-					if (LAST_SPOKE.containsKey(target)) {
-						LAST_SPOKE.remove(target);
-					}
-					LAST_SPOKE.put(target, sender);
+					LAST_SPOKE.put(pl, sender);
 					if (LAST_SPOKE.containsKey(sender)) {
 						LAST_SPOKE.remove(sender);
 					}
-					LAST_SPOKE.put(sender, target);
+					LAST_SPOKE.put(sender, pl);
 				} else {
-					sender.sendMessage(ColorUtil.replaceColors("&cNo player with name %s", args[0]));
+					msg += "*";
 				}
+				PlayerUtil.sendGlobalTo(target, ColorUtil
+						.replaceColors("&8&oReceived message from &c%s&8&l \u00BB &r&7%s.", sender.getName(), msg));
+				return ColorUtil.replaceColors("&8&oSend message to &c%s&8&l \u00BB &r&7%s.", target, msg);
 			} else {
-				sender.sendMessage(ColorUtil.replaceColors("Need a player and a message."));
+				return noOption();
 			}
 		} else {
-			noPermission();
+			return noPermission();
 		}
-		return true;
 	}
 
-	private boolean invsee() {
+	private String invsee() {
 		if (sender.hasPermission("iMine.invsee")) {
-			if (args.length == 0) {
-				if (sender instanceof Player) {
+			if (sender instanceof Player) {
+				if (args.length == 0) {
 					((Player) sender).openInventory(((Player) sender).getInventory());
+					return ColorUtil.replaceColors("&7Opend inventory of &c%s&7.", sender.getName());
+				} else if (args.length == 1) {
+					Player target = PlayerUtil.getOnline(args[0]);
+					if (target != null) {
+						Player pl = (Player) sender;
+						pl.openInventory(target.getInventory());
+						return ColorUtil.replaceColors("&7Opend inventory of &c%s&7.", pl.getName());
+					} else {
+						return noOnline(args[0]);
+					}
 				} else {
-					sender.sendMessage(ColorUtil.replaceColors("&cYou need to be a player!"));
-				}
-			} else if (args.length == 1) {
-				Player target = PlayerUtil.getOnline(args[0]);
-				if (sender instanceof Player && target != null) {
-					Player pl = (Player) sender;
-					pl.openInventory(target.getInventory());
-				} else {
-					sender.sendMessage(ColorUtil.replaceColors("&cNo player to open inventory."));
+					return noOption();
 				}
 			} else {
-				sender.sendMessage(ColorUtil.replaceColors("&cNeed a player."));
+				return noPlayer();
 			}
 		} else {
-			noPermission();
+			return noPermission();
 		}
-		return true;
 	}
 
-	private boolean endersee() {
+	private String endersee() {
 		if (sender.hasPermission("iMine.endersee")) {
-			if (args.length == 0) {
-				if (sender instanceof Player) {
+			if (sender instanceof Player) {
+				if (args.length == 0) {
 					((Player) sender).openInventory(((Player) sender).getEnderChest());
+					return ColorUtil.replaceColors("&7Opend enderchest of &c%s&7.", sender.getName());
+				} else if (args.length == 1) {
+					Player target = PlayerUtil.getOnline(args[0]);
+					if (target != null) {
+						Player pl = (Player) sender;
+						pl.openInventory(target.getEnderChest());
+						return ColorUtil.replaceColors("&7Opend enderchest of &c%s&7.", pl.getName());
+					} else {
+						return noOnline(args[0]);
+					}
 				} else {
-					sender.sendMessage(ColorUtil.replaceColors("&cYou need to be a player!"));
-				}
-			} else if (args.length == 1) {
-				Player target = PlayerUtil.getOnline(args[0]);
-				if (sender instanceof Player && target != null) {
-					Player pl = (Player) sender;
-					pl.openInventory(target.getEnderChest());
-				} else {
-					sender.sendMessage(ColorUtil.replaceColors("&cNeed a player and a message."));
+					return noOption();
 				}
 			} else {
-				sender.sendMessage(ColorUtil.replaceColors("&cNeed a player."));
+				return noPlayer();
 			}
 		} else {
-			noPermission();
+			return noPermission();
 		}
-		return true;
 	}
 
-	private boolean git() {
+	private String git() {
 		byte b = 0b00;
 		if (args.length > 0) {
 			if (args[0].equalsIgnoreCase("projects")) {
 				Set<String> projects = BukkitStarter.API.getProjects();
 				for (String project : projects) {
-					sender.sendMessage(project);
+					sender.sendMessage(ColorUtil.replaceColors("  &6-&e%s", project));
 				}
-				return true;
+				return "   ";
 			}
 			for (int i = 0; i < args.length; i++) {
 				if (args[i].equalsIgnoreCase("-v")) {
@@ -790,126 +803,123 @@ public class CommandHandler {
 				}
 			}
 		}
-		sender.sendMessage(ColorUtil.replaceColors("&r&l[&6&lGIT&r&l]&7 Checking all git repos..."));
-		Bukkit.getScheduler().runTaskAsynchronously(BukkitStarter.plugin, new GitCheckRunnalbe(sender, b));
-		return true;
+		Bukkit.getScheduler().runTaskLaterAsynchronously(BukkitStarter.plugin, new GitCheckRunnalbe(sender, b), 1L);
+		return ColorUtil.replaceColors("&r&l[&6&lGIT&r&l]&7 Checking all git repos...");
 	}
 
-	private boolean plr() {
+	private String plr() {
 		if ((sender.hasPermission("iMine.dev")) && args.length > 0) {
-			Bukkit.getScheduler().runTaskAsynchronously(BukkitStarter.plugin, () -> {
-				new ReloadPlugin();
-			});
+			Bukkit.getScheduler().runTaskAsynchronously(BukkitStarter.plugin, new ReloadPlugin());
+			return ColorUtil.replaceColors("&7Reloading plugin &e%s&7.", args[0]);
 		} else {
-			noPermission();
+			return noPermission();
 		}
-		return true;
 	}
 
-	private boolean returnTP() {
+	private String returnTP() {
 		if (sender.hasPermission("iMine.return")) {
 			if (sender instanceof Player) {
 				Player sender = (Player) this.sender;
 				if (BukkitListener.TP_HISTORY.containsKey(sender.getUniqueId())) {
 					List<Location> locs = BukkitListener.TP_HISTORY.get(sender.getUniqueId());
 					sender.teleport(locs.get(locs.size() - 1));
-					sender.sendMessage(ColorUtil.replaceColors("&7Back to previous location."));
+					return ColorUtil.replaceColors("&7Back to previous location.");
 				} else {
-					sender.sendMessage(ColorUtil.replaceColors("&cNo history."));
+					return ColorUtil.replaceColors("&cNo history.");
 				}
 			} else {
-				sender.sendMessage(ColorUtil.replaceColors("&cPlayer only."));
+				return ColorUtil.replaceColors("&cPlayer only.");
 			}
 		} else {
-			noPermission();
+			return noPermission();
 		}
-		return true;
 	}
 
-	private boolean vanish() {
+	private String vanish() {
 		if (sender.hasPermission("iMine.vanish")) {
 			if (args.length == 0) {
 				if (sender instanceof Player) {
 					Player sender = (Player) this.sender;
 					if (BukkitListener.VANISH.contains(sender.getUniqueId())) {
 						BukkitListener.VANISH.remove(sender.getUniqueId());
-						sender.sendMessage(ColorUtil.replaceColors("&7You are visible again!"));
+						BukkitListener.updateVanish();
+						return ColorUtil.replaceColors("&7You are visible again!");
 					} else {
 						BukkitListener.VANISH.add(sender.getUniqueId());
-						sender.sendMessage(ColorUtil.replaceColors("&7GhostMode!"));
+						BukkitListener.updateVanish();
+						return ColorUtil.replaceColors("&7GhostMode!");
 					}
 				} else {
-					sender.sendMessage(ColorUtil.replaceColors("&cPlayer only"));
+					return noPlayer();
 				}
 			} else {
 				Player target = PlayerUtil.getOnline(args[0]);
 				if (target != null) {
 					if (BukkitListener.VANISH.contains(target.getUniqueId())) {
 						BukkitListener.VANISH.remove(target.getUniqueId());
-						target.sendMessage(ColorUtil.replaceColors("&7You are visible again!"));
-						sender.sendMessage(ColorUtil.replaceColors("&c%s&7 is visible again.", target.getName()));
+						if (target != sender) {
+							target.sendMessage(ColorUtil.replaceColors("&7You are visible again!"));
+						}
 					} else {
 						BukkitListener.VANISH.add(target.getUniqueId());
-						target.sendMessage(ColorUtil.replaceColors("&7GhostMode!"));
-						sender.sendMessage(ColorUtil.replaceColors("&c%s&7 is in ghostmode.", target.getName()));
+						if (target != sender) {
+							target.sendMessage(ColorUtil.replaceColors("&7GhostMode!"));
+						}
 					}
-					sender.sendMessage(ColorUtil.replaceColors("&7Toggled vanish for &c%s&7.", target.getName()));
+					BukkitListener.updateVanish();
+					return (ColorUtil.replaceColors("&7Toggled vanish for &c%s&7.", target.getName()));
 				} else {
-					sender.sendMessage(ColorUtil.replaceColors("&cPlayer not found"));
+					return noOnline(args[0]);
 				}
 			}
-			BukkitListener.updateVanish();
 		} else {
-			noPermission();
+			return noPermission();
 		}
-		return true;
 	}
 
-	private boolean kill() {
+	private String kill() {
 		if (sender.hasPermission("iMine.kill")) {
 			if (args.length == 0) {
 				if (sender instanceof Player) {
 					Player sender = (Player) this.sender;
 					sender.setHealth(0D);
-					sender.sendMessage(ColorUtil.replaceColors("&7Committed suicide,"));
+					return ColorUtil.replaceColors("&7Committed suicide,");
 				} else {
-					sender.sendMessage(ColorUtil.replaceColors("&cPlayer only"));
+					return noPlayer();
 				}
 			} else {
 				Player target = PlayerUtil.getOnline(args[0]);
 				if (target != null) {
 					target.setHealth(0D);
-					sender.sendMessage(ColorUtil.replaceColors("&7Assassinated &c%s&7!", target.getName()));
+					return ColorUtil.replaceColors("&7Assassinated &c%s&7!", target.getName());
 				} else {
-					sender.sendMessage(ColorUtil.replaceColors("&cPlayer not found"));
+					return noOnline(args[0]);
 				}
 			}
 		} else {
-			noPermission();
+			return noPermission();
 		}
-		return true;
 	}
 
-	private boolean reply() {
+	private String reply() {
 		if (sender.hasPermission("iMine.reply")) {
 			if (args.length > 0) {
 				if (LAST_SPOKE.containsKey(sender)) {
 					CommandSender target = LAST_SPOKE.get(sender);
 					args = (String[]) ArrayUtils.addAll(new String[] { target.getName() }, args);
-					msg();
+					return msg();
 				} else {
-					sender.sendMessage(ColorUtil.replaceColors("&cNobody to reply to"));
+					return ColorUtil.replaceColors("&cNobody to reply to");
 				}
 			} else {
-				sender.sendMessage(ColorUtil.replaceColors("&cNeed a message to tell."));
+				return noOption();
 			}
 		} else {
-			noPermission();
+			return noPermission();
 		}
-		return true;
 	}
 
-	private boolean me() {
+	private String me() {
 		if (sender.hasPermission("iMine.me")) {
 			if (args.length > 0) {
 				String msg = "";
@@ -919,16 +929,16 @@ public class CommandHandler {
 				msg = msg.substring(0, msg.length() - 1);
 				msg = ColorUtil.replaceColors("&6* &7%s &r" + msg, sender.getName());
 				Bukkit.broadcastMessage(msg);
+				return "";
 			} else {
-				sender.sendMessage(ColorUtil.replaceColors("&cNeed a message to tell."));
+				return ColorUtil.replaceColors("&cNeed a message to tell.");
 			}
 		} else {
-			noPermission();
+			return noPermission();
 		}
-		return true;
 	}
 
-	private boolean world() {
+	private String world() {
 		if (sender instanceof Player) {
 			Player player = (Player) sender;
 			if (args.length == 0) {
@@ -937,6 +947,7 @@ public class CommandHandler {
 				Bukkit.getWorlds().stream().forEach(w -> {
 					player.sendMessage(ColorUtil.replaceColors("  &c%s", w.getName()));
 				});
+				return "   ";
 			} else if (args.length == 1) {
 				World world;
 				try {
@@ -951,17 +962,32 @@ public class CommandHandler {
 				}
 				if (world != null) {
 					player.teleport(world.getSpawnLocation(), PlayerTeleportEvent.TeleportCause.COMMAND);
+					return ColorUtil.replaceColors("&7Teleported to world &e%s&7.");
 				} else {
-					player.sendMessage(ColorUtil.replaceColors("&6No world with the name \"&c%s&6\" exists.", args[0]));
+					return ColorUtil.replaceColors("&6No world with the name \"&c%s&6\" exists.", args[0]);
 				}
+			} else {
+				return noOption();
 			}
+		} else {
+			return noPlayer();
 		}
-		return true;
 	}
 
-	private void noPermission() {
-		sender.sendMessage(
-				ColorUtil.replaceColors("&cYou do not have permission to execute '&6%s&c' command!", command));
+	private String noPermission() {
+		return ColorUtil.replaceColors("&cYou do not have permission to execute '&6%s&c' command!", command);
+	}
+
+	private String noOption() {
+		return ColorUtil.replaceColors("&cThere is no command with this argument.");
+	}
+
+	private String noPlayer() {
+		return ColorUtil.replaceColors("&cPlayer-command only.");
+	}
+
+	private String noOnline(String arg) {
+		return ColorUtil.replaceColors("&cPlayer '&c%s&c' is not online.", arg);
 	}
 
 	public static List<String> onTabComplete(Player sender, String command, String[] args) {
