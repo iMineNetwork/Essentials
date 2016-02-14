@@ -56,6 +56,9 @@ import nl.makertim.essentials.GitLabAPI.GitProject;
 
 public class CommandHandler {
 
+	private final String adminChatFormat = ColorUtil.replaceColors("&r&l[&a&lADMIN&r&l]&r&7%s &r&l\u00BB &r%s");
+	private final String reportChatFormat = ColorUtil.replaceColors("&r&l[&c&lREPORT&r&l]&r&7%s &r&l\u00BB &r%s");
+
 	private static final Map<CommandSender, CommandSender> LAST_SPOKE = new HashMap<>();
 
 	private final CommandSender sender;
@@ -119,11 +122,9 @@ public class CommandHandler {
 		} else if (command.equalsIgnoreCase("world")) {
 			return world();
 		} else if (command.equalsIgnoreCase("report")) {
-			new ServerReporter();
-			return true;
+			return reportChat();
 		} else if (command.equalsIgnoreCase("admin")) {
-			new AdminChat();
-			return true;
+			return adminChat();
 		} else if (command.equalsIgnoreCase("update")) {
 			if (sender instanceof Player) {
 				((Player) sender).performCommand("reload");
@@ -135,6 +136,51 @@ public class CommandHandler {
 		return false;
 	}
 
+	private boolean reportChat() {
+		if (args.length == 0) {
+			sender.sendMessage(ColorUtil.replaceColors("&c/Report [Message]"));
+			return true;
+		}
+		String message = "";
+		for (String str : args) {
+			message += str + " ";
+		}
+		message = ColorUtil.replaceColors(message);
+		if (message.matches("^\\s*$")) {
+			sender.sendMessage(ColorUtil.replaceColors("&c/Report [Message]"));
+			return true;
+		}
+		sender.sendMessage(ColorUtil.replaceColors("&7Message reported!"));
+		if (sender instanceof Player) {
+			PlayerUtil.sendGlobalAdmin(String.format(reportChatFormat, sender.getName(), message));
+		} else {
+			sender.sendMessage("Player-only");
+		}
+		return true;
+	}
+
+	private boolean adminChat() {
+		if (!sender.hasPermission("iMine.adminChat")) {
+			sender.sendMessage(ColorUtil.replaceColors("&cUse /report for contacting admins"));
+			return true;
+		}
+		if (args.length == 0) {
+			sender.sendMessage(ColorUtil.replaceColors("&c/Admin [Message]"));
+			return true;
+		}
+		String message = "";
+		for (String str : args) {
+			message += str + " ";
+		}
+		message = ColorUtil.replaceColors(message);
+		if (message.matches("^\\s*$")) {
+			sender.sendMessage(ColorUtil.replaceColors("&c/Admin [Message]"));
+			return true;
+		}
+		PlayerUtil.sendGlobalAdmin(String.format(adminChatFormat, sender.getName(), message));
+		return true;
+	}
+
 	private boolean banrichtlijn() {
 		sender.sendMessage(ColorUtil.replaceColors("&4&lBanRichtlijn"));
 		sender.sendMessage("   ");
@@ -143,11 +189,12 @@ public class CommandHandler {
 		sender.sendMessage(ColorUtil.replaceColors("&3Bedrijgen &6- &22weken ban "));
 		sender.sendMessage(ColorUtil.replaceColors("&3Extreem schelden &6- &248 uur ban "));
 		sender.sendMessage(
-				ColorUtil.replaceColors("&3Ongepast taalgebruik &6- &2Waarschuwing (kick), daarna 2 tot 4 uur ban"));
-		sender.sendMessage(ColorUtil.replaceColors("&3Spam &6- &2Waarschuwing (kick), daarna 2 tot 4 uur ban"));
+				ColorUtil.replaceColors("&3Ongepast taalgebruik &6- &2Waarschuwing (kick), daarna 2 - 4 uur ban"));
+		sender.sendMessage(ColorUtil.replaceColors("&3Spam &6- &2Waarschuwing (kick), daarna 2 - 4 uur ban"));
 		sender.sendMessage("   ");
 		sender.sendMessage(ColorUtil.replaceColors("&eBedenk je ban verstandig en zet er een DUIDELIJKE reden bij."));
 		sender.sendMessage(ColorUtil.replaceColors("&7Mocht je dit niet kunnen, geef dit door aan je leidinggevende!"));
+		sender.sendMessage("   ");
 		return true;
 	}
 
@@ -623,16 +670,16 @@ public class CommandHandler {
 								sender.sendMessage(ColorUtil.replaceColors("&7Speed set."));
 							}
 						} else {
-							sender.sendMessage(ColorUtil.replaceColors("cNo player with name %s", args[2]));
+							sender.sendMessage(ColorUtil.replaceColors("&cNo player with name %s", args[2]));
 						}
 					} else {
-						sender.sendMessage(ColorUtil.replaceColors("cI dont know what to do!"));
+						sender.sendMessage(ColorUtil.replaceColors("&cI dont know what to do!"));
 					}
 				} else {
-					sender.sendMessage(ColorUtil.replaceColors("cI dont know what to do!"));
+					sender.sendMessage(ColorUtil.replaceColors("&cI dont know what to do!"));
 				}
 			} else {
-				sender.sendMessage(ColorUtil.replaceColors("cOnly for players."));
+				sender.sendMessage(ColorUtil.replaceColors("&cOnly for players."));
 			}
 		} else {
 			noPermission();
@@ -1020,7 +1067,7 @@ public class CommandHandler {
 						}
 					}
 					if (nameChange.size() == 1) {
-						sender.sendMessage(ColorUtil.replaceColors("&7 Name has never changed since."));
+						sender.sendMessage(ColorUtil.replaceColors("&8  Name has never changed since."));
 					}
 				}
 			} catch (Exception ex) {
@@ -1033,72 +1080,15 @@ public class CommandHandler {
 			if (time > 0L) {
 				d = new Date(time);
 				if (name == null) {
-					sender.sendMessage(ColorUtil.replaceColors("&c This player has no other names"));
+					sender.sendMessage(ColorUtil.replaceColors("&c  This player has no other names"));
 				} else {
-					sender.sendMessage(ColorUtil.replaceColors("&6 Name: '&c%s&6' changed %s ago.", name,
+					sender.sendMessage(ColorUtil.replaceColors("&7  Name: '&c%s&7' changed &e%s&7 ago.", name,
 							DateUtil.timeUntilNow(d)));
 				}
 			} else {
-				sender.sendMessage(ColorUtil.replaceColors("&6Getting al old playernames from '&c%s&6'.", name));
+				sender.sendMessage(ColorUtil.replaceColors("&7Getting al old playernames from '&c%s&6'.", name));
 				return;
 			}
-		}
-	}
-
-	private class ServerReporter {
-
-		private final String formatMessage = ColorUtil.replaceColors("&r&l[&r&lREPORT&r&l]&r&6%s \u00BB %s");
-
-		public ServerReporter() {
-			if (args.length == 0) {
-				sender.sendMessage(ColorUtil.replaceColors("&c/Report [Message]"));
-				return;
-			}
-			String message = "";
-			for (String str : args) {
-				message += str + " ";
-			}
-			message = ColorUtil.replaceColors(message);
-			if (message.matches("^\\s*$")) {
-				sender.sendMessage(ColorUtil.replaceColors("&c/Report [Message]"));
-				return;
-			}
-			sender.sendMessage(ColorUtil.replaceColors("&7Message reported!"));
-			if (sender instanceof Player) {
-				PlayerUtil.sendGlobalAdmin(String.format(formatMessage, sender.getName(), message));
-			} else {
-				sender.sendMessage("Player-only");
-			}
-		}
-	}
-
-	private class AdminChat {
-
-		private final String formatMessage = ColorUtil.replaceColors("&r&l[&a&lADMIN&r&l]&r&6%s \u00BB %s");;
-
-		public AdminChat() {
-			if (!(sender instanceof Player)) {
-				sender.sendMessage(ColorUtil.replaceColors("&cPlayer Only"));
-			} else {
-				send();
-			}
-		}
-
-		public void send() {
-			if (!sender.hasPermission("iMine.adminChat") || args.length == 0) {
-				sender.sendMessage(ColorUtil.replaceColors("&c/Admin [Message]"));
-				return;
-			}
-			String message = "";
-			for (String str : args) {
-				message += str + " ";
-			}
-			message = ColorUtil.replaceColors(message);
-			if (message.matches("^\\s*$")) {
-				sender.sendMessage(ColorUtil.replaceColors("&c/Admin [Message]"));
-				return;
-			}
-			PlayerUtil.sendGlobalAdmin(String.format(formatMessage, sender.getName(), message));
 		}
 	}
 
