@@ -281,7 +281,7 @@ public class CommandHandler {
 				File f = (File) m.invoke(plugin);
 				extra.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
 						new ComponentBuilder(plugin.getDescription().getVersion()).append("\n\n" + f.getName())
-								.create()));
+						.create()));
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
@@ -906,7 +906,7 @@ public class CommandHandler {
 			if (args.length > 0) {
 				if (LAST_SPOKE.containsKey(sender)) {
 					CommandSender target = LAST_SPOKE.get(sender);
-					args = (String[]) ArrayUtils.addAll(new String[] { target.getName() }, args);
+					args = (String[]) ArrayUtils.addAll(new String[]{target.getName()}, args);
 					return msg();
 				} else {
 					return ColorUtil.replaceColors("&cNobody to reply to");
@@ -939,43 +939,43 @@ public class CommandHandler {
 	}
 
 	private String world() {
-	    if(sender.hasPermission("iMine.world")) {
-		    if (sender instanceof Player) {
-			    Player player = (Player) sender;
-	    		if (args.length == 0) {
-	    			player.sendMessage(ColorUtil.replaceColors("&6Current World: &c%s", player.getWorld().getName()));
-	    			player.sendMessage(ColorUtil.replaceColors("&6Availible worlds:"));
-	    			Bukkit.getWorlds().stream().forEach(w -> {
-	    				player.sendMessage(ColorUtil.replaceColors("  &c%s", w.getName()));
-	    			});
-	    			return "   ";
-	    		} else if (args.length == 1) {
-	    			World world;
-	    			try {
-	    				world = Bukkit.getWorlds().get(Integer.parseInt(args[0]));
-	    			} catch (NumberFormatException e) {
-	    				world = Bukkit.getWorld(args[0]);
-	    				if (world == null) {
-	    					if (new File(args[0], Bukkit.getWorldContainer().getPath()).exists()) {
-	    						world = Bukkit.createWorld(new WorldCreator(args[0]));
-	    					}
-	    				}
-	    			}
-	    			if (world != null) {
-	    				player.teleport(world.getSpawnLocation(), PlayerTeleportEvent.TeleportCause.COMMAND);
-	    				return ColorUtil.replaceColors("&7Teleported to world &e%s&7.");
-	    			} else {
-	    				return ColorUtil.replaceColors("&6No world with the name \"&c%s&6\" exists.", args[0]);
-	    			}
-	    		} else {
-	    			return noOption();
-	   	    	}
-		    } else {
-			    return noPlayer();
-	    	}
-	    } else {
-	        return noPermission();
-	    }
+		if (sender.hasPermission("iMine.world")) {
+			if (sender instanceof Player) {
+				Player player = (Player) sender;
+				if (args.length == 0) {
+					player.sendMessage(ColorUtil.replaceColors("&6Current World: &c%s", player.getWorld().getName()));
+					player.sendMessage(ColorUtil.replaceColors("&6Availible worlds:"));
+					Bukkit.getWorlds().stream().forEach(w -> {
+						player.sendMessage(ColorUtil.replaceColors("  &c%s", w.getName()));
+					});
+					return "   ";
+				} else if (args.length == 1) {
+					World world;
+					try {
+						world = Bukkit.getWorlds().get(Integer.parseInt(args[0]));
+					} catch (NumberFormatException e) {
+						world = Bukkit.getWorld(args[0]);
+						if (world == null) {
+							if (new File(args[0], Bukkit.getWorldContainer().getPath()).exists()) {
+								world = Bukkit.createWorld(new WorldCreator(args[0]));
+							}
+						}
+					}
+					if (world != null) {
+						player.teleport(world.getSpawnLocation(), PlayerTeleportEvent.TeleportCause.COMMAND);
+						return ColorUtil.replaceColors("&7Teleported to world &6%s&7.", world.getName());
+					} else {
+						return ColorUtil.replaceColors("&6No world with the name \"&c%s&6\" exists.", args[0]);
+					}
+				} else {
+					return noOption();
+				}
+			} else {
+				return noPlayer();
+			}
+		} else {
+			return noPermission();
+		}
 	}
 
 	private String noPermission() {
@@ -997,7 +997,7 @@ public class CommandHandler {
 	public static List<String> onTabComplete(Player sender, String command, String[] args) {
 		List<String> ret = new ArrayList<>();
 		if (command.equalsIgnoreCase("hub")) {
-			String[] servers = { "creative", "uhc", "hub", "survival", "outlaws", "testserver", "outlawsB" };
+			String[] servers = {"creative", "uhc", "hub", "survival", "outlaws", "testserver", "outlawsB"};
 			if (args.length == 1) {
 				for (String server : servers) {
 					if (server.toLowerCase().contains(args[args.length - 1].toLowerCase())) {
@@ -1009,7 +1009,7 @@ public class CommandHandler {
 				ret.addAll(PlayerUtil.getAllOnlineNames(args[args.length - 1], sender));
 			}
 		} else if (command.equalsIgnoreCase("tab") && args.length == 1) {
-			String[] argumenten = { "top", "bottom", "update" };
+			String[] argumenten = {"top", "bottom", "update"};
 			for (String arg : argumenten) {
 				if (arg.toLowerCase().contains(args[args.length - 1].toLowerCase())) {
 					ret.add(arg);
@@ -1019,7 +1019,7 @@ public class CommandHandler {
 		} else if (command.equalsIgnoreCase("mchistory") && args.length == 1) {
 			ret.addAll(PlayerUtil.getNamesLike(args[args.length - 1]));
 		} else if (command.equalsIgnoreCase("git")) {
-			String[] argumenten = { "-v", "-q", "projects" };
+			String[] argumenten = {"-v", "-q", "projects"};
 			for (String arg : argumenten) {
 				if (arg.toLowerCase().contains(args[args.length - 1].toLowerCase())) {
 					ret.add(arg);
@@ -1035,7 +1035,9 @@ public class CommandHandler {
 			Collections.sort(ret, new StringSearchSorter(args[args.length - 1]));
 		} else if (command.equalsIgnoreCase("world")) {
 			for (World w : Bukkit.getWorlds()) {
-				ret.add(w.getName());
+				if (w.getName().startsWith(args[args.length - 1])) {
+					ret.add(w.getName());
+				}
 			}
 			Collections.sort(ret, new StringSearchSorter(args[args.length - 1]));
 		} else if ((command.startsWith("gm") && command.length() == 3)
@@ -1213,8 +1215,7 @@ public class CommandHandler {
 				/**
 				 * Lief dagboek,
 				 *
-				 * Een mooie message maakt lelijke code. Mocht je hier onder nog
-				 * iets nuttigs mee willen doen, im sorry
+				 * Een mooie message maakt lelijke code. Mocht je hier onder nog iets nuttigs mee willen doen, im sorry
 				 *
 				 * groetjes Tim
 				 */
@@ -1222,22 +1223,24 @@ public class CommandHandler {
 				/**
 				 * Lief dagboek,
 				 *
-				 * Ik zag dat Tim iets had gemaakt waar hij zelf een mooiere
-				 * manier voor heeft geschreven. Zonde als dat niet gebruitk zou
-				 * worden hè? ;)
+				 * Ik zag dat Tim iets had gemaakt waar hij zelf een mooiere manier voor heeft geschreven. Zonde als dat niet gebruitk zou worden hè? ;)
 				 *
 				 * groetjes Sander
 				 */
-
 				/**
 				 * Lief dagboek,
-				 * 
-				 * het scheen dat ik soms dingen gebruikte en soms ook niet na
-				 * veel moeite gebruik ik het nu overal
-				 * 
+				 *
+				 * het scheen dat ik soms dingen gebruikte en soms ook niet na veel moeite gebruik ik het nu overal
+				 *
 				 * hoop dat toekomst zelf het nu makkelijker kan terug lezen
-				 * 
+				 *
 				 * Groetjes Tim
+				 */
+				/*
+				 * Lief dagboek,
+				 * Tim is dik, hihi
+				 * 
+				 * Groetjes Sander
 				 */
 				// newestversion: %gitshort% [RELOAD SERVER]
 				TextComponent extra, message = new TextComponent("");
@@ -1249,8 +1252,8 @@ public class CommandHandler {
 				extra.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, git.getWebUrl()));
 				extra.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
 						new ComponentBuilder(git.getDescription())
-								.append("\n\nCreated at: " + GitLabAPI.NL_DATE_FORMAT.format(git.getCreateDate()))
-								.create()));
+						.append("\n\nCreated at: " + GitLabAPI.NL_DATE_FORMAT.format(git.getCreateDate()))
+						.create()));
 				message.addExtra(extra);
 				// current verion:
 				extra = new TextComponent(ColorUtil.replaceColors("&rcurrent version: "));
@@ -1271,15 +1274,15 @@ public class CommandHandler {
 					extra.setColor(net.md_5.bungee.api.ChatColor.RED);
 					extra.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
 							new ComponentBuilder(ColorUtil.replaceColors("&c%s -comit not found"))
-									.append("\n\nPushed at: ~").create()));
+							.append("\n\nPushed at: ~").create()));
 				} else {
 					extra = new TextComponent(
 							ColorUtil.replaceColors("&6%s ", current.getTitle().replaceAll(" ", " &6")));
 					extra.setColor(net.md_5.bungee.api.ChatColor.GOLD);
 					extra.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
 							new ComponentBuilder(ColorUtil.replaceColors("&6id:%s", current.getShortId()))
-									.append("\n\nPushed at: " + GitLabAPI.NL_DATE_FORMAT.format(current.getWhen()))
-									.create()));
+							.append("\n\nPushed at: " + GitLabAPI.NL_DATE_FORMAT.format(current.getWhen()))
+							.create()));
 				}
 				extra.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, git.getWebUrl() + "/commit/"
 						+ (current == null ? "master" : current.getLongId()) + "?view=parallel"));
@@ -1381,7 +1384,7 @@ public class CommandHandler {
 						new HoverEvent(HoverEvent.Action.SHOW_TEXT,
 								new ComponentBuilder(ColorUtil
 										.replaceColors("&cWARNING, will shutdown server!\n&rClick to reboot server"))
-												.create()));
+								.create()));
 				message.addExtra(extra);
 				sendTextComponent(message);
 			} else {
