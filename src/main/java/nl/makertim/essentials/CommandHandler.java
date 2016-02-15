@@ -939,39 +939,43 @@ public class CommandHandler {
 	}
 
 	private String world() {
-		if (sender instanceof Player) {
-			Player player = (Player) sender;
-			if (args.length == 0) {
-				player.sendMessage(ColorUtil.replaceColors("&6Current World: &c%s", player.getWorld().getName()));
-				player.sendMessage(ColorUtil.replaceColors("&6Availible worlds:"));
-				Bukkit.getWorlds().stream().forEach(w -> {
-					player.sendMessage(ColorUtil.replaceColors("  &c%s", w.getName()));
-				});
-				return "   ";
-			} else if (args.length == 1) {
-				World world;
-				try {
-					world = Bukkit.getWorlds().get(Integer.parseInt(args[0]));
-				} catch (NumberFormatException e) {
-					world = Bukkit.getWorld(args[0]);
-					if (world == null) {
-						if (new File(args[0], Bukkit.getWorldContainer().getPath()).exists()) {
-							world = Bukkit.createWorld(new WorldCreator(args[0]));
-						}
-					}
-				}
-				if (world != null) {
-					player.teleport(world.getSpawnLocation(), PlayerTeleportEvent.TeleportCause.COMMAND);
-					return ColorUtil.replaceColors("&7Teleported to world &e%s&7.");
-				} else {
-					return ColorUtil.replaceColors("&6No world with the name \"&c%s&6\" exists.", args[0]);
-				}
-			} else {
-				return noOption();
-			}
-		} else {
-			return noPlayer();
-		}
+	    if(sender.hasPermission("iMine.world")) {
+		    if (sender instanceof Player) {
+			    Player player = (Player) sender;
+	    		if (args.length == 0) {
+	    			player.sendMessage(ColorUtil.replaceColors("&6Current World: &c%s", player.getWorld().getName()));
+	    			player.sendMessage(ColorUtil.replaceColors("&6Availible worlds:"));
+	    			Bukkit.getWorlds().stream().forEach(w -> {
+	    				player.sendMessage(ColorUtil.replaceColors("  &c%s", w.getName()));
+	    			});
+	    			return "   ";
+	    		} else if (args.length == 1) {
+	    			World world;
+	    			try {
+	    				world = Bukkit.getWorlds().get(Integer.parseInt(args[0]));
+	    			} catch (NumberFormatException e) {
+	    				world = Bukkit.getWorld(args[0]);
+	    				if (world == null) {
+	    					if (new File(args[0], Bukkit.getWorldContainer().getPath()).exists()) {
+	    						world = Bukkit.createWorld(new WorldCreator(args[0]));
+	    					}
+	    				}
+	    			}
+	    			if (world != null) {
+	    				player.teleport(world.getSpawnLocation(), PlayerTeleportEvent.TeleportCause.COMMAND);
+	    				return ColorUtil.replaceColors("&7Teleported to world &e%s&7.");
+	    			} else {
+	    				return ColorUtil.replaceColors("&6No world with the name \"&c%s&6\" exists.", args[0]);
+	    			}
+	    		} else {
+	    			return noOption();
+	   	    	}
+		    } else {
+			    return noPlayer();
+	    	}
+	    } else {
+	        return noPermission();
+	    }
 	}
 
 	private String noPermission() {
@@ -1220,7 +1224,7 @@ public class CommandHandler {
 				 *
 				 * Ik zag dat Tim iets had gemaakt waar hij zelf een mooiere
 				 * manier voor heeft geschreven. Zonde als dat niet gebruitk zou
-				 * worden hè? ;)
+				 * worden hÃ¨? ;)
 				 *
 				 * groetjes Sander
 				 */
