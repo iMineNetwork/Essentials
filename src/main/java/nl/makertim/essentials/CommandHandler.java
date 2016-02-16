@@ -136,7 +136,9 @@ public class CommandHandler {
 		if (finalAwsner == null) {
 			return false;
 		} else {
-			sender.sendMessage(finalAwsner);
+			if (!finalAwsner.trim().isEmpty()) {
+				sender.sendMessage(finalAwsner);
+			}
 			return true;
 		}
 	}
@@ -190,7 +192,7 @@ public class CommandHandler {
 		sender.sendMessage("   ");
 		sender.sendMessage(ColorUtil.replaceColors("&eBedenk je ban verstandig en zet er een DUIDELIJKE reden bij."));
 		sender.sendMessage(ColorUtil.replaceColors("&7Mocht je dit niet kunnen, geef dit door aan je leidinggevende!"));
-		return "   ";
+		return "";
 	}
 
 	private String mchistory() {
@@ -200,7 +202,7 @@ public class CommandHandler {
 				for (final UUID foundUUID : uuidsLike) {
 					Bukkit.getScheduler().runTaskAsynchronously(BukkitStarter.plugin, new NameLookup(foundUUID));
 				}
-				return "   ";
+				return "";
 			} else {
 				return ColorUtil.replaceColors("&cNeed player to lookup");
 			}
@@ -787,12 +789,13 @@ public class CommandHandler {
 	private String git() {
 		byte b = 0b00;
 		if (args.length > 0) {
-			if (args[0].equalsIgnoreCase("projects")) {
+			if (args[0].equalsIgnoreCase("projects") && sender.hasPermission("iMine.git")) {
 				Set<String> projects = BukkitStarter.API.getProjects();
+				sender.sendMessage(ColorUtil.replaceColors("&7Listing all git projects"));
 				for (String project : projects) {
-					sender.sendMessage(ColorUtil.replaceColors("  &6-&e%s", project));
+					sender.sendMessage(ColorUtil.replaceColors("  &6- &e%s", project));
 				}
-				return "   ";
+				return "";
 			}
 			for (int i = 0; i < args.length; i++) {
 				if (args[i].equalsIgnoreCase("-v")) {
@@ -943,12 +946,12 @@ public class CommandHandler {
 			if (sender instanceof Player) {
 				Player player = (Player) sender;
 				if (args.length == 0) {
-					player.sendMessage(ColorUtil.replaceColors("&6Current World: &c%s", player.getWorld().getName()));
-					player.sendMessage(ColorUtil.replaceColors("&6Availible worlds:"));
+					player.sendMessage(ColorUtil.replaceColors("&7Current World: &e%s", player.getWorld().getName()));
+					player.sendMessage(ColorUtil.replaceColors("&7Availible worlds:"));
 					Bukkit.getWorlds().stream().forEach(w -> {
-						player.sendMessage(ColorUtil.replaceColors("  &c%s", w.getName()));
+						player.sendMessage(ColorUtil.replaceColors("  &e%s", w.getName()));
 					});
-					return "   ";
+					return "";
 				} else if (args.length == 1) {
 					World world;
 					try {
@@ -965,7 +968,7 @@ public class CommandHandler {
 						player.teleport(world.getSpawnLocation(), PlayerTeleportEvent.TeleportCause.COMMAND);
 						return ColorUtil.replaceColors("&7Teleported to world &6%s&7.", world.getName());
 					} else {
-						return ColorUtil.replaceColors("&6No world with the name \"&c%s&6\" exists.", args[0]);
+						return ColorUtil.replaceColors("&cNo world with the name '&c%s&6' exists.", args[0]);
 					}
 				} else {
 					return noOption();
