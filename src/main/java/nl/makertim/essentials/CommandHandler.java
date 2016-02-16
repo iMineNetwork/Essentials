@@ -371,6 +371,7 @@ public class CommandHandler {
 	private String lagdebug() {
 		if (sender.hasPermission("iMine.lagdebug")) {
 			if (args.length == 0) {
+				sender.sendMessage(ColorUtil.replaceColors("&7All mobs, grouped by &cworld&7."));
 				for (World w : Bukkit.getWorlds()) {
 					sender.sendMessage(ColorUtil.replaceColors("&7Mobs in world '&e%s&7' [&c%d&7]", w.getName(),
 						w.getEntities().size()));
@@ -382,13 +383,14 @@ public class CommandHandler {
 						countMap.get(e.getClass()).add(e);
 					}
 					for (Class<? extends Entity> entityClass : MapCountSorter.getOrder(countMap, Sort.DESC)) {
-						sender.sendMessage(ColorUtil.replaceColors("  &c%d &7- &6%ss", countMap.get(entityClass).size(),
+						sender.sendMessage(ColorUtil.replaceColors("  &c%d &7- &e%ss", countMap.get(entityClass).size(),
 							entityClass.getSimpleName().replace("Craft", "")));
 					}
 				}
 				return ColorUtil.replaceColors("&7 ---------------");
 			} else {
-				if (args[0].equalsIgnoreCase("player")) {
+				if (args[0].equalsIgnoreCase("players")) {
+					sender.sendMessage(ColorUtil.replaceColors("&7All mobs, grouped by &cplayers&7."));
 					Map<String, List<Class<? extends Entity>>> countMap = new HashMap<>();
 					for (World w : Bukkit.getWorlds()) {
 						for (Entity e : w.getEntities()) {
@@ -410,13 +412,13 @@ public class CommandHandler {
 							countMap.get(name).add(e.getClass());
 						}
 					}
-					sender.sendMessage(ColorUtil.replaceColors("&cAll entitys by player"));
 					for (String plName : MapCountSorter.getOrder(countMap, Sort.DESC)) {
 						sender.sendMessage(
-							ColorUtil.replaceColors("  &c%d &7- &6%ss", countMap.get(plName).size(), plName));
+							ColorUtil.replaceColors("  &c%d &7- &e%ss", countMap.get(plName).size(), plName));
 					}
 					return ColorUtil.replaceColors("&7 ---------------");
 				} else {
+					sender.sendMessage(ColorUtil.replaceColors("&7All entitys near player(s) &l%s&7.", args[0]));
 					Map<Class<? extends Entity>, List<Entity>> countMap = new HashMap<>();
 					List<Player> argsPlayers = PlayerUtil.getAllOnline(args[0]);
 					for (World w : Bukkit.getWorlds()) {
@@ -440,10 +442,14 @@ public class CommandHandler {
 							}
 						}
 					}
-					sender.sendMessage(ColorUtil.replaceColors("All entitys by player(s) &l%s&r.", args[0]));
+					boolean hasSend = false;
 					for (Class<? extends Entity> entityClass : MapCountSorter.getOrder(countMap, Sort.DESC)) {
-						sender.sendMessage(ColorUtil.replaceColors("  &c%d &7- &6%ss", countMap.get(entityClass).size(),
+						sender.sendMessage(ColorUtil.replaceColors("  &c%d &7- &e%ss", countMap.get(entityClass).size(),
 							entityClass.getSimpleName().replace("Craft", "")));
+						hasSend = true;
+					}
+					if (!hasSend) {
+						sender.sendMessage(ColorUtil.replaceColors("  &cNo mobs near '&e%s&c'.", args[0]));
 					}
 					return ColorUtil.replaceColors("&7 ---------------");
 				}
