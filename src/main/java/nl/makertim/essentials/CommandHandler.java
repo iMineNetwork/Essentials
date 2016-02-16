@@ -418,7 +418,7 @@ public class CommandHandler {
 					}
 					return ColorUtil.replaceColors("&7 ---------------");
 				} else {
-					sender.sendMessage(ColorUtil.replaceColors("&7All entitys near player(s) &l%s&7.", args[0]));
+					sender.sendMessage(ColorUtil.replaceColors("&7All entitys near player(s) &c&l%s&7.", args[0]));
 					Map<Class<? extends Entity>, List<Entity>> countMap = new HashMap<>();
 					List<Player> argsPlayers = PlayerUtil.getAllOnline(args[0]);
 					for (World w : Bukkit.getWorlds()) {
@@ -444,7 +444,7 @@ public class CommandHandler {
 					}
 					boolean hasSend = false;
 					for (Class<? extends Entity> entityClass : MapCountSorter.getOrder(countMap, Sort.DESC)) {
-						sender.sendMessage(ColorUtil.replaceColors("  &c%d &7- &e%ss", countMap.get(entityClass).size(),
+						sender.sendMessage(ColorUtil.replaceColors("  &c%d &7- &e%s", countMap.get(entityClass).size(),
 							entityClass.getSimpleName().replace("Craft", "")));
 						hasSend = true;
 					}
