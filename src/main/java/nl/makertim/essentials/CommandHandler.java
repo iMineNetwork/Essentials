@@ -185,7 +185,7 @@ public class CommandHandler {
 		sender.sendMessage(ColorUtil.replaceColors("&cExtreem schelden &6- &a48 uur ban"));
 		sender.sendMessage(ColorUtil.replaceColors("&cReclame maken &6- &a12-24 uur ban"));
 		sender.sendMessage(
-				ColorUtil.replaceColors("&cOngepast taalgebruik &6- &aWaarschuwing (kick), daarna 2-4 uur ban"));
+			ColorUtil.replaceColors("&cOngepast taalgebruik &6- &aWaarschuwing (kick), daarna 2-4 uur ban"));
 		sender.sendMessage(ColorUtil.replaceColors("&cSpam &6- &aWaarschuwing (kick), daarna 2-4 uur ban"));
 		sender.sendMessage("   ");
 		sender.sendMessage(ColorUtil.replaceColors("&eBedenk je ban verstandig en zet er een DUIDELIJKE reden bij."));
@@ -254,11 +254,11 @@ public class CommandHandler {
 				pl.setAllowFlight(!pl.getAllowFlight());
 				pl.setFlying(pl.getAllowFlight());
 				if (sender != pl) {
-					pl.sendMessage(ColorUtil.replaceColors("&7You %s&7 fly now.",
-							(pl.getAllowFlight() ? "&6can" : "&4can't")));
+					pl.sendMessage(
+						ColorUtil.replaceColors("&7You %s&7 fly now.", (pl.getAllowFlight() ? "&6can" : "&4can't")));
 				}
 				return ColorUtil.replaceColors("&7Player &c%s&7 %s&7 fly now.", pl.getName(),
-						(pl.getAllowFlight() ? "&6can" : "&4can't"));
+					(pl.getAllowFlight() ? "&6can" : "&4can't"));
 			} else {
 				return noOnline(args[0]);
 			}
@@ -306,7 +306,7 @@ public class CommandHandler {
 			if (pl != null) {
 				BukkitListener.toggleMuted(pl);
 				return ColorUtil.replaceColors("&c%s&7 is now %s&7.", pl.getName(),
-						(BukkitListener.isMuted(pl) ? "&cmuted." : "&6unmuted."));
+					(BukkitListener.isMuted(pl) ? "&cmuted." : "&6unmuted."));
 			} else {
 				return noOnline(args[0]);
 			}
@@ -371,7 +371,7 @@ public class CommandHandler {
 			if (args.length == 0) {
 				for (World w : Bukkit.getWorlds()) {
 					sender.sendMessage(ColorUtil.replaceColors("&7Mobs in world '&e%s&7' [&c%d&7]", w.getName(),
-							w.getEntities().size()));
+						w.getEntities().size()));
 					Map<Class<? extends Entity>, List<Entity>> countMap = new HashMap<>();
 					for (Entity e : w.getEntities()) {
 						if (!countMap.containsKey(e.getClass())) {
@@ -381,7 +381,7 @@ public class CommandHandler {
 					}
 					for (Class<? extends Entity> entityClass : MapCountSorter.getOrder(countMap, Sort.DESC)) {
 						sender.sendMessage(ColorUtil.replaceColors("  &c%d &7- &6%ss", countMap.get(entityClass).size(),
-								entityClass.getSimpleName().replace("Craft", "")));
+							entityClass.getSimpleName().replace("Craft", "")));
 					}
 				}
 				return ColorUtil.replaceColors("&7 ---------------");
@@ -411,7 +411,7 @@ public class CommandHandler {
 					sender.sendMessage(ColorUtil.replaceColors("&cAll entitys by player"));
 					for (String plName : MapCountSorter.getOrder(countMap, Sort.DESC)) {
 						sender.sendMessage(
-								ColorUtil.replaceColors("  &c%d &7- &6%ss", countMap.get(plName).size(), plName));
+							ColorUtil.replaceColors("  &c%d &7- &6%ss", countMap.get(plName).size(), plName));
 					}
 					return ColorUtil.replaceColors("&7 ---------------");
 				} else {
@@ -441,7 +441,7 @@ public class CommandHandler {
 					sender.sendMessage(ColorUtil.replaceColors("All entitys by player(s) &l%s&r.", args[0]));
 					for (Class<? extends Entity> entityClass : MapCountSorter.getOrder(countMap, Sort.DESC)) {
 						sender.sendMessage(ColorUtil.replaceColors("  &c%d &7- &6%ss", countMap.get(entityClass).size(),
-								entityClass.getSimpleName().replace("Craft", "")));
+							entityClass.getSimpleName().replace("Craft", "")));
 					}
 					return ColorUtil.replaceColors("&7 ---------------");
 				}
@@ -473,7 +473,7 @@ public class CommandHandler {
 						who.teleport(target);
 						who.sendMessage(ColorUtil.replaceColors("&7Teleporting"));
 						return ColorUtil.replaceColors("&7Teleported &c%s&7 to &c%s&7.", who.getName(),
-								target.getName());
+							target.getName());
 					} else {
 						return noOnline(args[1]);
 					}
@@ -513,18 +513,18 @@ public class CommandHandler {
 						}
 					} catch (Exception ex) {
 						return ColorUtil.replaceColors("&cThere is no world with id '&c%s&7'.",
-								((who == sender) ? args[3] : args[4]));
+							((who == sender) ? args[3] : args[4]));
 					}
 				}
 				who.sendMessage(ColorUtil.replaceColors("&7Teleporting"));
 				if (who == sender) {
 					who.teleport(new Location(world, coords[0], coords[1], coords[2]));
 					return ColorUtil.replaceColors("&7Teleported to &e%f,%f,%f&7 in World &e%s&7.", coords[0],
-							coords[1], coords[2], world.getName());
+						coords[1], coords[2], world.getName());
 				} else {
 					who.teleport(new Location(world, coords[1], coords[2], coords[3]));
 					return ColorUtil.replaceColors("&7Teleported &c%s&7 to &e%f,%f,%f&7 in World &e%s&7.",
-							who.getName(), coords[0], coords[1], coords[2], world.getName());
+						who.getName(), coords[0], coords[1], coords[2], world.getName());
 				}
 			} else {
 				return noOption();
@@ -571,11 +571,11 @@ public class CommandHandler {
 						if (set != null) {
 							who.setGameMode(set);
 							if (sender != who) {
-								who.sendMessage(ColorUtil.replaceColors("&7Set gamemode to &e%s&7.",
-										MktUtil.readableEnum(set)));
+								who.sendMessage(
+									ColorUtil.replaceColors("&7Set gamemode to &e%s&7.", MktUtil.readableEnum(set)));
 							}
 							return ColorUtil.replaceColors("&7Set gamemode to &e%s&7 for &c%s&7.",
-									MktUtil.readableEnum(set), who.getName());
+								MktUtil.readableEnum(set), who.getName());
 						} else {
 							return ColorUtil.replaceColors("&cThere is no gamemode found with '&e%s&c'.", args[0]);
 						}
@@ -620,10 +620,10 @@ public class CommandHandler {
 					who.setGameMode(set);
 					if (who != sender) {
 						who.sendMessage(
-								ColorUtil.replaceColors("&7Set gamemode to &e%s&7.", MktUtil.readableEnum(set)));
+							ColorUtil.replaceColors("&7Set gamemode to &e%s&7.", MktUtil.readableEnum(set)));
 					}
 					return ColorUtil.replaceColors("&7Set gamemode to &e%s&7 for &c%s&7.", MktUtil.readableEnum(set),
-							who.getName());
+						who.getName());
 				} else {
 					return noOnline(args[0]);
 				}
@@ -906,7 +906,7 @@ public class CommandHandler {
 			if (args.length > 0) {
 				if (LAST_SPOKE.containsKey(sender)) {
 					CommandSender target = LAST_SPOKE.get(sender);
-					args = (String[]) ArrayUtils.addAll(new String[] { target.getName() }, args);
+					args = (String[]) ArrayUtils.addAll(new String[]{target.getName()}, args);
 					return msg();
 				} else {
 					return ColorUtil.replaceColors("&cNobody to reply to");
@@ -997,7 +997,7 @@ public class CommandHandler {
 	public static List<String> onTabComplete(Player sender, String command, String[] args) {
 		List<String> ret = new ArrayList<>();
 		if (command.equalsIgnoreCase("hub")) {
-			String[] servers = { "creative", "uhc", "hub", "survival", "outlaws", "testserver", "outlawsB" };
+			String[] servers = {"creative", "uhc", "hub", "survival", "outlaws", "testserver", "outlawsB"};
 			if (args.length == 1) {
 				for (String server : servers) {
 					if (server.toLowerCase().contains(args[args.length - 1].toLowerCase())) {
@@ -1009,7 +1009,7 @@ public class CommandHandler {
 				ret.addAll(PlayerUtil.getAllOnlineNames(args[args.length - 1], sender));
 			}
 		} else if (command.equalsIgnoreCase("tab") && args.length == 1) {
-			String[] argumenten = { "top", "bottom", "update" };
+			String[] argumenten = {"top", "bottom", "update"};
 			for (String arg : argumenten) {
 				if (arg.toLowerCase().contains(args[args.length - 1].toLowerCase())) {
 					ret.add(arg);
@@ -1019,7 +1019,7 @@ public class CommandHandler {
 		} else if (command.equalsIgnoreCase("mchistory") && args.length == 1) {
 			ret.addAll(PlayerUtil.getNamesLike(args[args.length - 1]));
 		} else if (command.equalsIgnoreCase("git")) {
-			String[] argumenten = { "-v", "-q", "projects" };
+			String[] argumenten = {"-v", "-q", "projects"};
 			for (String arg : argumenten) {
 				if (arg.toLowerCase().contains(args[args.length - 1].toLowerCase())) {
 					ret.add(arg);
@@ -1115,7 +1115,7 @@ public class CommandHandler {
 					sender.sendMessage(ColorUtil.replaceColors("&c  This player has no other names"));
 				} else {
 					sender.sendMessage(ColorUtil.replaceColors("&7  Name: '&c%s&7' changed &e%s&7 ago.", name,
-							DateUtil.timeUntilNow(d)));
+						DateUtil.timeUntilNow(d)));
 				}
 			} else {
 				sender.sendMessage(ColorUtil.replaceColors("&7Getting al old playernames from '&c%s&6'.", name));
@@ -1135,7 +1135,7 @@ public class CommandHandler {
 				sender.sendMessage(String.format(format, "Overriding to new plugins"));
 				Bukkit.getPluginManager().disablePlugin(pl);
 				sender.sendMessage(String.format(format,
-						pl.getName() + " is now disabled [" + pl.getDescription().getVersion() + "]"));
+					pl.getName() + " is now disabled [" + pl.getDescription().getVersion() + "]"));
 				try {
 					Thread.sleep(1500L);
 					Method m = JavaPlugin.class.getDeclaredMethod("getFile");
@@ -1145,17 +1145,17 @@ public class CommandHandler {
 					Thread.sleep(1500L);
 					pl = Bukkit.getPluginManager().loadPlugin(new File(f.getAbsolutePath()));
 					sender.sendMessage(String.format(format,
-							pl.getName() + " is now reloaded! [" + pl.getDescription().getVersion() + "]"));
+						pl.getName() + " is now reloaded! [" + pl.getDescription().getVersion() + "]"));
 				} catch (UnknownDependencyException ex) {
 					sender.sendMessage(
-							ColorUtil.replaceColors("&cPlugin Dependency not correctly: " + ex.getMessage()));
+						ColorUtil.replaceColors("&cPlugin Dependency not correctly: " + ex.getMessage()));
 					ex.printStackTrace();
 				} catch (InvalidPluginException ex) {
 					sender.sendMessage(ColorUtil.replaceColors("&cPlugin invalid. because: " + ex.getMessage()));
 					ex.printStackTrace();
 				} catch (InvalidDescriptionException ex) {
 					sender.sendMessage(
-							ColorUtil.replaceColors("&cPlugin invalid description. because: " + ex.getMessage()));
+						ColorUtil.replaceColors("&cPlugin invalid description. because: " + ex.getMessage()));
 					ex.printStackTrace();
 				} catch (Exception ex) {
 					sender.sendMessage(ColorUtil.replaceColors("&cYou just fucked-up: " + ex.getMessage()));
@@ -1309,7 +1309,7 @@ public class CommandHandler {
 					hoverBuilder.append("\nMissing Versions:");
 					for (Commit commit : commits) {
 						hoverBuilder.append(ColorUtil.replaceColors("\n&7 ^&a%s &r[&6%s&r]", commit.getTitle(),
-								GitLabAPI.NL_DATE_FORMAT.format(commit.getWhen())));
+							GitLabAPI.NL_DATE_FORMAT.format(commit.getWhen())));
 					}
 					hoverBuilder
 							.append("\n\nPushed at: " + GitLabAPI.NL_DATE_FORMAT.format(git.getCommits()[0].getWhen()));
@@ -1384,10 +1384,10 @@ public class CommandHandler {
 						ColorUtil.replaceColors(" &r&l[&c%sReload server&r&l]&r ", (updates == 0 ? "&m" : "")));
 				extra.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/restart"));
 				extra.setHoverEvent(
-						new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-								new ComponentBuilder(ColorUtil
-										.replaceColors("&cWARNING, will shutdown server!\n&rClick to reboot server"))
-												.create()));
+					new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+							new ComponentBuilder(ColorUtil
+									.replaceColors("&cWARNING, will shutdown server!\n&rClick to reboot server"))
+											.create()));
 				message.addExtra(extra);
 				sendTextComponent(message);
 			} else {
