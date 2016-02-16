@@ -26,10 +26,10 @@ import nl.imine.api.util.ColorUtil;
 
 public class BukkitListener implements Listener {
 
-	private static final String[] SHOP_FORMAT = { "shop", "kost", "duur", "kopen", "whitelist", "vip" };
-	private static final String[] BUGS_FORMAT = { "help", "bug", "fout", "error" };
-	private static final String[] TS_FORMAT = { " ts", "teamspeak", "team", "speak" };
-	private static final String[] REPORT_FORMAT = { "hax", "hack", "hex", "h@x", "h3x", "hAck", "h3ck", "flyh" };
+	private static final String[] SHOP_FORMAT = {"shop", "kost", "duur", "kopen", "whitelist", "vip"};
+	private static final String[] BUGS_FORMAT = {"help", "bug", "fout", "error"};
+	private static final String[] TS_FORMAT = {" ts", "teamspeak", "team", "speak"};
+	private static final String[] REPORT_FORMAT = {"hax", "hack", "hex", "h@x", "h3x", "hAck", "h3ck", "flyh"};
 	private static final Set<UUID> MUTED = new HashSet<>();
 	public static final Map<UUID, List<Location>> TP_HISTORY = new HashMap<>();
 	public static final List<UUID> VANISH = new ArrayList<>();
@@ -137,21 +137,21 @@ public class BukkitListener implements Listener {
 			for (String shp : SHOP_FORMAT) {
 				if (mssg.toLowerCase().contains(shp)) {
 					pl.sendMessage(ColorUtil.replaceColors(
-							"&6&lDo you like to purchase one of our fine VIP ranks or a whitelist? Click here &9&nshop.iMine.nl&6."));
+						"&6&lDo you like to purchase one of our fine VIP ranks or a whitelist? Click here &9&nshop.iMine.nl&6."));
 					break;
 				}
 			}
 			for (String bgs : BUGS_FORMAT) {
 				if (mssg.toLowerCase().contains(bgs)) {
 					pl.sendMessage(ColorUtil.replaceColors(
-							"&6&lFound a bug or something else to report? Post it here &9&nbugs.iMine.nl&6."));
+						"&6&lFound a bug or something else to report? Post it here &9&nbugs.iMine.nl&6."));
 					break;
 				}
 			}
 			for (String ts : TS_FORMAT) {
 				if (mssg.toLowerCase().contains(ts)) {
 					pl.sendMessage(
-							ColorUtil.replaceColors("&6&lUse our official TeamSpeak3 server: &9&nts.iMine.nl&6."));
+						ColorUtil.replaceColors("&6&lUse our official TeamSpeak3 server: &9&nts.iMine.nl&6."));
 					break;
 				}
 			}
@@ -161,7 +161,7 @@ public class BukkitListener implements Listener {
 				pl.sendMessage(ColorUtil
 						.replaceColors("&c&lInstead of calling someone a hacker, report it to our moderation team."));
 				pl.sendMessage(ColorUtil.replaceColors(
-						"&6To report: use '&c/report %s&6'. &6&o{Works even when admins are not online}", mssg));
+					"&6To report: use '&c/report %s&6'. &6&o{Works even when admins are not online}", mssg));
 				break;
 			}
 		}

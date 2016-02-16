@@ -88,7 +88,7 @@ public class BukkitStarter extends JavaPlugin {
 			return true;
 		} else {
 			System.out.println(
-					"[UPDATELOG] !" + child.getName() + " failed to update" + (del ? "" : ", couldn't find old file!"));
+				"[UPDATELOG] !" + child.getName() + " failed to update" + (del ? "" : ", couldn't find old file!"));
 			return false;
 		}
 	}

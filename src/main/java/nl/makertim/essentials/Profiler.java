@@ -40,14 +40,12 @@ public class Profiler implements Listener, Runnable {
 		int hour = c.get(Calendar.HOUR_OF_DAY);
 		int minute = c.get(Calendar.MINUTE);
 		minute = minute - (minute % 5);
-		db.insertQuery(String
-				.format("INSERT INTO ServerLog (TimeChecked, ServerName, PlayerCount, TPS, RamUsage) VALUES ('%s', '%s', '%s', '%s', '%s');",
-						DatabaseManager
-								.prepareString(String.format("%d-%d-%d %d:%d:00", year, month, day, hour, minute)),
-						DatabaseManager.prepareString(serverName),
-						DatabaseManager.prepareString(Bukkit.getOnlinePlayers().size()),
-						DatabaseManager.prepareString(Math.round(Lagg.getTPS())),
-						DatabaseManager.prepareString(Math.round(memPercentageFree))));
+		db.insertQuery(String.format(
+			"INSERT INTO ServerLog (TimeChecked, ServerName, PlayerCount, TPS, RamUsage) VALUES ('%s', '%s', '%s', '%s', '%s');",
+			DatabaseManager.prepareString(String.format("%d-%d-%d %d:%d:00", year, month, day, hour, minute)),
+			DatabaseManager.prepareString(serverName), DatabaseManager.prepareString(Bukkit.getOnlinePlayers().size()),
+			DatabaseManager.prepareString(Math.round(Lagg.getTPS())),
+			DatabaseManager.prepareString(Math.round(memPercentageFree))));
 	}
 
 	private static class Lagg implements Runnable {

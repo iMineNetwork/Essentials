@@ -71,8 +71,8 @@ public class GitLabAPI {
 						}
 
 						JsonArray commitsJson = new JsonParser()
-								.parse(WebUtil
-										.getResponse(new URL(String.format(URL_COMMITS, projectId, PRIVATE_TOKEN))))
+								.parse(
+									WebUtil.getResponse(new URL(String.format(URL_COMMITS, projectId, PRIVATE_TOKEN))))
 								.getAsJsonArray();
 						Commit[] commits = new Commit[commitsJson.size()];
 						for (int k = 0; k < commitsJson.size(); k++) {
@@ -84,10 +84,10 @@ public class GitLabAPI {
 						}
 
 						projects.put(project.get("name").getAsString(),
-								new GitProject(projectId, project.get("web_url").getAsString(),
-										project.get("description").getAsString(),
-										parseStringToDate(project.get("last_activity_at").getAsString()), commits,
-										parseStringToDate(project.get("created_at").getAsString())));
+							new GitProject(projectId, project.get("web_url").getAsString(),
+									project.get("description").getAsString(),
+									parseStringToDate(project.get("last_activity_at").getAsString()), commits,
+									parseStringToDate(project.get("created_at").getAsString())));
 						ids.add(projectId);
 					}
 				}
@@ -195,8 +195,7 @@ public class GitLabAPI {
 		private Commit[] commits;
 		private Date createDate;
 
-		public GitProject(int projectId, String webUrl, String description, Date lastActivity, Commit[] commits,
-				Date createDate) {
+		public GitProject(int projectId, String webUrl, String description, Date lastActivity, Commit[] commits, Date createDate) {
 			this.projectId = projectId;
 			this.webUrl = webUrl;
 			this.description = description;
