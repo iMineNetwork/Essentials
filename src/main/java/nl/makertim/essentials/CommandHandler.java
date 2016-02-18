@@ -56,6 +56,7 @@ import nl.makertim.essentials.GitLabAPI.GitProject;
 
 public class CommandHandler {
 
+	private static final GitLabAPI API = new GitLabAPI();
 	private final String adminChatFormat = ColorUtil.replaceColors("&r&l[&a&lADMIN&r&l] &r&7%s &r&l\u00BB &r%s");
 	private final String reportChatFormat = ColorUtil.replaceColors("&r&l[&c&lREPORT&r&l] &r&7%s &r&l\u00BB &r%s");
 
@@ -371,7 +372,7 @@ public class CommandHandler {
 	private String lagdebug() {
 		if (sender.hasPermission("iMine.lagdebug")) {
 			if (args.length == 0) {
-				sender.sendMessage(ColorUtil.replaceColors("&7All mobs, grouped by &cworld&7."));
+				sender.sendMessage(ColorUtil.replaceColors("&7All mobs, grouped by &eworld&7."));
 				for (World w : Bukkit.getWorlds()) {
 					sender.sendMessage(ColorUtil.replaceColors("&7Mobs in world '&e%s&7' [&c%d&7]", w.getName(),
 						w.getEntities().size()));
@@ -390,7 +391,7 @@ public class CommandHandler {
 				return ColorUtil.replaceColors("&7 ---------------");
 			} else {
 				if (args[0].equalsIgnoreCase("players")) {
-					sender.sendMessage(ColorUtil.replaceColors("&7All mobs, grouped by &cplayers&7."));
+					sender.sendMessage(ColorUtil.replaceColors("&7All mobs, grouped by &eplayers&7."));
 					Map<String, List<Class<? extends Entity>>> countMap = new HashMap<>();
 					for (World w : Bukkit.getWorlds()) {
 						for (Entity e : w.getEntities()) {
@@ -796,7 +797,7 @@ public class CommandHandler {
 		byte b = 0b00;
 		if (args.length > 0) {
 			if (args[0].equalsIgnoreCase("projects") && sender.hasPermission("iMine.git")) {
-				Set<String> projects = BukkitStarter.API.getProjects();
+				Set<String> projects = CommandHandler.API.getProjects();
 				sender.sendMessage(ColorUtil.replaceColors("&7Listing all git projects"));
 				for (String project : projects) {
 					sender.sendMessage(ColorUtil.replaceColors("  &6- &e%s", project));
@@ -954,9 +955,8 @@ public class CommandHandler {
 				if (args.length == 0) {
 					player.sendMessage(ColorUtil.replaceColors("&7Current World: &e%s", player.getWorld().getName()));
 					player.sendMessage(ColorUtil.replaceColors("&7Availible worlds:"));
-					Bukkit.getWorlds().stream().forEach(w -> {
-						player.sendMessage(ColorUtil.replaceColors("  &e%s", w.getName()));
-					});
+					Bukkit.getWorlds().stream()
+							.forEach(w -> player.sendMessage(ColorUtil.replaceColors("  &e%s", w.getName())));
 					return "";
 				} else if (args.length == 1) {
 					World world;
@@ -972,9 +972,9 @@ public class CommandHandler {
 					}
 					if (world != null) {
 						player.teleport(world.getSpawnLocation(), PlayerTeleportEvent.TeleportCause.COMMAND);
-						return ColorUtil.replaceColors("&7Teleported to world &6%s&7.", world.getName());
+						return ColorUtil.replaceColors("&7Teleported to world &e%s&7.", world.getName());
 					} else {
-						return ColorUtil.replaceColors("&cNo world with the name '&c%s&6' exists.", args[0]);
+						return ColorUtil.replaceColors("&cNo world with the name '&e%s&6' exists.", args[0]);
 					}
 				} else {
 					return noOption();
@@ -988,7 +988,7 @@ public class CommandHandler {
 	}
 
 	private String noPermission() {
-		return ColorUtil.replaceColors("&cYou do not have permission to execute '&6%s&c' command!", command);
+		return ColorUtil.replaceColors("&cYou do not have permission to execute '&e%s&c' command!", command);
 	}
 
 	private String noOption() {
@@ -1000,7 +1000,7 @@ public class CommandHandler {
 	}
 
 	private String noOnline(String arg) {
-		return ColorUtil.replaceColors("&cPlayer '&c%s&c' is not online.", arg);
+		return ColorUtil.replaceColors("&cPlayer '&e%s&c' is not online.", arg);
 	}
 
 	public static List<String> onTabComplete(Player sender, String command, String[] args) {
@@ -1216,7 +1216,7 @@ public class CommandHandler {
 			Matcher match = p.matcher(version);
 			if (match.find()) {
 				verboseMessage("plugin " + plugin.getName() + " is a GIT project!");
-				GitProject git = BukkitStarter.API.getProjectData(plugin.getName());
+				GitProject git = CommandHandler.API.getProjectData(plugin.getName());
 				if (git == null) {
 					verboseMessage("but i couldnt find it our system");
 					return;
@@ -1407,8 +1407,8 @@ public class CommandHandler {
 		@Override
 		public void run() {
 			if (sender.hasPermission("iMine.git")) {
-				BukkitStarter.API.refreshData();
-				if (!BukkitStarter.API.canWork()) {
+				CommandHandler.API.refreshData();
+				if (!CommandHandler.API.canWork()) {
 					message("This server is outdated -> cant check on GitRepo's");
 					return;
 				}
