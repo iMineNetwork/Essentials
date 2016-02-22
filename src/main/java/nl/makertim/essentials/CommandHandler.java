@@ -184,7 +184,7 @@ public class CommandHandler {
 		sender.sendMessage("   ");
 		sender.sendMessage(ColorUtil.replaceColors("&cGriefing &6- &aPermanent ban"));
 		sender.sendMessage(ColorUtil.replaceColors("&cHacks &6- &aPermanent ban"));
-		sender.sendMessage(ColorUtil.replaceColors("&cBedrijgen &6- &a2weken ban"));
+		sender.sendMessage(ColorUtil.replaceColors("&cBedreigen &6- &a2weken ban"));
 		sender.sendMessage(ColorUtil.replaceColors("&cExtreem schelden &6- &a48 uur ban"));
 		sender.sendMessage(ColorUtil.replaceColors("&cReclame maken &6- &a12-24 uur ban"));
 		sender.sendMessage(
@@ -1346,6 +1346,8 @@ public class CommandHandler {
 					verboseMessage("  - Git");
 				} else if (updates > 0) {
 					verboseMessage("  - Random update");
+				} else {
+					verboseMessage("  - No update");
 				}
 				TextComponent extra, message = new TextComponent("");
 				// Files to update: #
