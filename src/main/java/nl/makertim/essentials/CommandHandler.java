@@ -1257,10 +1257,10 @@ public class CommandHandler {
 				// newestversion: %gitshort% [RELOAD SERVER]
 				TextComponent extra, message = new TextComponent("");
 				// [GIT]
-				extra = new TextComponent(ColorUtil.replaceColors("&r&l[&6&lGIT&r&l]&r "));
+				extra = new TextComponent(ColorUtil.replaceColors("&r&l[&6&lGIT&r&l]&7 "));
 				message.addExtra(extra);
 				// %plugin naam%
-				extra = new TextComponent(ColorUtil.replaceColors("&a%s&r ", plugin.getName()));
+				extra = new TextComponent(ColorUtil.replaceColors("&e%s&7 ", plugin.getName()));
 				extra.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, git.getWebUrl()));
 				extra.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
 						new ComponentBuilder(git.getDescription())
@@ -1268,7 +1268,7 @@ public class CommandHandler {
 								.create()));
 				message.addExtra(extra);
 				// current verion:
-				extra = new TextComponent(ColorUtil.replaceColors("&rcurrent version: "));
+				extra = new TextComponent(ColorUtil.replaceColors("&7current version: "));
 				message.addExtra(extra);
 				// %git short this version%
 				Commit current = null;
@@ -1289,12 +1289,14 @@ public class CommandHandler {
 									.append("\n\nPushed at: ~").create()));
 				} else {
 					extra = new TextComponent(
-							ColorUtil.replaceColors("&6%s ", current.getTitle().replaceAll(" ", " &6")));
-					extra.setColor(net.md_5.bungee.api.ChatColor.GOLD);
-					extra.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-							new ComponentBuilder(ColorUtil.replaceColors("&6id:%s", current.getShortId()))
-									.append("\n\nPushed at: " + GitLabAPI.NL_DATE_FORMAT.format(current.getWhen()))
-									.create()));
+							ColorUtil.replaceColors("&e%s ", current.getTitle().replaceAll(" ", " &e")));
+					extra.setColor(net.md_5.bungee.api.ChatColor.YELLOW);
+					extra.setHoverEvent(
+						new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+								new ComponentBuilder(ColorUtil.replaceColors("&7id:&e%s&7", current.getShortId()))
+										.append(
+											"\n\n&7Pushed at: &c" + GitLabAPI.NL_DATE_FORMAT.format(current.getWhen()))
+										.create()));
 				}
 				extra.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, git.getWebUrl() + "/commit/"
 						+ (current == null ? "master" : current.getLongId()) + "?view=parallel"));
@@ -1305,23 +1307,23 @@ public class CommandHandler {
 				} else {
 					toUpdate.add(plugin);
 					// newest verion:
-					extra = new TextComponent(ColorUtil.replaceColors("&rnewest version: "));
+					extra = new TextComponent(ColorUtil.replaceColors("&7newest version: "));
 					message.addExtra(extra);
 					// %git short new version%
 					extra = new TextComponent(
-							ColorUtil.replaceColors("&6%s&r ", git.getCommits()[0].getTitle().replaceAll(" ", " &6")));
-					extra.setColor(net.md_5.bungee.api.ChatColor.GOLD);
+							ColorUtil.replaceColors("&e%s&7 ", git.getCommits()[0].getTitle().replaceAll(" ", " &e")));
+					extra.setColor(net.md_5.bungee.api.ChatColor.YELLOW);
 					extra.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, git.getWebUrl() + "/compare/"
 							+ (current == null ? "master" : current.getShortId()) + "...master?view=parallel"));
 					ComponentBuilder hoverBuilder = new ComponentBuilder(
-							"version id: " + git.getCommits()[0].getShortId());
+							"&7version id: &e" + git.getCommits()[0].getShortId());
 					hoverBuilder.append("\nMissing Versions:");
 					for (Commit commit : commits) {
-						hoverBuilder.append(ColorUtil.replaceColors("\n&7 ^&a%s &r[&6%s&r]", commit.getTitle(),
+						hoverBuilder.append(ColorUtil.replaceColors("\n&7 ^&e%s &7[&c%s&7]", commit.getTitle(),
 							GitLabAPI.NL_DATE_FORMAT.format(commit.getWhen())));
 					}
-					hoverBuilder
-							.append("\n\nPushed at: " + GitLabAPI.NL_DATE_FORMAT.format(git.getCommits()[0].getWhen()));
+					hoverBuilder.append(
+						"\n\n&7Pushed at: &c" + GitLabAPI.NL_DATE_FORMAT.format(git.getCommits()[0].getWhen()));
 					extra.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverBuilder.create()));
 					message.addExtra(extra);
 					// versions behind [#]:
