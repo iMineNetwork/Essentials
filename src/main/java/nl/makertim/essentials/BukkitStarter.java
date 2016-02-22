@@ -9,6 +9,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import nl.imine.api.iMineAPI;
 import nl.imine.api.db.DatabaseManager;
 
 public class BukkitStarter extends JavaPlugin {
@@ -26,7 +27,7 @@ public class BukkitStarter extends JavaPlugin {
 	public void onEnable() {
 		plugin = this;
 		updatePlugins();
-		dm = new DatabaseManager(Credentials.getDatabase(), Credentials.getUsername(), Credentials.getPassword());
+		dm = iMineAPI.getDatabaseManager();
 		setupConfig();
 		getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 		Bukkit.getPluginManager().registerEvents(new BukkitListener(), this);
