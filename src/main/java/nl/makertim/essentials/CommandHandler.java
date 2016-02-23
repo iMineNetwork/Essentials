@@ -64,7 +64,7 @@ public class CommandHandler {
 	private static final GitLabAPI API = new GitLabAPI();
 	private final String adminChatFormat = ColorUtil.replaceColors("&r&l[&a&lADMIN&r&l] &r&7%s &r&l\u00BB &r%s");
 	private final String reportChatFormat = ColorUtil.replaceColors("&r&l[&c&lREPORT&r&l] &r&7%s &r&l\u00BB &r%s");
-	private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm");
+	private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 
 	private static final Map<CommandSender, CommandSender> LAST_SPOKE = new HashMap<>();
 
