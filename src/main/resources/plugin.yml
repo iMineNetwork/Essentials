@@ -21,6 +21,10 @@ commands:
     description: Kan iemand dit kind uitzetten?
     usage: /mute [player]
     aliases: [stil, aufgedonderd]
+  whois:
+    description: Who is that?
+    usage: /whois <player>
+    aliases: [whowas, seen]
   mchistory:
     description: Username info
     usage: /mchistory [player]

@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -21,6 +22,7 @@ import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
@@ -28,6 +30,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.plugin.InvalidDescriptionException;
 import org.bukkit.plugin.InvalidPluginException;
 import org.bukkit.plugin.Plugin;
@@ -39,11 +42,16 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.HoverEvent.Action;
 import net.md_5.bungee.api.chat.TextComponent;
+import nl.imine.api.db.iMinePlayer;
+import nl.imine.api.gui.Button;
+import nl.imine.api.gui.Container;
+import nl.imine.api.gui.GuiManager;
 import nl.imine.api.sorters.MapCountSorter;
 import nl.imine.api.sorters.MapCountSorter.Sort;
 import nl.imine.api.sorters.StringSearchSorter;
 import nl.imine.api.util.ColorUtil;
 import nl.imine.api.util.DateUtil;
+import nl.imine.api.util.ItemUtil;
 import nl.imine.api.util.MktUtil;
 import nl.imine.api.util.PlayerUtil;
 import nl.makertim.essentials.GitLabAPI.Commit;
@@ -54,6 +62,7 @@ public class CommandHandler {
 	private static final GitLabAPI API = new GitLabAPI();
 	private final String adminChatFormat = ColorUtil.replaceColors("&r&l[&a&lADMIN&r&l] &r&7%s &r&l\u00BB &r%s");
 	private final String reportChatFormat = ColorUtil.replaceColors("&r&l[&c&lREPORT&r&l] &r&7%s &r&l\u00BB &r%s");
+	private final SimpleDateFormat dateFormat = new SimpleDateFormat("d-M-y k:m");
 
 	private static final Map<CommandSender, CommandSender> LAST_SPOKE = new HashMap<>();
 
@@ -89,6 +98,8 @@ public class CommandHandler {
 			finalAwsner = gmx();
 		} else if (command.equalsIgnoreCase("speed")) {
 			finalAwsner = speed();
+		} else if (command.equalsIgnoreCase("whois")) {
+			finalAwsner = whois();
 		} else if (command.equalsIgnoreCase("banrichtlijn")) {
 			finalAwsner = banrichtlijn();
 		} else if (command.equalsIgnoreCase("msg")) {
@@ -137,6 +148,43 @@ public class CommandHandler {
 			}
 			return true;
 		}
+	}
+
+	private String whois() {
+		if (args.length == 0) {
+			return noOption();
+		}
+		if (!(sender instanceof Player)) {
+			return noPlayer();
+		}
+		if (!sender.hasPermission("iMine.whois")) {
+			return noPermission();
+		}
+		UUID uuid = PlayerUtil.getUUID(args[0], false);
+		if (uuid == null) {
+			return noOnline(args[0]);
+		}
+		iMinePlayer ipl = iMinePlayer.findPlayer(uuid);
+		Bukkit.getScheduler().runTaskAsynchronously(BukkitStarter.plugin, () -> {
+			NameLookup nl = new NameLookup(uuid, false);
+			nl.run();
+			List<String> names = nl.getNames();
+			Container ui = GuiManager.getInstance().createContainer(ipl.getName(), 27, false, false);
+			SkullMeta meta = (SkullMeta) Bukkit.getItemFactory().getItemMeta(Material.SKULL_ITEM);
+			meta.setOwner(ipl.getName());
+			ui.addButton(new Button(ui, ItemUtil.getBuilder(Material.SKULL_ITEM, meta)
+					.setName(ColorUtil.replaceColors("&7%s", ipl.getName())).build(), 4));
+			ui.addButton(new Button(ui, ItemUtil.getBuilder(Material.BOOK_AND_QUILL)
+					.setName(ColorUtil.replaceColors("&cName history")).setLore(names).build(), 9));
+			ui.addButton(
+				new Button(ui,
+						ItemUtil.getBuilder(Material.SIGN).setName(ColorUtil.replaceColors("&cLast seen"))
+								.setLore(new String[]{
+										String.format("&7Last seen: &c%s&7.", dateFormat.format(ipl.getDate()))})
+					.build(), 9));
+			ui.open((Player) sender);
+		});
+		return ColorUtil.replaceColors("&7Getting data for player &c%s&7.", ipl.getName());
 	}
 
 	private String reportChat() {
@@ -196,7 +244,7 @@ public class CommandHandler {
 			if (args.length > 0) {
 				List<UUID> uuidsLike = PlayerUtil.getUuidsLike(args[0]);
 				for (final UUID foundUUID : uuidsLike) {
-					Bukkit.getScheduler().runTaskAsynchronously(BukkitStarter.plugin, new NameLookup(foundUUID));
+					Bukkit.getScheduler().runTaskAsynchronously(BukkitStarter.plugin, new NameLookup(foundUUID, true));
 				}
 				return "";
 			} else {
@@ -1068,9 +1116,13 @@ public class CommandHandler {
 	private class NameLookup implements Runnable {
 
 		private final UUID uuid;
+		private List<String> names;
+		private boolean sendChat;
 
-		public NameLookup(UUID uuid) {
+		public NameLookup(UUID uuid, boolean sendChat) {
 			this.uuid = uuid;
+			this.names = new ArrayList<>();
+			this.sendChat = sendChat;
 		}
 
 		public void run() {
@@ -1092,15 +1144,21 @@ public class CommandHandler {
 			try {
 				com.google.gson.JsonArray nameChange = new com.google.gson.JsonParser().parse(request).getAsJsonArray();
 				if (nameChange.size() == 0) {
-					sendNameInfo(null, 0L);
+					getNameInfo(null, 0L);
 				} else {
 					for (com.google.gson.JsonElement nameInfo : nameChange) {
 						com.google.gson.JsonObject nameObj = nameInfo.getAsJsonObject();
+						String name = nameObj.get("name").getAsString();
+						String response = null;
 						if (nameObj.has("changedToAt")) {
-							sendNameInfo(nameObj.get("name").getAsString(), nameObj.get("changedToAt").getAsLong());
+							response = getNameInfo(name, nameObj.get("changedToAt").getAsLong());
 						} else {
-							sendNameInfo(nameObj.get("name").getAsString(), 0L);
+							response = getNameInfo(name, 0L);
 						}
+						if (sendChat) {
+							sender.sendMessage(response);
+						}
+						names.add(response);
 					}
 					if (nameChange.size() == 1) {
 						sender.sendMessage(ColorUtil.replaceColors("&8  Name has never changed since."));
@@ -1111,19 +1169,22 @@ public class CommandHandler {
 			}
 		}
 
-		private void sendNameInfo(String name, long time) {
+		public List<String> getNames() {
+			return names;
+		}
+
+		private String getNameInfo(String name, long time) {
 			Date d = null;
 			if (time > 0L) {
 				d = new Date(time);
 				if (name == null) {
-					sender.sendMessage(ColorUtil.replaceColors("&c  This player has no other names"));
+					return ColorUtil.replaceColors("&c  This player has no other names");
 				} else {
-					sender.sendMessage(ColorUtil.replaceColors("&7  Name: '&c%s&7' changed &e%s&7 ago.", name,
-						DateUtil.timeUntilNow(d)));
+					return ColorUtil.replaceColors("&7  Name: '&c%s&7' changed &e%s&7 ago.", name,
+						DateUtil.timeUntilNow(d));
 				}
 			} else {
-				sender.sendMessage(ColorUtil.replaceColors("&7Getting al old playernames from '&c%s&6'.", name));
-				return;
+				return ColorUtil.replaceColors("&7Getting al old playernames from '&c%s&7'.", name);
 			}
 		}
 	}
