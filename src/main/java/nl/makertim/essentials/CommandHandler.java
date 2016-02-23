@@ -172,7 +172,7 @@ public class CommandHandler {
 			Container ui = GuiManager.getInstance().createContainer(ipl.getName(), 27, false, false);
 			SkullMeta meta = (SkullMeta) Bukkit.getItemFactory().getItemMeta(Material.SKULL_ITEM);
 			meta.setOwner(ipl.getName());
-			ui.addButton(new Button(ui, ItemUtil.getBuilder(Material.SKULL_ITEM, meta)
+			ui.addButton(new Button(ui, ItemUtil.getBuilder(Material.SKULL_ITEM, meta).setDurability((short) 1)
 					.setName(ColorUtil.replaceColors("&7%s", ipl.getName())).build(), 4));
 			ui.addButton(new Button(ui, ItemUtil.getBuilder(Material.BOOK_AND_QUILL)
 					.setName(ColorUtil.replaceColors("&cName history")).setLore(names).build(), 9));
