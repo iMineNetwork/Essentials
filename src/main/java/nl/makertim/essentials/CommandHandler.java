@@ -181,7 +181,7 @@ public class CommandHandler {
 					ips.add(ip);
 					com.google.gson.JsonObject ipInfo = new com.google.gson.JsonParser()
 							.parse(WebUtil.getResponse(new URL("http://ip-api.com/json/" + ip))).getAsJsonObject();
-					ipsinfo.add(String.format("&e%s %s %s &7(&c%s&7).", ipInfo.get("city").getAsString(),
+					ipsinfo.add(ColorUtil.replaceColors("&e%s %s %s &7(&c%s&7).", ipInfo.get("city").getAsString(),
 						ipInfo.get("regionName").getAsString(), ipInfo.get("country").getAsString(),
 						ipInfo.get("isp").getAsString()));
 				}
@@ -203,7 +203,7 @@ public class CommandHandler {
 					.build(), index++));
 			ui.addButton(new Button(ui, ItemUtil.getBuilder(Material.EXP_BOTTLE)
 					.setName(ColorUtil.replaceColors("&cIP's")).setLore(ips).build(), index++));
-			ui.addButton(new Button(ui, ItemUtil.getBuilder(Material.EXP_BOTTLE)
+			ui.addButton(new Button(ui, ItemUtil.getBuilder(Material.GLASS_BOTTLE)
 					.setName(ColorUtil.replaceColors("&cIP info")).setLore(ipsinfo).build(), index++));
 			ui.open((Player) sender);
 		});
