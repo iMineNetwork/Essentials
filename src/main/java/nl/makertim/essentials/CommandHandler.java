@@ -34,11 +34,6 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.UnknownDependencyException;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -1095,12 +1090,12 @@ public class CommandHandler {
 				return;
 			}
 			try {
-				JsonArray nameChange = new JsonParser().parse(request).getAsJsonArray();
+				com.google.gson.JsonArray nameChange = new com.google.gson.JsonParser().parse(request).getAsJsonArray();
 				if (nameChange.size() == 0) {
 					sendNameInfo(null, 0L);
 				} else {
-					for (JsonElement nameInfo : nameChange) {
-						JsonObject nameObj = nameInfo.getAsJsonObject();
+					for (com.google.gson.JsonElement nameInfo : nameChange) {
+						com.google.gson.JsonObject nameObj = nameInfo.getAsJsonObject();
 						if (nameObj.has("changedToAt")) {
 							sendNameInfo(nameObj.get("name").getAsString(), nameObj.get("changedToAt").getAsLong());
 						} else {
