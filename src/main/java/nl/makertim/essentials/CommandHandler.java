@@ -62,7 +62,7 @@ public class CommandHandler {
 	private static final GitLabAPI API = new GitLabAPI();
 	private final String adminChatFormat = ColorUtil.replaceColors("&r&l[&a&lADMIN&r&l] &r&7%s &r&l\u00BB &r%s");
 	private final String reportChatFormat = ColorUtil.replaceColors("&r&l[&c&lREPORT&r&l] &r&7%s &r&l\u00BB &r%s");
-	private final SimpleDateFormat dateFormat = new SimpleDateFormat("d-M-y k:m");
+	private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm");
 
 	private static final Map<CommandSender, CommandSender> LAST_SPOKE = new HashMap<>();
 
@@ -164,8 +164,8 @@ public class CommandHandler {
 		if (uuid == null) {
 			return noOnline(args[0]);
 		}
-		iMinePlayer ipl = iMinePlayer.findPlayer(uuid);
 		Bukkit.getScheduler().runTaskAsynchronously(BukkitStarter.plugin, () -> {
+			iMinePlayer ipl = iMinePlayer.findPlayer(uuid);
 			NameLookup nl = new NameLookup(uuid, false);
 			nl.run();
 			List<String> names = nl.getNames();
@@ -176,15 +176,14 @@ public class CommandHandler {
 					.setName(ColorUtil.replaceColors("&7%s", ipl.getName())).build(), 4));
 			ui.addButton(new Button(ui, ItemUtil.getBuilder(Material.BOOK_AND_QUILL)
 					.setName(ColorUtil.replaceColors("&cName history")).setLore(names).build(), 9));
-			ui.addButton(
-				new Button(ui,
-						ItemUtil.getBuilder(Material.SIGN).setName(ColorUtil.replaceColors("&cLast seen"))
-								.setLore(new String[]{
-										String.format("&7Last seen: &c%s&7.", dateFormat.format(ipl.getDate()))})
-					.build(), 9));
+			ui.addButton(new Button(ui,
+					ItemUtil.getBuilder(Material.SIGN).setName(ColorUtil.replaceColors("&cLast seen"))
+							.setLore(new String[]{
+									ColorUtil.replaceColors("&7Last seen: &c%s&7.", dateFormat.format(ipl.getDate()))})
+					.build(), 10));
 			ui.open((Player) sender);
 		});
-		return ColorUtil.replaceColors("&7Getting data for player &c%s&7.", ipl.getName());
+		return ColorUtil.replaceColors("&7Getting data for player &c%s&7.", args[0]);
 	}
 
 	private String reportChat() {
@@ -1096,6 +1095,7 @@ public class CommandHandler {
 				|| (command.equalsIgnoreCase("gm") && args.length == 2)
 				|| (command.equalsIgnoreCase("mute") && args.length == 1)
 				|| (command.equalsIgnoreCase("fly") && args.length == 1)
+				|| (command.equalsIgnoreCase("whois") && args.length == 1)
 				|| (command.equalsIgnoreCase("invsee") && args.length == 1)
 				|| (command.equalsIgnoreCase("vanish") && args.length == 1) || (command.equalsIgnoreCase("report"))
 				|| (command.equalsIgnoreCase("tp") && (args.length == 1 || args.length == 2))
@@ -1161,7 +1161,11 @@ public class CommandHandler {
 						names.add(response);
 					}
 					if (nameChange.size() == 1) {
-						sender.sendMessage(ColorUtil.replaceColors("&8  Name has never changed since."));
+						String str = ColorUtil.replaceColors("&8  Name has never changed since.");
+						if (sendChat) {
+							sender.sendMessage(str);
+						}
+						names.add(str);
 					}
 				}
 			} catch (Exception ex) {
