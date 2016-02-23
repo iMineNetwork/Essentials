@@ -1209,7 +1209,7 @@ public class CommandHandler {
 					return ColorUtil.replaceColors("&c  This player has no other names");
 				} else {
 					return ColorUtil.replaceColors("&7  Name: '&c%s&7' changed &e%s&7 ago.", name,
-						DateUtil.timeUntilNow(d));
+						DateUtil.timeUntilNow(d, true));
 				}
 			} else {
 				return ColorUtil.replaceColors("&7Getting al old playernames from '&c%s&7'.", name);
