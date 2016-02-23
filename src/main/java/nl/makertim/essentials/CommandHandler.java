@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -54,6 +55,7 @@ import nl.imine.api.util.DateUtil;
 import nl.imine.api.util.ItemUtil;
 import nl.imine.api.util.MktUtil;
 import nl.imine.api.util.PlayerUtil;
+import nl.imine.api.util.WebUtil;
 import nl.makertim.essentials.GitLabAPI.Commit;
 import nl.makertim.essentials.GitLabAPI.GitProject;
 
@@ -169,18 +171,40 @@ public class CommandHandler {
 			NameLookup nl = new NameLookup(uuid, false);
 			nl.run();
 			List<String> names = nl.getNames();
+			List<String> ips = new ArrayList<>();
+			List<String> ipsinfo = new ArrayList<>();
+			ResultSet rs = BukkitStarter.plugin.getDB()
+					.selectQuery(String.format("SELECT ip FROM ipLookup WHERE uuid = '%s';", uuid.toString()));
+			try {
+				while (rs.next()) {
+					String ip = rs.getString("ip");
+					ips.add(ip);
+					com.google.gson.JsonObject ipInfo = new com.google.gson.JsonParser()
+							.parse(WebUtil.getResponse(new URL("http://ip-api.com/json/" + ip))).getAsJsonObject();
+					ipsinfo.add(String.format("&e%s %s %s &7(&c%s&7).", ipInfo.get("city").getAsString(),
+						ipInfo.get("regionName").getAsString(), ipInfo.get("country").getAsString(),
+						ipInfo.get("isp").getAsString()));
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			Container ui = GuiManager.getInstance().createContainer(ipl.getName(), 27, false, false);
 			SkullMeta meta = (SkullMeta) Bukkit.getItemFactory().getItemMeta(Material.SKULL_ITEM);
 			meta.setOwner(ipl.getName());
-			ui.addButton(new Button(ui, ItemUtil.getBuilder(Material.SKULL_ITEM, meta).setDurability((short) 1)
+			ui.addButton(new Button(ui, ItemUtil.getBuilder(Material.SKULL_ITEM, meta).setDurability((short) 3)
 					.setName(ColorUtil.replaceColors("&7%s", ipl.getName())).build(), 4));
+			int index = 9;
 			ui.addButton(new Button(ui, ItemUtil.getBuilder(Material.BOOK_AND_QUILL)
-					.setName(ColorUtil.replaceColors("&cName history")).setLore(names).build(), 9));
+					.setName(ColorUtil.replaceColors("&cName history")).setLore(names).build(), index++));
 			ui.addButton(new Button(ui,
 					ItemUtil.getBuilder(Material.SIGN).setName(ColorUtil.replaceColors("&cLast seen"))
 							.setLore(new String[]{
 									ColorUtil.replaceColors("&7Last seen: &c%s&7.", dateFormat.format(ipl.getDate()))})
-					.build(), 10));
+					.build(), index++));
+			ui.addButton(new Button(ui, ItemUtil.getBuilder(Material.EXP_BOTTLE)
+					.setName(ColorUtil.replaceColors("&cIP's")).setLore(ips).build(), index++));
+			ui.addButton(new Button(ui, ItemUtil.getBuilder(Material.EXP_BOTTLE)
+					.setName(ColorUtil.replaceColors("&cIP info")).setLore(ipsinfo).build(), index++));
 			ui.open((Player) sender);
 		});
 		return ColorUtil.replaceColors("&7Getting data for player &c%s&7.", args[0]);
@@ -1161,7 +1185,7 @@ public class CommandHandler {
 						names.add(response);
 					}
 					if (nameChange.size() == 1) {
-						String str = ColorUtil.replaceColors("&8  Name has never changed since.");
+						String str = ColorUtil.replaceColors("&8  And he never changed his name.");
 						if (sendChat) {
 							sender.sendMessage(str);
 						}
