@@ -1207,6 +1207,7 @@ public class CommandHandler {
 		private void checkPlugin(Plugin plugin) {
 			verboseMessage("Checking plugin " + plugin.getName());
 			String version = plugin.getDescription().getVersion();
+			version = version.substring(0, Math.min(7, version.length()));
 			Pattern p = Pattern.compile("\\b([0-9a-f]{5,40})\\b");
 			Matcher match = p.matcher(version);
 			if (match.find()) {
@@ -1244,7 +1245,7 @@ public class CommandHandler {
 				 *
 				 * Groetjes Tim
 				 */
-				/*
+				/**
 				 * Lief dagboek, Tim is dik, hihi
 				 * 
 				 * Groetjes Sander
