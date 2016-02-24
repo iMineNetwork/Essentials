@@ -49,6 +49,7 @@ import nl.imine.api.db.iMinePlayer;
 import nl.imine.api.gui.Button;
 import nl.imine.api.gui.Container;
 import nl.imine.api.gui.GuiManager;
+import nl.imine.api.gui.button.ButtonCommand;
 import nl.imine.api.gui.button.ButtonList;
 import nl.imine.api.gui.button.ButtonListed;
 import nl.imine.api.sorters.MapCountSorter;
@@ -369,19 +370,38 @@ public class CommandHandler {
 								.setName(ColorUtil.replaceColors("&4Ban log")).build(),
 						lore, 3));
 			});
-
 			Bukkit.getScheduler().runTaskAsynchronously(BukkitStarter.plugin, () -> {
-				try {
-
-				} catch (Exception ex) {
-					ex.printStackTrace();
-				}
-			});
-			Bukkit.getScheduler().runTaskAsynchronously(BukkitStarter.plugin, () -> {
-				// TODO: fast cmd's - tp/tphere, invsee, endersee, toggleFly,
-				// setSpeed w/f, vanish, lagdebug, gm, speed, tell, tempban,
-				// kill
-
+				ui.addButton(new ButtonCommand(
+						ui, ItemUtil.getBuilder(Material.COMPASS)
+								.setName(ColorUtil.replaceColors("&bTeleport to other.")).build(),
+						26, "tp " + ipl.getName()));
+				ui.addButton(
+					new ButtonCommand(
+							ui, ItemUtil.getBuilder(Material.COMPASS)
+									.setName(ColorUtil.replaceColors("&bTeleport to you.")).build(),
+							27, "tp " + sender.getName() + " " + ipl.getName()));
+				ui.addButton(new ButtonCommand(ui,
+						ItemUtil.getBuilder(Material.CHEST).setName(ColorUtil.replaceColors("&bInvsee.")).build(), 28,
+						"invsee " + ipl.getName()));
+				ui.addButton(
+					new ButtonCommand(
+							ui, ItemUtil.getBuilder(Material.ENDER_CHEST)
+									.setName(ColorUtil.replaceColors("&bEndersee.")).build(),
+							29, "endersee " + ipl.getName()));
+				ui.addButton(new ButtonCommand(ui,
+						ItemUtil.getBuilder(Material.FEATHER).setName(ColorUtil.replaceColors("&bToggle Fly.")).build(),
+						30, "fly " + ipl.getName()));
+				ui.addButton(new ButtonCommand(ui,
+						ItemUtil.getBuilder(Material.POTION).setName(ColorUtil.replaceColors("&bVanish.")).build(), 31,
+						"vanish " + ipl.getName()));
+				ui.addButton(
+					new ButtonCommand(
+							ui, ItemUtil.getBuilder(Material.MOB_SPAWNER)
+									.setName(ColorUtil.replaceColors("&bMobcount.")).build(),
+							32, "mobcount " + ipl.getName()));
+				ui.addButton(new ButtonCommand(ui,
+						ItemUtil.getBuilder(Material.BARRIER).setName(ColorUtil.replaceColors("&bKill.")).build(), 33,
+						"kill " + ipl.getName()));
 			});
 			ui.open((Player) sender);
 		});
