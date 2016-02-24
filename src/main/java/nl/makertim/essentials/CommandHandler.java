@@ -180,8 +180,8 @@ public class CommandHandler {
 				List<String> ipsinfo = new ArrayList<>();
 				if (ipl.getPlayer() != null) {
 					OfflinePlayer targetO = ipl.getPlayer();
-					if (targetO.isOnline()) {
-						Player target = targetO.getPlayer();
+					if (targetO != null && targetO.isOnline()) {
+						Player target = (Player) targetO;
 						online.add(ColorUtil.replaceColors("&aOnline"));
 						for (Statistic stat : Statistic.values()) {
 							stats.add(ColorUtil.replaceColors("&7%s: &c%s&7.", MktUtil.readableEnum(stat),
