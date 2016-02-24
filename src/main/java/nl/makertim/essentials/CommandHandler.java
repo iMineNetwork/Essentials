@@ -50,6 +50,7 @@ import nl.imine.api.gui.Button;
 import nl.imine.api.gui.Container;
 import nl.imine.api.gui.GuiManager;
 import nl.imine.api.gui.button.ButtonList;
+import nl.imine.api.gui.button.ButtonListed;
 import nl.imine.api.sorters.MapCountSorter;
 import nl.imine.api.sorters.MapCountSorter.Sort;
 import nl.imine.api.sorters.StringSearchSorter;
@@ -171,7 +172,8 @@ public class CommandHandler {
 				sender.sendMessage(noOnline(args[0]));
 			}
 			final iMinePlayer ipl = iMinePlayer.findPlayer(uuid);
-			final Container ui = GuiManager.getInstance().createContainer(ipl.getName(), 36, false, false);
+			final Container ui = GuiManager.getInstance()
+					.createContainer(ColorUtil.replaceColors("&7Who is: &c%s&7.", ipl.getName()), 36, false, false);
 			// Skull & Stats
 			Bukkit.getScheduler().runTaskAsynchronously(BukkitStarter.plugin, () -> {
 				List<String> online = new ArrayList<>();
@@ -253,27 +255,27 @@ public class CommandHandler {
 			});
 			// Ip & Ip info
 			Bukkit.getScheduler().runTaskAsynchronously(BukkitStarter.plugin, () -> {
-				List<String> ips = new ArrayList<>();
-				List<String> ipsinfo = new ArrayList<>();
+				List<String>[] ips = new List[]{new ArrayList<>(), new ArrayList<>(), new ArrayList<>(),
+						new ArrayList<>(), new ArrayList<>()};
 				ResultSet rs = BukkitStarter.plugin.getDB()
 						.selectQuery(String.format("SELECT ip FROM ipLookup WHERE uuid = '%s';", uuid.toString()));
 				try {
 					while (rs.next()) {
 						String ip = rs.getString("ip");
-						ips.add(ip);
+						ips[0].add(ip);
 						com.google.gson.JsonObject ipInfo = new com.google.gson.JsonParser()
 								.parse(WebUtil.getResponse(new URL("http://ip-api.com/json/" + ip))).getAsJsonObject();
-						ipsinfo.add(ColorUtil.replaceColors("&e%s %s %s &7(&c%s&7).", ipInfo.get("city").getAsString(),
-							ipInfo.get("regionName").getAsString(), ipInfo.get("country").getAsString(),
-							ipInfo.get("isp").getAsString()));
+						ips[1].add(ColorUtil.replaceColors("&e%s&7.", ipInfo.get("city").getAsString()));
+						ips[2].add(ColorUtil.replaceColors("&e%s&7.", ipInfo.get("regionName").getAsString()));
+						ips[3].add(ColorUtil.replaceColors("&e%s&7.", ipInfo.get("country").getAsString()));
+						ips[4].add(ColorUtil.replaceColors("&e%s&7.", ipInfo.get("isp").getAsString()));
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				ui.addButton(new Button(ui, ItemUtil.getBuilder(Material.EXP_BOTTLE)
-						.setName(ColorUtil.replaceColors("&cIP's")).setLore(ips).build(), 11));
-				ui.addButton(new Button(ui, ItemUtil.getBuilder(Material.GLASS_BOTTLE)
-						.setName(ColorUtil.replaceColors("&cIP info")).setLore(ipsinfo).build(), 12));
+				ui.addButton(new ButtonListed(ui,
+						ItemUtil.getBuilder(Material.EXP_BOTTLE).setName(ColorUtil.replaceColors("&cIP's")).build(),
+						ips, 11));
 			});
 			Bukkit.getScheduler().runTaskAsynchronously(BukkitStarter.plugin, () -> {
 				// TODO: isBannend / old tempbans / pardons
