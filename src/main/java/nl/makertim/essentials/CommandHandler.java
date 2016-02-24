@@ -119,7 +119,7 @@ public class CommandHandler {
 			finalAwsner = git();
 		} else if (command.equalsIgnoreCase("plr")) {
 			finalAwsner = plr();
-		} else if (command.equalsIgnoreCase("returntp")) {
+		} else if (command.equalsIgnoreCase("return")) {
 			finalAwsner = returnTP();
 		} else if (command.equalsIgnoreCase("vanish")) {
 			finalAwsner = vanish();
