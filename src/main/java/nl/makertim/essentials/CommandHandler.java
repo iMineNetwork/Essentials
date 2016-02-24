@@ -48,6 +48,7 @@ import nl.imine.api.db.iMinePlayer;
 import nl.imine.api.gui.Button;
 import nl.imine.api.gui.Container;
 import nl.imine.api.gui.GuiManager;
+import nl.imine.api.gui.button.ButtonList;
 import nl.imine.api.sorters.MapCountSorter;
 import nl.imine.api.sorters.MapCountSorter.Sort;
 import nl.imine.api.sorters.StringSearchSorter;
@@ -170,14 +171,10 @@ public class CommandHandler {
 		Bukkit.getScheduler().runTaskLaterAsynchronously(BukkitStarter.plugin, () -> {
 			final iMinePlayer ipl = iMinePlayer.findPlayer(uuid);
 			final Container ui = GuiManager.getInstance().createContainer(ipl.getName(), 27, false, false);
-			Bukkit.getScheduler().runTaskLaterAsynchronously(BukkitStarter.plugin, () -> {
-				NameLookup nl = new NameLookup(uuid, false);
-				nl.run();
+			// Skull & Stats
+			Bukkit.getScheduler().runTaskAsynchronously(BukkitStarter.plugin, () -> {
 				List<String> online = new ArrayList<>();
 				List<String> stats = new ArrayList<>();
-				List<String> names = nl.getNames();
-				List<String> ips = new ArrayList<>();
-				List<String> ipsinfo = new ArrayList<>();
 				if (ipl.getPlayer() != null) {
 					OfflinePlayer targetO = ipl.getPlayer();
 					if (targetO != null && targetO.isOnline()) {
@@ -196,6 +193,36 @@ public class CommandHandler {
 				} else {
 					online.add(ColorUtil.replaceColors("&cNo stats available."));
 				}
+				SkullMeta meta = (SkullMeta) Bukkit.getItemFactory().getItemMeta(Material.SKULL_ITEM);
+				meta.setOwner(ipl.getName());
+				ui.addButton(
+					new Button(ui,
+							ItemUtil.getBuilder(Material.SKULL_ITEM, meta).setDurability((short) 3)
+									.setName(ColorUtil.replaceColors("&6%s", ipl.getName())).setLore(online).build(),
+							4));
+				if (!stats.isEmpty()) {
+					ui.addButton(new ButtonList(ui,
+							ItemUtil.getBuilder(Material.PAPER).setName(ColorUtil.replaceColors("&aStats")).build(),
+							stats, 5));
+				}
+			});
+			// Name history & Last Seen
+			Bukkit.getScheduler().runTaskAsynchronously(BukkitStarter.plugin, () -> {
+				NameLookup nl = new NameLookup(uuid, false);
+				nl.run();
+				List<String> names = nl.getNames();
+				ui.addButton(new Button(ui, ItemUtil.getBuilder(Material.BOOK_AND_QUILL)
+						.setName(ColorUtil.replaceColors("&cName history")).setLore(names).build(), 9));
+				ui.addButton(
+					new Button(ui, ItemUtil.getBuilder(Material.SIGN).setName(ColorUtil.replaceColors("&cLast seen"))
+							.setLore(new String[]{
+									ColorUtil.replaceColors("&7Last seen: &c%s&7.", dateFormat.format(ipl.getDate()))})
+						.build(), 10));
+			});
+			// Ip & Ip info
+			Bukkit.getScheduler().runTaskAsynchronously(BukkitStarter.plugin, () -> {
+				List<String> ips = new ArrayList<>();
+				List<String> ipsinfo = new ArrayList<>();
 				ResultSet rs = BukkitStarter.plugin.getDB()
 						.selectQuery(String.format("SELECT ip FROM ipLookup WHERE uuid = '%s';", uuid.toString()));
 				try {
@@ -211,33 +238,11 @@ public class CommandHandler {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				SkullMeta meta = (SkullMeta) Bukkit.getItemFactory().getItemMeta(Material.SKULL_ITEM);
-				meta.setOwner(ipl.getName());
-				ui.addButton(
-					new Button(ui,
-							ItemUtil.getBuilder(Material.SKULL_ITEM, meta).setDurability((short) 3)
-									.setName(ColorUtil.replaceColors("&7%s", ipl.getName())).setLore(online).build(),
-							4));
-				if (!stats.isEmpty()) {
-					ui.addButton(new Button(ui, ItemUtil.getBuilder(Material.PAPER, meta)
-							.setName(ColorUtil.replaceColors("&aStats")).setLore(stats).build(), 5));
-				}
-				int index = 9;
-				ui.addButton(
-					new Button(ui,
-							ItemUtil.getBuilder(Material.BOOK_AND_QUILL)
-									.setName(ColorUtil.replaceColors("&cName history")).setLore(names).build(),
-							index++));
-				ui.addButton(
-					new Button(ui, ItemUtil.getBuilder(Material.SIGN).setName(ColorUtil.replaceColors("&cLast seen"))
-							.setLore(new String[]{
-									ColorUtil.replaceColors("&7Last seen: &c%s&7.", dateFormat.format(ipl.getDate()))})
-						.build(), index++));
 				ui.addButton(new Button(ui, ItemUtil.getBuilder(Material.EXP_BOTTLE)
-						.setName(ColorUtil.replaceColors("&cIP's")).setLore(ips).build(), index++));
+						.setName(ColorUtil.replaceColors("&cIP's")).setLore(ips).build(), 11));
 				ui.addButton(new Button(ui, ItemUtil.getBuilder(Material.GLASS_BOTTLE)
-						.setName(ColorUtil.replaceColors("&cIP info")).setLore(ipsinfo).build(), index++));
-			} , 1L);
+						.setName(ColorUtil.replaceColors("&cIP info")).setLore(ipsinfo).build(), 12));
+			});
 			ui.open((Player) sender);
 		} , 1L);
 		return ColorUtil.replaceColors("&7Getting data for player &c%s&7.", args[0]);
