@@ -171,7 +171,7 @@ public class CommandHandler {
 				sender.sendMessage(noOnline(args[0]));
 			}
 			final iMinePlayer ipl = iMinePlayer.findPlayer(uuid);
-			final Container ui = GuiManager.getInstance().createContainer(ipl.getName(), 27, false, false);
+			final Container ui = GuiManager.getInstance().createContainer(ipl.getName(), 36, false, false);
 			// Skull & Stats
 			Bukkit.getScheduler().runTaskAsynchronously(BukkitStarter.plugin, () -> {
 				List<String> online = new ArrayList<>();
@@ -191,6 +191,8 @@ public class CommandHandler {
 							Boolean.toString(target.getAllowFlight())));
 						online.add(
 							ColorUtil.replaceColors("&7Is Flying? &e%s&7.", Boolean.toString(target.isFlying())));
+						// TODO: show speed
+						// TODO: isVanish
 						online.add(
 							ColorUtil.replaceColors("&7Gamemode: &e%s&7.", MktUtil.readableEnum(target.getGameMode())));
 						online.add(ColorUtil.replaceColors("&7Health: &c%d&7/&c%d&7.", (int) target.getHealth(),
@@ -206,7 +208,7 @@ public class CommandHandler {
 						for (Achievement achievement : Achievement.values()) {
 							try {
 								achievements
-										.add(ColorUtil.replaceColors("&7%s: &c%s&7.", MktUtil.readableEnum(achievement),
+										.add(ColorUtil.replaceColors("&7%s: &e%s&7.", MktUtil.readableEnum(achievement),
 											Boolean.toString(target.hasAchievement(achievement))));
 							} catch (Exception ex) {
 							}
@@ -271,6 +273,10 @@ public class CommandHandler {
 				ui.addButton(new Button(ui, ItemUtil.getBuilder(Material.GLASS_BOTTLE)
 						.setName(ColorUtil.replaceColors("&cIP info")).setLore(ipsinfo).build(), 12));
 			});
+			// TODO: isBannend / old tempbans / pardons
+			// TODO: linked users, same ip
+			// TODO: fast cmd's - tp/tphere, invsee, endersee, toggleFly,
+			// setSpeed w/f, vanish, lagdebug, gm, speed, tell, tempban, kill
 			ui.open((Player) sender);
 		});
 		return ColorUtil.replaceColors("&7Getting data for player &c%s&7.", args[0]);
