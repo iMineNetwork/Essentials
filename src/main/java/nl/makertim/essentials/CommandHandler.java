@@ -316,8 +316,9 @@ public class CommandHandler {
 								bans.add(ColorUtil.replaceColors("   &7&mfor &e%s&7&m by &c%s&7&m.",
 									rs.getString("Reason"), rs.getString("LastName")));
 							} else {
-								bans.add(ColorUtil.replaceColors("&7Tempban until &e%s &7for &e%s &7by &c%s&7.",
-									dateFormat.format(rs.getTimestamp("UnbanTimestamp")), rs.getString("Reason"),
+								bans.add(ColorUtil.replaceColors("&7Tempban until &e%s",
+									dateFormat.format(rs.getTimestamp("UnbanTimestamp"))));
+								bans.add(ColorUtil.replaceColors("   &7for &e%s&7 by &c%s&7.", rs.getString("Reason"),
 									rs.getString("LastName")));
 							}
 						}
