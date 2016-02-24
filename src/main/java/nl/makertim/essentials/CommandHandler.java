@@ -191,8 +191,10 @@ public class CommandHandler {
 							Boolean.toString(target.getAllowFlight())));
 						online.add(
 							ColorUtil.replaceColors("&7Is Flying? &e%s&7.", Boolean.toString(target.isFlying())));
-						// TODO: show speed
-						// TODO: isVanish
+						online.add(ColorUtil.replaceColors("&7Is Vanish? &e%s&7.",
+							Boolean.toString(BukkitListener.VANISH.contains(target.getUniqueId()))));
+						online.add(ColorUtil.replaceColors("&7Speed &eWalking: &c%d&7, &eFlying: &c%d&7.",
+							(int) (target.getWalkSpeed() * 10), (int) (target.getFlySpeed() * 10)));
 						online.add(
 							ColorUtil.replaceColors("&7Gamemode: &e%s&7.", MktUtil.readableEnum(target.getGameMode())));
 						online.add(ColorUtil.replaceColors("&7Health: &c%d&7/&c%d&7.", (int) target.getHealth(),
@@ -273,10 +275,19 @@ public class CommandHandler {
 				ui.addButton(new Button(ui, ItemUtil.getBuilder(Material.GLASS_BOTTLE)
 						.setName(ColorUtil.replaceColors("&cIP info")).setLore(ipsinfo).build(), 12));
 			});
-			// TODO: isBannend / old tempbans / pardons
-			// TODO: linked users, same ip
-			// TODO: fast cmd's - tp/tphere, invsee, endersee, toggleFly,
-			// setSpeed w/f, vanish, lagdebug, gm, speed, tell, tempban, kill
+			Bukkit.getScheduler().runTaskAsynchronously(BukkitStarter.plugin, () -> {
+				// TODO: isBannend / old tempbans / pardons
+			});
+
+			Bukkit.getScheduler().runTaskAsynchronously(BukkitStarter.plugin, () -> {
+				// TODO: linked users, same ip
+			});
+			Bukkit.getScheduler().runTaskAsynchronously(BukkitStarter.plugin, () -> {
+				// TODO: fast cmd's - tp/tphere, invsee, endersee, toggleFly,
+				// setSpeed w/f, vanish, lagdebug, gm, speed, tell, tempban,
+				// kill
+
+			});
 			ui.open((Player) sender);
 		});
 		return ColorUtil.replaceColors("&7Getting data for player &c%s&7.", args[0]);
@@ -787,7 +798,7 @@ public class CommandHandler {
 			if (args.length > 0) {
 				float speed = 0;
 				try {
-					speed = Math.min(Math.abs(Float.parseFloat(args[0]) * 0.2F), 1F);
+					speed = Math.min(Math.abs(Float.parseFloat(args[0]) * 0.1F), 1F);
 				} catch (Exception ex) {
 					return ColorUtil.replaceColors("&c%s is not a number.", args[0]);
 				}
