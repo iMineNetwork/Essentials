@@ -164,11 +164,11 @@ public class CommandHandler {
 		if (!sender.hasPermission("iMine.whois")) {
 			return noPermission();
 		}
-		UUID uuid = PlayerUtil.getUUID(args[0], false);
-		if (uuid == null) {
-			return noOnline(args[0]);
-		}
 		Bukkit.getScheduler().runTaskLaterAsynchronously(BukkitStarter.plugin, () -> {
+			UUID uuid = PlayerUtil.getUUID(args[0], false);
+			if (uuid == null) {
+				sender.sendMessage(noOnline(args[0]));
+			}
 			final iMinePlayer ipl = iMinePlayer.findPlayer(uuid);
 			final Container ui = GuiManager.getInstance().createContainer(ipl.getName(), 27, false, false);
 			// Skull & Stats
