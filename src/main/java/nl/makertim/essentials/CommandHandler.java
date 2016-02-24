@@ -294,8 +294,9 @@ public class CommandHandler {
 								uuid.toString()));
 					try {
 						while (rs.next()) {
-							bans.add(ColorUtil.replaceColors("&7Banned since &e%s &7for &e%s &7by &c%s&7.",
-								dateFormat.format(rs.getDate("Timestamp")), rs.getString("Reason"),
+							bans.add(ColorUtil.replaceColors("&7Banned since &e%s",
+								dateFormat.format(rs.getDate("Timestamp"))));
+							bans.add(ColorUtil.replaceColors("   &7for &e%s &7by &c%s&7.", rs.getString("Reason"),
 								rs.getString("LastName")));
 						}
 					} catch (Exception ex) {
@@ -310,10 +311,10 @@ public class CommandHandler {
 					try {
 						while (rs.next()) {
 							if (rs.getTimestamp("UnbanTimestamp").before(new Date())) {
-								bans.add(ColorUtil.replaceColors("&7&mTempban until &e%s&7&m",
+								bans.add(ColorUtil.replaceColors("&7&mTempban until &e%s",
 									dateFormat.format(rs.getTimestamp("UnbanTimestamp"))));
-								bans.add(ColorUtil.replaceColors("   for &e%s&7&m by &c%s&7&m.", rs.getString("Reason"),
-									rs.getString("LastName")));
+								bans.add(ColorUtil.replaceColors("   &7&mfor &e%s&7&m by &c%s&7&m.",
+									rs.getString("Reason"), rs.getString("LastName")));
 							} else {
 								bans.add(ColorUtil.replaceColors("&7Tempban until &e%s &7for &e%s &7by &c%s&7.",
 									dateFormat.format(rs.getTimestamp("UnbanTimestamp")), rs.getString("Reason"),
