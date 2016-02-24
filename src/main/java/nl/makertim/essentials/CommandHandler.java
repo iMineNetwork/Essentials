@@ -184,8 +184,11 @@ public class CommandHandler {
 						Player target = (Player) targetO;
 						online.add(ColorUtil.replaceColors("&aOnline"));
 						for (Statistic stat : Statistic.values()) {
-							stats.add(ColorUtil.replaceColors("&7%s: &c%s&7.", MktUtil.readableEnum(stat),
-								target.getStatistic(stat)));
+							try {
+								stats.add(ColorUtil.replaceColors("&7%s: &c%s&7.", MktUtil.readableEnum(stat),
+									target.getStatistic(stat)));
+							} catch (Exception ex) {
+							}
 						}
 					} else {
 						online.add(ColorUtil.replaceColors("&cOffline"));
