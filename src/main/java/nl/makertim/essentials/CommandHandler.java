@@ -25,6 +25,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.Statistic;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.command.CommandSender;
@@ -166,47 +167,76 @@ public class CommandHandler {
 		if (uuid == null) {
 			return noOnline(args[0]);
 		}
-		Bukkit.getScheduler().runTaskAsynchronously(BukkitStarter.plugin, () -> {
-			iMinePlayer ipl = iMinePlayer.findPlayer(uuid);
-			NameLookup nl = new NameLookup(uuid, false);
-			nl.run();
-			List<String> names = nl.getNames();
-			List<String> ips = new ArrayList<>();
-			List<String> ipsinfo = new ArrayList<>();
-			ResultSet rs = BukkitStarter.plugin.getDB()
-					.selectQuery(String.format("SELECT ip FROM ipLookup WHERE uuid = '%s';", uuid.toString()));
-			try {
-				while (rs.next()) {
-					String ip = rs.getString("ip");
-					ips.add(ip);
-					com.google.gson.JsonObject ipInfo = new com.google.gson.JsonParser()
-							.parse(WebUtil.getResponse(new URL("http://ip-api.com/json/" + ip))).getAsJsonObject();
-					ipsinfo.add(ColorUtil.replaceColors("&e%s %s %s &7(&c%s&7).", ipInfo.get("city").getAsString(),
-						ipInfo.get("regionName").getAsString(), ipInfo.get("country").getAsString(),
-						ipInfo.get("isp").getAsString()));
+		Bukkit.getScheduler().runTaskLaterAsynchronously(BukkitStarter.plugin, () -> {
+			final iMinePlayer ipl = iMinePlayer.findPlayer(uuid);
+			final Container ui = GuiManager.getInstance().createContainer(ipl.getName(), 27, false, false);
+			Bukkit.getScheduler().runTaskLaterAsynchronously(BukkitStarter.plugin, () -> {
+				NameLookup nl = new NameLookup(uuid, false);
+				nl.run();
+				List<String> online = new ArrayList<>();
+				List<String> stats = new ArrayList<>();
+				List<String> names = nl.getNames();
+				List<String> ips = new ArrayList<>();
+				List<String> ipsinfo = new ArrayList<>();
+				if (ipl.getPlayer() != null) {
+					OfflinePlayer targetO = ipl.getPlayer();
+					if (targetO.isOnline()) {
+						Player target = targetO.getPlayer();
+						online.add(ColorUtil.replaceColors("&aOnline"));
+						for (Statistic stat : Statistic.values()) {
+							stats.add(ColorUtil.replaceColors("&7%s: &c%s&7.", MktUtil.readableEnum(stat),
+								target.getStatistic(stat)));
+						}
+					} else {
+						online.add(ColorUtil.replaceColors("&cOffline"));
+					}
+				} else {
+					online.add(ColorUtil.replaceColors("&cNo stats available."));
 				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			Container ui = GuiManager.getInstance().createContainer(ipl.getName(), 27, false, false);
-			SkullMeta meta = (SkullMeta) Bukkit.getItemFactory().getItemMeta(Material.SKULL_ITEM);
-			meta.setOwner(ipl.getName());
-			ui.addButton(new Button(ui, ItemUtil.getBuilder(Material.SKULL_ITEM, meta).setDurability((short) 3)
-					.setName(ColorUtil.replaceColors("&7%s", ipl.getName())).build(), 4));
-			int index = 9;
-			ui.addButton(new Button(ui, ItemUtil.getBuilder(Material.BOOK_AND_QUILL)
-					.setName(ColorUtil.replaceColors("&cName history")).setLore(names).build(), index++));
-			ui.addButton(new Button(ui,
-					ItemUtil.getBuilder(Material.SIGN).setName(ColorUtil.replaceColors("&cLast seen"))
+				ResultSet rs = BukkitStarter.plugin.getDB()
+						.selectQuery(String.format("SELECT ip FROM ipLookup WHERE uuid = '%s';", uuid.toString()));
+				try {
+					while (rs.next()) {
+						String ip = rs.getString("ip");
+						ips.add(ip);
+						com.google.gson.JsonObject ipInfo = new com.google.gson.JsonParser()
+								.parse(WebUtil.getResponse(new URL("http://ip-api.com/json/" + ip))).getAsJsonObject();
+						ipsinfo.add(ColorUtil.replaceColors("&e%s %s %s &7(&c%s&7).", ipInfo.get("city").getAsString(),
+							ipInfo.get("regionName").getAsString(), ipInfo.get("country").getAsString(),
+							ipInfo.get("isp").getAsString()));
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				SkullMeta meta = (SkullMeta) Bukkit.getItemFactory().getItemMeta(Material.SKULL_ITEM);
+				meta.setOwner(ipl.getName());
+				ui.addButton(
+					new Button(ui,
+							ItemUtil.getBuilder(Material.SKULL_ITEM, meta).setDurability((short) 3)
+									.setName(ColorUtil.replaceColors("&7%s", ipl.getName())).setLore(online).build(),
+							4));
+				if (!stats.isEmpty()) {
+					ui.addButton(new Button(ui, ItemUtil.getBuilder(Material.PAPER, meta)
+							.setName(ColorUtil.replaceColors("&aStats")).setLore(stats).build(), 5));
+				}
+				int index = 9;
+				ui.addButton(
+					new Button(ui,
+							ItemUtil.getBuilder(Material.BOOK_AND_QUILL)
+									.setName(ColorUtil.replaceColors("&cName history")).setLore(names).build(),
+							index++));
+				ui.addButton(
+					new Button(ui, ItemUtil.getBuilder(Material.SIGN).setName(ColorUtil.replaceColors("&cLast seen"))
 							.setLore(new String[]{
 									ColorUtil.replaceColors("&7Last seen: &c%s&7.", dateFormat.format(ipl.getDate()))})
-					.build(), index++));
-			ui.addButton(new Button(ui, ItemUtil.getBuilder(Material.EXP_BOTTLE)
-					.setName(ColorUtil.replaceColors("&cIP's")).setLore(ips).build(), index++));
-			ui.addButton(new Button(ui, ItemUtil.getBuilder(Material.GLASS_BOTTLE)
-					.setName(ColorUtil.replaceColors("&cIP info")).setLore(ipsinfo).build(), index++));
+						.build(), index++));
+				ui.addButton(new Button(ui, ItemUtil.getBuilder(Material.EXP_BOTTLE)
+						.setName(ColorUtil.replaceColors("&cIP's")).setLore(ips).build(), index++));
+				ui.addButton(new Button(ui, ItemUtil.getBuilder(Material.GLASS_BOTTLE)
+						.setName(ColorUtil.replaceColors("&cIP info")).setLore(ipsinfo).build(), index++));
+			} , 1L);
 			ui.open((Player) sender);
-		});
+		} , 1L);
 		return ColorUtil.replaceColors("&7Getting data for player &c%s&7.", args[0]);
 	}
 
