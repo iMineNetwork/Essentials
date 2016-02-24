@@ -246,9 +246,9 @@ public class CommandHandler {
 				nl.run();
 				List<String> names = nl.getNames();
 				ui.addButton(new Button(ui, ItemUtil.getBuilder(Material.BOOK_AND_QUILL)
-						.setName(ColorUtil.replaceColors("&cName history")).setLore(names).build(), 9));
+						.setName(ColorUtil.replaceColors("&bName history")).setLore(names).build(), 9));
 				ui.addButton(
-					new Button(ui, ItemUtil.getBuilder(Material.SIGN).setName(ColorUtil.replaceColors("&cLast seen"))
+					new Button(ui, ItemUtil.getBuilder(Material.SIGN).setName(ColorUtil.replaceColors("&bLast seen"))
 							.setLore(new String[]{
 									ColorUtil.replaceColors("&7Last seen: &c%s&7.", dateFormat.format(ipl.getDate()))})
 						.build(), 10));
@@ -299,12 +299,12 @@ public class CommandHandler {
 					e.printStackTrace();
 				}
 				ui.addButton(new ButtonListed(ui,
-						ItemUtil.getBuilder(Material.GLASS_BOTTLE).setName(ColorUtil.replaceColors("&cIP's")).build(),
+						ItemUtil.getBuilder(Material.GLASS_BOTTLE).setName(ColorUtil.replaceColors("&bIP's")).build(),
 						ips, 11));
 				ui.addButton(
 					new ButtonList(ui,
 							ItemUtil.getBuilder(Material.EXP_BOTTLE)
-									.setName(ColorUtil.replaceColors("&cLinked users grouped by IP.")).build(),
+									.setName(ColorUtil.replaceColors("&bLinked users grouped by IP.")).build(),
 							lore, 12));
 			});
 			Bukkit.getScheduler().runTaskAsynchronously(BukkitStarter.plugin, () -> {
