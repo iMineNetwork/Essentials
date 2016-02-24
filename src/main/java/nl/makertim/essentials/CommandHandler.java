@@ -374,33 +374,33 @@ public class CommandHandler {
 				ui.addButton(new ButtonCommand(
 						ui, ItemUtil.getBuilder(Material.COMPASS)
 								.setName(ColorUtil.replaceColors("&bTeleport to other.")).build(),
-						26, "tp " + ipl.getName()));
+						27, "tp " + ipl.getName()));
 				ui.addButton(
 					new ButtonCommand(
 							ui, ItemUtil.getBuilder(Material.COMPASS)
 									.setName(ColorUtil.replaceColors("&bTeleport to you.")).build(),
-							27, "tp " + sender.getName() + " " + ipl.getName()));
+							28, "tp " + ipl.getName() + " " + sender.getName()));
 				ui.addButton(new ButtonCommand(ui,
-						ItemUtil.getBuilder(Material.CHEST).setName(ColorUtil.replaceColors("&bInvsee.")).build(), 28,
+						ItemUtil.getBuilder(Material.CHEST).setName(ColorUtil.replaceColors("&bInvsee.")).build(), 29,
 						"invsee " + ipl.getName()));
 				ui.addButton(
 					new ButtonCommand(
 							ui, ItemUtil.getBuilder(Material.ENDER_CHEST)
 									.setName(ColorUtil.replaceColors("&bEndersee.")).build(),
-							29, "endersee " + ipl.getName()));
+							30, "endersee " + ipl.getName()));
 				ui.addButton(new ButtonCommand(ui,
 						ItemUtil.getBuilder(Material.FEATHER).setName(ColorUtil.replaceColors("&bToggle Fly.")).build(),
-						30, "fly " + ipl.getName()));
+						31, "fly " + ipl.getName()));
 				ui.addButton(new ButtonCommand(ui,
-						ItemUtil.getBuilder(Material.POTION).setName(ColorUtil.replaceColors("&bVanish.")).build(), 31,
+						ItemUtil.getBuilder(Material.POTION).setName(ColorUtil.replaceColors("&bVanish.")).build(), 32,
 						"vanish " + ipl.getName()));
 				ui.addButton(
 					new ButtonCommand(
 							ui, ItemUtil.getBuilder(Material.MOB_SPAWNER)
 									.setName(ColorUtil.replaceColors("&bMobcount.")).build(),
-							32, "mobcount " + ipl.getName()));
+							33, "mobcount " + ipl.getName()));
 				ui.addButton(new ButtonCommand(ui,
-						ItemUtil.getBuilder(Material.BARRIER).setName(ColorUtil.replaceColors("&bKill.")).build(), 33,
+						ItemUtil.getBuilder(Material.BARRIER).setName(ColorUtil.replaceColors("&bKill.")).build(), 34,
 						"kill " + ipl.getName()));
 			});
 			ui.open((Player) sender);
