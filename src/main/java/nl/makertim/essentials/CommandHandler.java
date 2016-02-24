@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.UUID;
@@ -260,6 +261,16 @@ public class CommandHandler {
 				ResultSet rs = BukkitStarter.plugin.getDB()
 						.selectQuery(String.format("SELECT ip FROM ipLookup WHERE uuid = '%s';", uuid.toString()));
 				try {
+					ips[0].add(ColorUtil.replaceColors("&7IP."));
+					ips[1].add(ColorUtil.replaceColors("&7City."));
+					ips[2].add(ColorUtil.replaceColors("&7Region."));
+					ips[3].add(ColorUtil.replaceColors("&7Country."));
+					ips[4].add(ColorUtil.replaceColors("&7ISP."));
+					ips[0].add("");
+					ips[1].add("");
+					ips[2].add("");
+					ips[3].add("");
+					ips[4].add("");
 					while (rs.next()) {
 						String ip = rs.getString("ip");
 						ResultSet ipBan = BukkitStarter.plugin.getDB()
@@ -284,65 +295,58 @@ public class CommandHandler {
 						ips, 11));
 			});
 			Bukkit.getScheduler().runTaskAsynchronously(BukkitStarter.plugin, () -> {
-				// TODO: isBannend / old tempbans / pardons
 				List<String> bans = new ArrayList<>();
 				List<String> pardons = new ArrayList<>();
 				Boolean problem = null;
-				{
-					ResultSet rs = BukkitStarter.plugin.getDB()
-							.selectQuery(String.format(
-								"SELECT b.*, u.LastName  FROM ban b, UUID_Table u WHERE b.UUID LIKE '%s' AND b.FromUUID = u.UUID;",
-								uuid.toString()));
-					try {
-						while (rs.next()) {
-							bans.add(ColorUtil.replaceColors("&7Banned since &e%s",
-								dateFormat.format(rs.getDate("Timestamp"))));
-							bans.add(ColorUtil.replaceColors("   &7for &e%s &7by &c%s&7.", rs.getString("Reason"),
+				ResultSet rs = BukkitStarter.plugin.getDB()
+						.selectQuery(String.format(
+							"SELECT b.*, u.LastName  FROM ban b, UUID_Table u WHERE b.UUID LIKE '%s' AND b.FromUUID = u.UUID;",
+							uuid.toString()));
+				try {
+					while (rs.next()) {
+						bans.add(
+							ColorUtil.replaceColors("&7Banned since &e%s", dateFormat.format(rs.getDate("Timestamp"))));
+						bans.add(ColorUtil.replaceColors("   &7for &e%s &7by &c%s&7.", rs.getString("Reason"),
+							rs.getString("LastName")));
+						problem = true;
+					}
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+				rs = BukkitStarter.plugin.getDB()
+						.selectQuery(String.format(
+							"SELECT b.*, u.LastName  FROM temp_ban b, UUID_Table u WHERE b.UUID LIKE '%s' AND b.FromUUID = u.UUID",
+							uuid.toString()));
+				try {
+					while (rs.next()) {
+						if (rs.getTimestamp("UnbanTimestamp").before(new Date())) {
+							bans.add(ColorUtil.replaceColors("&7&mTempban until &e%s",
+								dateFormat.format(rs.getTimestamp("UnbanTimestamp"))));
+							bans.add(ColorUtil.replaceColors("   &7&mfor &e%s&7&m by &c%s&7&m.", rs.getString("Reason"),
+								rs.getString("LastName")));
+							problem = false;
+						} else {
+							bans.add(ColorUtil.replaceColors("&7Tempban until &e%s",
+								dateFormat.format(rs.getTimestamp("UnbanTimestamp"))));
+							bans.add(ColorUtil.replaceColors("   &7for &e%s&7 by &c%s&7.", rs.getString("Reason"),
 								rs.getString("LastName")));
 							problem = true;
 						}
-					} catch (Exception ex) {
-						ex.printStackTrace();
 					}
+				} catch (Exception ex) {
+					ex.printStackTrace();
 				}
-				{
-					ResultSet rs = BukkitStarter.plugin.getDB()
-							.selectQuery(String.format(
-								"SELECT b.*, u.LastName  FROM temp_ban b, UUID_Table u WHERE b.UUID LIKE '%s' AND b.FromUUID = u.UUID",
-								uuid.toString()));
-					try {
-						while (rs.next()) {
-							if (rs.getTimestamp("UnbanTimestamp").before(new Date())) {
-								bans.add(ColorUtil.replaceColors("&7&mTempban until &e%s",
-									dateFormat.format(rs.getTimestamp("UnbanTimestamp"))));
-								bans.add(ColorUtil.replaceColors("   &7&mfor &e%s&7&m by &c%s&7&m.",
-									rs.getString("Reason"), rs.getString("LastName")));
-								problem = false;
-							} else {
-								bans.add(ColorUtil.replaceColors("&7Tempban until &e%s",
-									dateFormat.format(rs.getTimestamp("UnbanTimestamp"))));
-								bans.add(ColorUtil.replaceColors("   &7for &e%s&7 by &c%s&7.", rs.getString("Reason"),
-									rs.getString("LastName")));
-								problem = true;
-							}
-						}
-					} catch (Exception ex) {
-						ex.printStackTrace();
+				rs = BukkitStarter.plugin.getDB()
+						.selectQuery(String.format(
+							"SELECT b.*, u.LastName  FROM unban_log b, UUID_Table u WHERE b.who LIKE '%s' AND u.UUID = b.from;",
+							uuid.toString()));
+				try {
+					while (rs.next()) {
+						pardons.add(ColorUtil.replaceColors("&7Got unbanned by &c%s &7at &e%s&7.",
+							rs.getString("LastName"), dateFormat.format(rs.getDate("when"))));
 					}
-				}
-				{
-					ResultSet rs = BukkitStarter.plugin.getDB()
-							.selectQuery(String.format(
-								"SELECT b.*, u.LastName  FROM unban_log b, UUID_Table u WHERE b.who LIKE '%s' AND u.UUID = b.from;",
-								uuid.toString()));
-					try {
-						while (rs.next()) {
-							pardons.add(ColorUtil.replaceColors("&7Got unbanned by &c%s &7at &e%s&7.",
-								rs.getString("LastName"), dateFormat.format(rs.getDate("when"))));
-						}
-					} catch (Exception ex) {
-						ex.printStackTrace();
-					}
+				} catch (Exception ex) {
+					ex.printStackTrace();
 				}
 				List<String> lore = new ArrayList<String>(bans);
 				lore.addAll(pardons);
@@ -354,7 +358,28 @@ public class CommandHandler {
 			});
 
 			Bukkit.getScheduler().runTaskAsynchronously(BukkitStarter.plugin, () -> {
-				// TODO: linked users, same ip
+				try {
+					List<String> lore = new ArrayList<>();
+					Map<String, List<String>> ipGrouped = new HashMap<>();
+					ResultSet rs = BukkitStarter.plugin.getDB().selectQuery(
+						"SELECT i.ip, u.LastName  FROM ipLookup i, UUID_Table u WHERE i.ip LIKE '83.128.203.217' AND u.UUID = i.uuid;");
+					while (rs.next()) {
+						if (!ipGrouped.containsKey(rs.getString("ip"))) {
+							ipGrouped.put(rs.getString("ip"), new ArrayList<String>());
+						}
+						ipGrouped.get(rs.getString("ip")).add(rs.getString("LastName"));
+					}
+					for (Entry<String, List<String>> ipGroup : ipGrouped.entrySet()) {
+						lore.add(ColorUtil.replaceColors("&e%s", ipGroup.getKey()));
+						for (String name : ipGroup.getValue()) {
+							lore.add(ColorUtil.replaceColors("  &c%s", name));
+						}
+					}
+					ui.addButton(new ButtonList(ui, ItemUtil.getBuilder(Material.EXP_BOTTLE)
+							.setName(ColorUtil.replaceColors("&aAchievements")).build(), lore, 12));
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
 			});
 			Bukkit.getScheduler().runTaskAsynchronously(BukkitStarter.plugin, () -> {
 				// TODO: fast cmd's - tp/tphere, invsee, endersee, toggleFly,
