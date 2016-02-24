@@ -328,7 +328,7 @@ public class CommandHandler {
 				{
 					ResultSet rs = BukkitStarter.plugin.getDB()
 							.selectQuery(String.format(
-								"SELECT b.*, u.LastName  FROM unban_log b, UUID_Table u WHERE b.who LIKE '%s' AND u.UUID = b.who;",
+								"SELECT b.*, u.LastName  FROM unban_log b, UUID_Table u WHERE b.who LIKE '%s' AND u.UUID = b.from;",
 								uuid.toString()));
 					try {
 						while (rs.next()) {
