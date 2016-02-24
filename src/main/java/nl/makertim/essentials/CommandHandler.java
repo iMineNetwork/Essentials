@@ -13,7 +13,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.UUID;
@@ -258,14 +257,15 @@ public class CommandHandler {
 			Bukkit.getScheduler().runTaskAsynchronously(BukkitStarter.plugin, () -> {
 				List<String>[] ips = new List[]{new ArrayList<>(), new ArrayList<>(), new ArrayList<>(),
 						new ArrayList<>(), new ArrayList<>()};
+				List<String> lore = new ArrayList<>();
 				ResultSet rs = BukkitStarter.plugin.getDB()
 						.selectQuery(String.format("SELECT ip FROM ipLookup WHERE uuid = '%s';", uuid.toString()));
 				try {
-					ips[0].add(ColorUtil.replaceColors("&7IP."));
-					ips[1].add(ColorUtil.replaceColors("&7City."));
-					ips[2].add(ColorUtil.replaceColors("&7Region."));
-					ips[3].add(ColorUtil.replaceColors("&7Country."));
-					ips[4].add(ColorUtil.replaceColors("&7ISP."));
+					ips[0].add(ColorUtil.replaceColors("&7IP"));
+					ips[1].add(ColorUtil.replaceColors("&7City"));
+					ips[2].add(ColorUtil.replaceColors("&7Region"));
+					ips[3].add(ColorUtil.replaceColors("&7Country"));
+					ips[4].add(ColorUtil.replaceColors("&7ISP"));
 					ips[0].add("");
 					ips[1].add("");
 					ips[2].add("");
@@ -286,13 +286,26 @@ public class CommandHandler {
 						ips[2].add(ColorUtil.replaceColors("&e%s&7.", ipInfo.get("regionName").getAsString()));
 						ips[3].add(ColorUtil.replaceColors("&e%s&7.", ipInfo.get("country").getAsString()));
 						ips[4].add(ColorUtil.replaceColors("&e%s&7.", ipInfo.get("isp").getAsString()));
+						ResultSet usersIp = BukkitStarter.plugin.getDB()
+								.selectQuery(String.format(
+									"SELECT u.LastName FROM ipLookup i, UUID_Table u WHERE i.ip LIKE '%s' AND u.UUID = i.uuid;",
+									ip));
+						lore.add(ColorUtil.replaceColors("&e%s", ip));
+						while (usersIp.next()) {
+							lore.add(ColorUtil.replaceColors("  &c%s", usersIp.getString("LastName")));
+						}
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 				ui.addButton(new ButtonListed(ui,
-						ItemUtil.getBuilder(Material.EXP_BOTTLE).setName(ColorUtil.replaceColors("&cIP's")).build(),
+						ItemUtil.getBuilder(Material.GLASS_BOTTLE).setName(ColorUtil.replaceColors("&cIP's")).build(),
 						ips, 11));
+				ui.addButton(
+					new ButtonList(ui,
+							ItemUtil.getBuilder(Material.EXP_BOTTLE)
+									.setName(ColorUtil.replaceColors("&cLinked users grouped by IP.")).build(),
+							lore, 12));
 			});
 			Bukkit.getScheduler().runTaskAsynchronously(BukkitStarter.plugin, () -> {
 				List<String> bans = new ArrayList<>();
@@ -359,24 +372,7 @@ public class CommandHandler {
 
 			Bukkit.getScheduler().runTaskAsynchronously(BukkitStarter.plugin, () -> {
 				try {
-					List<String> lore = new ArrayList<>();
-					Map<String, List<String>> ipGrouped = new HashMap<>();
-					ResultSet rs = BukkitStarter.plugin.getDB().selectQuery(
-						"SELECT i.ip, u.LastName  FROM ipLookup i, UUID_Table u WHERE i.ip LIKE '83.128.203.217' AND u.UUID = i.uuid;");
-					while (rs.next()) {
-						if (!ipGrouped.containsKey(rs.getString("ip"))) {
-							ipGrouped.put(rs.getString("ip"), new ArrayList<String>());
-						}
-						ipGrouped.get(rs.getString("ip")).add(rs.getString("LastName"));
-					}
-					for (Entry<String, List<String>> ipGroup : ipGrouped.entrySet()) {
-						lore.add(ColorUtil.replaceColors("&e%s", ipGroup.getKey()));
-						for (String name : ipGroup.getValue()) {
-							lore.add(ColorUtil.replaceColors("  &c%s", name));
-						}
-					}
-					ui.addButton(new ButtonList(ui, ItemUtil.getBuilder(Material.EXP_BOTTLE)
-							.setName(ColorUtil.replaceColors("&aAchievements")).build(), lore, 12));
+
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
