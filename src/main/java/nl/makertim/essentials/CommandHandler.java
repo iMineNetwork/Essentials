@@ -20,6 +20,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.bukkit.Achievement;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -175,6 +176,7 @@ public class CommandHandler {
 			Bukkit.getScheduler().runTaskAsynchronously(BukkitStarter.plugin, () -> {
 				List<String> online = new ArrayList<>();
 				List<String> stats = new ArrayList<>();
+				List<String> achievements = new ArrayList<>();
 				if (ipl.getPlayer() != null) {
 					OfflinePlayer targetO = ipl.getPlayer();
 					if (targetO != null && targetO.isOnline()) {
@@ -183,19 +185,29 @@ public class CommandHandler {
 						online.add(ColorUtil.replaceColors("&7Rank: &e%s &7[&c%d&7].", ipl.getRank().getName(),
 							ipl.getRank().getAdminRanking()));
 						Location loc = target.getLocation();
-						online.add(ColorUtil.replaceColors("&7Location: &e%s &7[&c%f&7,&c%f&7,&c%f&7].",
-							loc.getWorld().getName(), loc.getX(), loc.getY(), loc.getZ()));
+						online.add(ColorUtil.replaceColors("&7Location: &e%s &7[&c%d&7,&c%d&7,&c%d&7].",
+							loc.getWorld().getName(), (int) loc.getX(), (int) loc.getY(), (int) loc.getZ()));
 						online.add(ColorUtil.replaceColors("&7Allow Flight? &e%s&7.",
 							Boolean.toString(target.getAllowFlight())));
 						online.add(
+							ColorUtil.replaceColors("&7Is Flying? &e%s&7.", Boolean.toString(target.isFlying())));
+						online.add(
 							ColorUtil.replaceColors("&7Gamemode: &e%s&7.", MktUtil.readableEnum(target.getGameMode())));
-						online.add(ColorUtil.replaceColors("&7Health: &c%f&7/&c%f&7.", target.getHealth(),
-							target.getMaxHealth()));
+						online.add(ColorUtil.replaceColors("&7Health: &c%d&7/&c%d&7.", (int) target.getHealth(),
+							(int) target.getMaxHealth()));
 						online.add(ColorUtil.replaceColors("&7UUID: &e%s&7.", target.getUniqueId()));
 						for (Statistic stat : Statistic.values()) {
 							try {
 								stats.add(ColorUtil.replaceColors("&7%s: &c%s&7.", MktUtil.readableEnum(stat),
 									target.getStatistic(stat)));
+							} catch (Exception ex) {
+							}
+						}
+						for (Achievement achievement : Achievement.values()) {
+							try {
+								achievements
+										.add(ColorUtil.replaceColors("&7%s: &c%s&7.", MktUtil.readableEnum(achievement),
+											Boolean.toString(target.hasAchievement(achievement))));
 							} catch (Exception ex) {
 							}
 						}
@@ -216,6 +228,10 @@ public class CommandHandler {
 					ui.addButton(new ButtonList(ui,
 							ItemUtil.getBuilder(Material.PAPER).setName(ColorUtil.replaceColors("&aStats")).build(),
 							stats, 5));
+				}
+				if (!achievements.isEmpty()) {
+					ui.addButton(new ButtonList(ui, ItemUtil.getBuilder(Material.PAPER)
+							.setName(ColorUtil.replaceColors("&aAchievements")).build(), stats, 6));
 				}
 			});
 			// Name history & Last Seen
