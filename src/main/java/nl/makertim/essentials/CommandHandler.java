@@ -179,19 +179,19 @@ public class CommandHandler {
 					OfflinePlayer targetO = ipl.getPlayer();
 					if (targetO != null && targetO.isOnline()) {
 						Player target = (Player) targetO;
-						online.add(ColorUtil.replaceColors("&aOnline"));
-						online.add(ColorUtil.replaceColors("&7Rank: &e%s &7[&c%d&7]", ipl.getRank().getName(),
+						online.add(ColorUtil.replaceColors("&aOnline&7."));
+						online.add(ColorUtil.replaceColors("&7Rank: &e%s &7[&c%d&7].", ipl.getRank().getName(),
 							ipl.getRank().getAdminRanking()));
 						Location loc = target.getLocation();
-						online.add(ColorUtil.replaceColors("&7Location: &e%s &7[&c%d&7,&c%d&7,&c%d&7]",
+						online.add(ColorUtil.replaceColors("&7Location: &e%s &7[&c%f&7,&c%f&7,&c%f&7].",
 							loc.getWorld().getName(), loc.getX(), loc.getY(), loc.getZ()));
+						online.add(ColorUtil.replaceColors("&7Allow Flight? &e%s&7.",
+							Boolean.toString(target.getAllowFlight())));
 						online.add(
-							ColorUtil.replaceColors("&7Allow Flight? &e%s", Boolean.toString(target.getAllowFlight())));
-						online.add(
-							ColorUtil.replaceColors("&7Gamemode: &e%s", MktUtil.readableEnum(target.getGameMode())));
-						online.add(ColorUtil.replaceColors("&7Health: &c%d&7/&c%s", target.getHealth(),
+							ColorUtil.replaceColors("&7Gamemode: &e%s&7.", MktUtil.readableEnum(target.getGameMode())));
+						online.add(ColorUtil.replaceColors("&7Health: &c%f&7/&c%f&7.", target.getHealth(),
 							target.getMaxHealth()));
-						online.add(ColorUtil.replaceColors("&7UUID: &e%s", target.getUniqueId()));
+						online.add(ColorUtil.replaceColors("&7UUID: &e%s&7.", target.getUniqueId()));
 						for (Statistic stat : Statistic.values()) {
 							try {
 								stats.add(ColorUtil.replaceColors("&7%s: &c%s&7.", MktUtil.readableEnum(stat),
