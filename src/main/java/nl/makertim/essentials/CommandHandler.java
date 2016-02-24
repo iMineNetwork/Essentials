@@ -309,7 +309,7 @@ public class CommandHandler {
 								uuid.toString()));
 					try {
 						while (rs.next()) {
-							if (rs.getTimestamp("UnbanTimestamp").after(new Date())) {
+							if (rs.getTimestamp("UnbanTimestamp").before(new Date())) {
 								bans.add(ColorUtil.replaceColors("&7&mTempban until &e%s &7&mfor &e%s &7&mby &c%s&7&m.",
 									dateFormat.format(rs.getTimestamp("UnbanTimestamp")), rs.getString("Reason"),
 									rs.getString("LastName")));
