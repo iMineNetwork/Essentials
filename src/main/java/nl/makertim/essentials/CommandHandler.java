@@ -287,6 +287,7 @@ public class CommandHandler {
 				// TODO: isBannend / old tempbans / pardons
 				List<String> bans = new ArrayList<>();
 				List<String> pardons = new ArrayList<>();
+				Boolean problem = null;
 				{
 					ResultSet rs = BukkitStarter.plugin.getDB()
 							.selectQuery(String.format(
@@ -298,6 +299,7 @@ public class CommandHandler {
 								dateFormat.format(rs.getDate("Timestamp"))));
 							bans.add(ColorUtil.replaceColors("   &7for &e%s &7by &c%s&7.", rs.getString("Reason"),
 								rs.getString("LastName")));
+							problem = true;
 						}
 					} catch (Exception ex) {
 						ex.printStackTrace();
@@ -315,11 +317,13 @@ public class CommandHandler {
 									dateFormat.format(rs.getTimestamp("UnbanTimestamp"))));
 								bans.add(ColorUtil.replaceColors("   &7&mfor &e%s&7&m by &c%s&7&m.",
 									rs.getString("Reason"), rs.getString("LastName")));
+								problem = false;
 							} else {
 								bans.add(ColorUtil.replaceColors("&7Tempban until &e%s",
 									dateFormat.format(rs.getTimestamp("UnbanTimestamp"))));
 								bans.add(ColorUtil.replaceColors("   &7for &e%s&7 by &c%s&7.", rs.getString("Reason"),
 									rs.getString("LastName")));
+								problem = true;
 							}
 						}
 					} catch (Exception ex) {
@@ -344,7 +348,7 @@ public class CommandHandler {
 				lore.addAll(pardons);
 				ui.addButton(new ButtonList(ui,
 						ItemUtil.getBuilder(Material.STAINED_GLASS_PANE)
-								.setDurability((short) (bans.isEmpty() ? pardons.isEmpty() ? 5 : 4 : 14))
+								.setDurability((short) (problem == null ? 5 : problem == false ? 4 : 14))
 								.setName(ColorUtil.replaceColors("&4Ban log")).build(),
 						lore, 3));
 			});
