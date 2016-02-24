@@ -310,8 +310,9 @@ public class CommandHandler {
 					try {
 						while (rs.next()) {
 							if (rs.getTimestamp("UnbanTimestamp").before(new Date())) {
-								bans.add(ColorUtil.replaceColors("&7&mTempban until &e%s&7&m for &e%s&7&m by &c%s&7&m.",
-									dateFormat.format(rs.getTimestamp("UnbanTimestamp")), rs.getString("Reason"),
+								bans.add(ColorUtil.replaceColors("&7&mTempban until &e%s&7&m",
+									dateFormat.format(rs.getTimestamp("UnbanTimestamp"))));
+								bans.add(ColorUtil.replaceColors("   for &e%s&7&m by &c%s&7&m.", rs.getString("Reason"),
 									rs.getString("LastName")));
 							} else {
 								bans.add(ColorUtil.replaceColors("&7Tempban until &e%s &7for &e%s &7by &c%s&7.",
