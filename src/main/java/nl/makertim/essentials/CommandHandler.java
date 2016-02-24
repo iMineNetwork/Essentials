@@ -164,7 +164,7 @@ public class CommandHandler {
 		if (!sender.hasPermission("iMine.whois")) {
 			return noPermission();
 		}
-		Bukkit.getScheduler().runTaskLaterAsynchronously(BukkitStarter.plugin, () -> {
+		Bukkit.getScheduler().runTaskAsynchronously(BukkitStarter.plugin, () -> {
 			UUID uuid = PlayerUtil.getUUID(args[0], false);
 			if (uuid == null) {
 				sender.sendMessage(noOnline(args[0]));
@@ -180,6 +180,18 @@ public class CommandHandler {
 					if (targetO != null && targetO.isOnline()) {
 						Player target = (Player) targetO;
 						online.add(ColorUtil.replaceColors("&aOnline"));
+						online.add(ColorUtil.replaceColors("&7Rank: &e%s &7[&c%d&7]", ipl.getRank().getName(),
+							ipl.getRank().getAdminRanking()));
+						Location loc = target.getLocation();
+						online.add(ColorUtil.replaceColors("&7Location: &e%s &7[&c%d&7,&c%d&7,&c%d&7]",
+							loc.getWorld().getName(), loc.getX(), loc.getY(), loc.getZ()));
+						online.add(
+							ColorUtil.replaceColors("&7Allow Flight? &e%s", Boolean.toString(target.getAllowFlight())));
+						online.add(
+							ColorUtil.replaceColors("&7Gamemode: &e%s", MktUtil.readableEnum(target.getGameMode())));
+						online.add(ColorUtil.replaceColors("&7Health: &c%d&7/&c%s", target.getHealth(),
+							target.getMaxHealth()));
+						online.add(ColorUtil.replaceColors("&7UUID: &e%s", target.getUniqueId()));
 						for (Statistic stat : Statistic.values()) {
 							try {
 								stats.add(ColorUtil.replaceColors("&7%s: &c%s&7.", MktUtil.readableEnum(stat),
@@ -191,7 +203,7 @@ public class CommandHandler {
 						online.add(ColorUtil.replaceColors("&cOffline"));
 					}
 				} else {
-					online.add(ColorUtil.replaceColors("&cNo stats available."));
+					online.add(ColorUtil.replaceColors("&4No stats available."));
 				}
 				SkullMeta meta = (SkullMeta) Bukkit.getItemFactory().getItemMeta(Material.SKULL_ITEM);
 				meta.setOwner(ipl.getName());
@@ -244,7 +256,7 @@ public class CommandHandler {
 						.setName(ColorUtil.replaceColors("&cIP info")).setLore(ipsinfo).build(), 12));
 			});
 			ui.open((Player) sender);
-		} , 1L);
+		});
 		return ColorUtil.replaceColors("&7Getting data for player &c%s&7.", args[0]);
 	}
 
