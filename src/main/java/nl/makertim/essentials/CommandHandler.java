@@ -231,7 +231,7 @@ public class CommandHandler {
 				}
 				if (!achievements.isEmpty()) {
 					ui.addButton(new ButtonList(ui, ItemUtil.getBuilder(Material.PAPER)
-							.setName(ColorUtil.replaceColors("&aAchievements")).build(), stats, 6));
+							.setName(ColorUtil.replaceColors("&aAchievements")).build(), achievements, 6));
 				}
 			});
 			// Name history & Last Seen
