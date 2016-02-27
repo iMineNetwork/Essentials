@@ -308,6 +308,7 @@ public class CommandHandler {
 									.setName(ColorUtil.replaceColors("&bLinked users grouped by IP.")).build(),
 							lore, 12));
 			});
+			// Banlog
 			Bukkit.getScheduler().runTaskAsynchronously(BukkitStarter.plugin, () -> {
 				List<String> bans = new ArrayList<>();
 				List<String> pardons = new ArrayList<>();
@@ -338,10 +339,12 @@ public class CommandHandler {
 								dateFormat.format(rs.getTimestamp("UnbanTimestamp"))));
 							bans.add(ColorUtil.replaceColors("   &7&mfor &e%s&7&m by &c%s&7&m.", rs.getString("Reason"),
 								rs.getString("LastName")));
-							problem = false;
+							if (problem == null) {
+								problem = false;
+							}
 						} else {
 							bans.add(ColorUtil.replaceColors("&7Tempban until &e%s",
-								dateFormat.format(rs.getTimestamp("UnbanTimestamp"))));
+								DateUtil.timeUntilNow(rs.getTimestamp("UnbanTimestamp"), false)));
 							bans.add(ColorUtil.replaceColors("   &7for &e%s&7 by &c%s&7.", rs.getString("Reason"),
 								rs.getString("LastName")));
 							problem = true;
