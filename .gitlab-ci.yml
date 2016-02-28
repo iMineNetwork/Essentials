@@ -24,6 +24,7 @@ distributefase:
     - "sudo cp -f ../target/$1 /home/minecraft/multicraft/servers/server9/plugins/update"
     - "sudo cp -f ../target/$1 /home/minecraft/multicraft/servers/server10/plugins/update"
     - "sudo cp -f ../target/$1 /home/minecraft/multicraft/servers/server14/plugins/update"
+    - "sudo cp -f ../target/$1 /home/minecraft/multicraft/servers/server16/plugins/update"
 stages:
   - build
   - deploy
