@@ -31,19 +31,6 @@ public class GitLabAPI {
 	private List<Integer> ids;
 	private boolean canWork = true;
 
-	/**
-	 * Lief dagboek,
-	 * 
-	 * vandaag is sander me aan het grammernazien, ik weet niet hoe je dit spelt
-	 * maakt niet uit. verder probeer ik /git wat meer usefull te maken. waarom
-	 * weet ik nog niet maar ik had tijd over om niet aan outlaws te werken
-	 * 
-	 * DAG IEDEREEEEEN, mwho
-	 */
-	public GitLabAPI() {
-		refreshData();
-	}
-
 	public void refreshData() {
 		try {
 			JsonArray je = new JsonParser().parse(WebUtil.getResponse(new URL(String.format(URL_USERS, PRIVATE_TOKEN))))
