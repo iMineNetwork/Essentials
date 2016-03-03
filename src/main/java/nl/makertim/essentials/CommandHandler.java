@@ -1226,14 +1226,13 @@ public class CommandHandler {
 					Bukkit.getWorlds().stream()
 							.forEach(w -> player.sendMessage(ColorUtil.replaceColors("  &e%s", w.getName())));
 					return "";
-				} else if (args.length == 1 || args.length == 2) {
+				} else if (args.length == 1) {
 					World world;
 					try {
 						world = Bukkit.getWorlds().get(Integer.parseInt(args[0]));
 					} catch (NumberFormatException e) {
 						world = Bukkit.getWorld(args[0]);
 						if (world == null) {
-							System.out.println(new File(args[0], Bukkit.getWorldContainer().getPath()).getPath());
 							if (new File(args[0], Bukkit.getWorldContainer().getPath()).exists()) {
 								if (args.length == 2) {
 									if (Environment.valueOf(args[1].toUpperCase()) != null) {
