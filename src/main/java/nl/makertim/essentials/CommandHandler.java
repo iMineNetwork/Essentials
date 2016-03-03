@@ -63,6 +63,7 @@ import nl.imine.api.util.PlayerUtil;
 import nl.imine.api.util.WebUtil;
 import nl.makertim.essentials.GitLabAPI.Commit;
 import nl.makertim.essentials.GitLabAPI.GitProject;
+import org.bukkit.World.Environment;
 
 public class CommandHandler {
 
@@ -186,27 +187,27 @@ public class CommandHandler {
 						Player target = (Player) targetO;
 						online.add(ColorUtil.replaceColors("&aOnline&7."));
 						online.add(ColorUtil.replaceColors("&7Rank: &e%s &7[&c%d&7].", ipl.getRank().getName(),
-							ipl.getRank().getAdminRanking()));
+								ipl.getRank().getAdminRanking()));
 						Location loc = target.getLocation();
 						online.add(ColorUtil.replaceColors("&7Location: &e%s &7[&c%d&7,&c%d&7,&c%d&7].",
-							loc.getWorld().getName(), (int) loc.getX(), (int) loc.getY(), (int) loc.getZ()));
+								loc.getWorld().getName(), (int) loc.getX(), (int) loc.getY(), (int) loc.getZ()));
 						online.add(ColorUtil.replaceColors("&7Allow Flight? &e%s&7.",
-							Boolean.toString(target.getAllowFlight())));
+								Boolean.toString(target.getAllowFlight())));
 						online.add(
-							ColorUtil.replaceColors("&7Is Flying? &e%s&7.", Boolean.toString(target.isFlying())));
+								ColorUtil.replaceColors("&7Is Flying? &e%s&7.", Boolean.toString(target.isFlying())));
 						online.add(ColorUtil.replaceColors("&7Is Vanish? &e%s&7.",
-							Boolean.toString(BukkitListener.VANISH.contains(target.getUniqueId()))));
+								Boolean.toString(BukkitListener.VANISH.contains(target.getUniqueId()))));
 						online.add(ColorUtil.replaceColors("&7Speed &eWalking: &c%d&7, &eFlying: &c%d&7.",
-							(int) (target.getWalkSpeed() * 10), (int) (target.getFlySpeed() * 10)));
+								(int) (target.getWalkSpeed() * 10), (int) (target.getFlySpeed() * 10)));
 						online.add(
-							ColorUtil.replaceColors("&7Gamemode: &e%s&7.", MktUtil.readableEnum(target.getGameMode())));
+								ColorUtil.replaceColors("&7Gamemode: &e%s&7.", MktUtil.readableEnum(target.getGameMode())));
 						online.add(ColorUtil.replaceColors("&7Health: &c%d&7/&c%d&7.", (int) target.getHealth(),
-							(int) target.getMaxHealth()));
+								(int) target.getMaxHealth()));
 						online.add(ColorUtil.replaceColors("&7UUID: &e%s&7.", target.getUniqueId()));
 						for (Statistic stat : Statistic.values()) {
 							try {
 								stats.add(ColorUtil.replaceColors("&7%s: &c%s&7.", MktUtil.readableEnum(stat),
-									target.getStatistic(stat)));
+										target.getStatistic(stat)));
 							} catch (Exception ex) {
 							}
 						}
@@ -214,7 +215,7 @@ public class CommandHandler {
 							try {
 								achievements
 										.add(ColorUtil.replaceColors("&7%s: &e%s&7.", MktUtil.readableEnum(achievement),
-											Boolean.toString(target.hasAchievement(achievement))));
+														Boolean.toString(target.hasAchievement(achievement))));
 							} catch (Exception ex) {
 							}
 						}
@@ -227,10 +228,10 @@ public class CommandHandler {
 				SkullMeta meta = (SkullMeta) Bukkit.getItemFactory().getItemMeta(Material.SKULL_ITEM);
 				meta.setOwner(ipl.getName());
 				ui.addButton(
-					new Button(ui,
-							ItemUtil.getBuilder(Material.SKULL_ITEM, meta).setDurability((short) 3)
-									.setName(ColorUtil.replaceColors("&6%s", ipl.getName())).setLore(online).build(),
-							4));
+						new Button(ui,
+								ItemUtil.getBuilder(Material.SKULL_ITEM, meta).setDurability((short) 3)
+								.setName(ColorUtil.replaceColors("&6%s", ipl.getName())).setLore(online).build(),
+								4));
 				if (!stats.isEmpty()) {
 					ui.addButton(new ButtonList(ui,
 							ItemUtil.getBuilder(Material.PAPER).setName(ColorUtil.replaceColors("&aStats")).build(),
@@ -249,15 +250,15 @@ public class CommandHandler {
 				ui.addButton(new Button(ui, ItemUtil.getBuilder(Material.BOOK_AND_QUILL)
 						.setName(ColorUtil.replaceColors("&bName history")).setLore(names).build(), 9));
 				ui.addButton(
-					new Button(ui, ItemUtil.getBuilder(Material.SIGN).setName(ColorUtil.replaceColors("&bLast seen"))
-							.setLore(new String[]{
+						new Button(ui, ItemUtil.getBuilder(Material.SIGN).setName(ColorUtil.replaceColors("&bLast seen"))
+								.setLore(new String[]{
 									ColorUtil.replaceColors("&7Last seen: &c%s&7.", dateFormat.format(ipl.getDate()))})
-						.build(), 10));
+								.build(), 10));
 			});
 			// Ip & Ip info
 			Bukkit.getScheduler().runTaskAsynchronously(BukkitStarter.plugin, () -> {
 				List<String>[] ips = new List[]{new ArrayList<>(), new ArrayList<>(), new ArrayList<>(),
-						new ArrayList<>(), new ArrayList<>()};
+					new ArrayList<>(), new ArrayList<>()};
 				List<String> lore = new ArrayList<>();
 				ResultSet rs = BukkitStarter.plugin.getDB()
 						.selectQuery(String.format("SELECT ip FROM ipLookup WHERE uuid = '%s';", uuid.toString()));
@@ -289,8 +290,8 @@ public class CommandHandler {
 						ips[4].add(ColorUtil.replaceColors("&e%s&7.", ipInfo.get("isp").getAsString()));
 						ResultSet usersIp = BukkitStarter.plugin.getDB()
 								.selectQuery(String.format(
-									"SELECT u.LastName FROM ipLookup i, UUID_Table u WHERE i.ip LIKE '%s' AND u.UUID = i.uuid;",
-									ip));
+												"SELECT u.LastName FROM ipLookup i, UUID_Table u WHERE i.ip LIKE '%s' AND u.UUID = i.uuid;",
+												ip));
 						lore.add(ColorUtil.replaceColors("&e%s", ip));
 						while (usersIp.next()) {
 							lore.add(ColorUtil.replaceColors("  &c%s", usersIp.getString("LastName")));
@@ -303,10 +304,10 @@ public class CommandHandler {
 						ItemUtil.getBuilder(Material.GLASS_BOTTLE).setName(ColorUtil.replaceColors("&bIP's")).build(),
 						ips, 11));
 				ui.addButton(
-					new ButtonList(ui,
-							ItemUtil.getBuilder(Material.EXP_BOTTLE)
-									.setName(ColorUtil.replaceColors("&bLinked users grouped by IP.")).build(),
-							lore, 12));
+						new ButtonList(ui,
+								ItemUtil.getBuilder(Material.EXP_BOTTLE)
+								.setName(ColorUtil.replaceColors("&bLinked users grouped by IP.")).build(),
+								lore, 12));
 			});
 			// Banlog
 			Bukkit.getScheduler().runTaskAsynchronously(BukkitStarter.plugin, () -> {
@@ -315,14 +316,14 @@ public class CommandHandler {
 				Boolean problem = null;
 				ResultSet rs = BukkitStarter.plugin.getDB()
 						.selectQuery(String.format(
-							"SELECT b.*, u.LastName  FROM ban b, UUID_Table u WHERE b.UUID LIKE '%s' AND b.FromUUID = u.UUID;",
-							uuid.toString()));
+										"SELECT b.*, u.LastName  FROM ban b, UUID_Table u WHERE b.UUID LIKE '%s' AND b.FromUUID = u.UUID;",
+										uuid.toString()));
 				try {
 					while (rs.next()) {
 						bans.add(
-							ColorUtil.replaceColors("&7Banned since &e%s", dateFormat.format(rs.getDate("Timestamp"))));
+								ColorUtil.replaceColors("&7Banned since &e%s", dateFormat.format(rs.getDate("Timestamp"))));
 						bans.add(ColorUtil.replaceColors("   &7for &e%s &7by &c%s&7.", rs.getString("Reason"),
-							rs.getString("LastName")));
+								rs.getString("LastName")));
 						problem = true;
 					}
 				} catch (Exception ex) {
@@ -330,23 +331,23 @@ public class CommandHandler {
 				}
 				rs = BukkitStarter.plugin.getDB()
 						.selectQuery(String.format(
-							"SELECT b.*, u.LastName  FROM temp_ban b, UUID_Table u WHERE b.UUID LIKE '%s' AND b.FromUUID = u.UUID",
-							uuid.toString()));
+										"SELECT b.*, u.LastName  FROM temp_ban b, UUID_Table u WHERE b.UUID LIKE '%s' AND b.FromUUID = u.UUID",
+										uuid.toString()));
 				try {
 					while (rs.next()) {
 						if (rs.getTimestamp("UnbanTimestamp").before(new Date())) {
 							bans.add(ColorUtil.replaceColors("&7&mTempban until &e%s",
-								dateFormat.format(rs.getTimestamp("UnbanTimestamp"))));
+									dateFormat.format(rs.getTimestamp("UnbanTimestamp"))));
 							bans.add(ColorUtil.replaceColors("   &7&mfor &e%s&7&m by &c%s&7&m.", rs.getString("Reason"),
-								rs.getString("LastName")));
+									rs.getString("LastName")));
 							if (problem == null) {
 								problem = false;
 							}
 						} else {
 							bans.add(ColorUtil.replaceColors("&7Tempban until &e%s",
-								DateUtil.timeUntilNow(rs.getTimestamp("UnbanTimestamp"), false)));
+									DateUtil.timeUntilNow(rs.getTimestamp("UnbanTimestamp"), false)));
 							bans.add(ColorUtil.replaceColors("   &7for &e%s&7 by &c%s&7.", rs.getString("Reason"),
-								rs.getString("LastName")));
+									rs.getString("LastName")));
 							problem = true;
 						}
 					}
@@ -355,12 +356,12 @@ public class CommandHandler {
 				}
 				rs = BukkitStarter.plugin.getDB()
 						.selectQuery(String.format(
-							"SELECT b.*, u.LastName  FROM unban_log b, UUID_Table u WHERE b.who LIKE '%s' AND u.UUID = b.from;",
-							uuid.toString()));
+										"SELECT b.*, u.LastName  FROM unban_log b, UUID_Table u WHERE b.who LIKE '%s' AND u.UUID = b.from;",
+										uuid.toString()));
 				try {
 					while (rs.next()) {
 						pardons.add(ColorUtil.replaceColors("&7Got unbanned by &c%s &7at &e%s&7.",
-							rs.getString("LastName"), dateFormat.format(rs.getDate("when"))));
+								rs.getString("LastName"), dateFormat.format(rs.getDate("when"))));
 					}
 				} catch (Exception ex) {
 					ex.printStackTrace();
@@ -369,28 +370,28 @@ public class CommandHandler {
 				lore.addAll(pardons);
 				ui.addButton(new ButtonList(ui,
 						ItemUtil.getBuilder(Material.STAINED_GLASS_PANE)
-								.setDurability((short) (problem == null ? 5 : problem == false ? 4 : 14))
-								.setName(ColorUtil.replaceColors("&4Ban log")).build(),
+						.setDurability((short) (problem == null ? 5 : problem == false ? 4 : 14))
+						.setName(ColorUtil.replaceColors("&4Ban log")).build(),
 						lore, 3));
 			});
 			Bukkit.getScheduler().runTaskAsynchronously(BukkitStarter.plugin, () -> {
 				ui.addButton(new ButtonCommand(
 						ui, ItemUtil.getBuilder(Material.COMPASS)
-								.setName(ColorUtil.replaceColors("&bTeleport to other.")).build(),
+						.setName(ColorUtil.replaceColors("&bTeleport to other.")).build(),
 						27, "tp " + ipl.getName()));
 				ui.addButton(
-					new ButtonCommand(
-							ui, ItemUtil.getBuilder(Material.COMPASS)
-									.setName(ColorUtil.replaceColors("&bTeleport to you.")).build(),
-							28, "tp " + ipl.getName() + " " + sender.getName()));
+						new ButtonCommand(
+								ui, ItemUtil.getBuilder(Material.COMPASS)
+								.setName(ColorUtil.replaceColors("&bTeleport to you.")).build(),
+								28, "tp " + ipl.getName() + " " + sender.getName()));
 				ui.addButton(new ButtonCommand(ui,
 						ItemUtil.getBuilder(Material.CHEST).setName(ColorUtil.replaceColors("&bInvsee.")).build(), 29,
 						"invsee " + ipl.getName()));
 				ui.addButton(
-					new ButtonCommand(
-							ui, ItemUtil.getBuilder(Material.ENDER_CHEST)
-									.setName(ColorUtil.replaceColors("&bEndersee.")).build(),
-							30, "endersee " + ipl.getName()));
+						new ButtonCommand(
+								ui, ItemUtil.getBuilder(Material.ENDER_CHEST)
+								.setName(ColorUtil.replaceColors("&bEndersee.")).build(),
+								30, "endersee " + ipl.getName()));
 				ui.addButton(new ButtonCommand(ui,
 						ItemUtil.getBuilder(Material.FEATHER).setName(ColorUtil.replaceColors("&bToggle Fly.")).build(),
 						31, "fly " + ipl.getName()));
@@ -398,10 +399,10 @@ public class CommandHandler {
 						ItemUtil.getBuilder(Material.POTION).setName(ColorUtil.replaceColors("&bVanish.")).build(), 32,
 						"vanish " + ipl.getName()));
 				ui.addButton(
-					new ButtonCommand(
-							ui, ItemUtil.getBuilder(Material.MOB_SPAWNER)
-									.setName(ColorUtil.replaceColors("&bMobcount.")).build(),
-							33, "mobcount " + ipl.getName()));
+						new ButtonCommand(
+								ui, ItemUtil.getBuilder(Material.MOB_SPAWNER)
+								.setName(ColorUtil.replaceColors("&bMobcount.")).build(),
+								33, "mobcount " + ipl.getName()));
 				ui.addButton(new ButtonCommand(ui,
 						ItemUtil.getBuilder(Material.BARRIER).setName(ColorUtil.replaceColors("&bKill.")).build(), 34,
 						"kill " + ipl.getName()));
@@ -455,7 +456,7 @@ public class CommandHandler {
 		sender.sendMessage(ColorUtil.replaceColors("&cExtreem schelden &6- &a48 uur ban"));
 		sender.sendMessage(ColorUtil.replaceColors("&cReclame maken &6- &a12-24 uur ban"));
 		sender.sendMessage(
-			ColorUtil.replaceColors("&cOngepast taalgebruik &6- &aWaarschuwing (kick), daarna 2-4 uur ban"));
+				ColorUtil.replaceColors("&cOngepast taalgebruik &6- &aWaarschuwing (kick), daarna 2-4 uur ban"));
 		sender.sendMessage(ColorUtil.replaceColors("&cSpam &6- &aWaarschuwing (kick), daarna 2-4 uur ban"));
 		sender.sendMessage("   ");
 		sender.sendMessage(ColorUtil.replaceColors("&eBedenk je ban verstandig en zet er een DUIDELIJKE reden bij."));
@@ -525,10 +526,10 @@ public class CommandHandler {
 				pl.setFlying(pl.getAllowFlight());
 				if (sender != pl) {
 					pl.sendMessage(
-						ColorUtil.replaceColors("&7You %s&7 fly now.", (pl.getAllowFlight() ? "&6can" : "&4can't")));
+							ColorUtil.replaceColors("&7You %s&7 fly now.", (pl.getAllowFlight() ? "&6can" : "&4can't")));
 				}
 				return ColorUtil.replaceColors("&7Player &c%s&7 %s&7 fly now.", pl.getName(),
-					(pl.getAllowFlight() ? "&6can" : "&4can't"));
+						(pl.getAllowFlight() ? "&6can" : "&4can't"));
 			} else {
 				return noOnline(args[0]);
 			}
@@ -551,7 +552,7 @@ public class CommandHandler {
 				File f = (File) m.invoke(plugin);
 				extra.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
 						new ComponentBuilder(plugin.getDescription().getVersion()).append("\n\n" + f.getName())
-								.create()));
+						.create()));
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
@@ -576,7 +577,7 @@ public class CommandHandler {
 			if (pl != null) {
 				BukkitListener.toggleMuted(pl);
 				return ColorUtil.replaceColors("&c%s&7 is now %s&7.", pl.getName(),
-					(BukkitListener.isMuted(pl) ? "&cmuted." : "&6unmuted."));
+						(BukkitListener.isMuted(pl) ? "&cmuted." : "&6unmuted."));
 			} else {
 				return noOnline(args[0]);
 			}
@@ -642,7 +643,7 @@ public class CommandHandler {
 				sender.sendMessage(ColorUtil.replaceColors("&7All mobs, grouped by &eworld&7."));
 				for (World w : Bukkit.getWorlds()) {
 					sender.sendMessage(ColorUtil.replaceColors("&7Mobs in world '&e%s&7' [&c%d&7]", w.getName(),
-						w.getEntities().size()));
+							w.getEntities().size()));
 					Map<Class<? extends Entity>, List<Entity>> countMap = new HashMap<>();
 					for (Entity e : w.getEntities()) {
 						if (!countMap.containsKey(e.getClass())) {
@@ -652,7 +653,7 @@ public class CommandHandler {
 					}
 					for (Class<? extends Entity> entityClass : MapCountSorter.getOrder(countMap, Sort.DESC)) {
 						sender.sendMessage(ColorUtil.replaceColors("  &c%d &7- &e%ss", countMap.get(entityClass).size(),
-							entityClass.getSimpleName().replace("Craft", "")));
+								entityClass.getSimpleName().replace("Craft", "")));
 					}
 				}
 				return ColorUtil.replaceColors("&7 ---------------");
@@ -682,7 +683,7 @@ public class CommandHandler {
 					}
 					for (String plName : MapCountSorter.getOrder(countMap, Sort.DESC)) {
 						sender.sendMessage(
-							ColorUtil.replaceColors("  &c%d &7- &e%ss", countMap.get(plName).size(), plName));
+								ColorUtil.replaceColors("  &c%d &7- &e%ss", countMap.get(plName).size(), plName));
 					}
 					return ColorUtil.replaceColors("&7 ---------------");
 				} else {
@@ -713,7 +714,7 @@ public class CommandHandler {
 					boolean hasSend = false;
 					for (Class<? extends Entity> entityClass : MapCountSorter.getOrder(countMap, Sort.DESC)) {
 						sender.sendMessage(ColorUtil.replaceColors("  &c%d &7- &e%s", countMap.get(entityClass).size(),
-							entityClass.getSimpleName().replace("Craft", "")));
+								entityClass.getSimpleName().replace("Craft", "")));
 						hasSend = true;
 					}
 					if (!hasSend) {
@@ -749,7 +750,7 @@ public class CommandHandler {
 						who.teleport(target);
 						who.sendMessage(ColorUtil.replaceColors("&7Teleporting"));
 						return ColorUtil.replaceColors("&7Teleported &c%s&7 to &c%s&7.", who.getName(),
-							target.getName());
+								target.getName());
 					} else {
 						return noOnline(args[1]);
 					}
@@ -789,18 +790,18 @@ public class CommandHandler {
 						}
 					} catch (Exception ex) {
 						return ColorUtil.replaceColors("&cThere is no world with id '&c%s&7'.",
-							((who == sender) ? args[3] : args[4]));
+								((who == sender) ? args[3] : args[4]));
 					}
 				}
 				who.sendMessage(ColorUtil.replaceColors("&7Teleporting"));
 				if (who == sender) {
 					who.teleport(new Location(world, coords[0], coords[1], coords[2]));
 					return ColorUtil.replaceColors("&7Teleported to &e%f,%f,%f&7 in World &e%s&7.", coords[0],
-						coords[1], coords[2], world.getName());
+							coords[1], coords[2], world.getName());
 				} else {
 					who.teleport(new Location(world, coords[1], coords[2], coords[3]));
 					return ColorUtil.replaceColors("&7Teleported &c%s&7 to &e%f,%f,%f&7 in World &e%s&7.",
-						who.getName(), coords[0], coords[1], coords[2], world.getName());
+							who.getName(), coords[0], coords[1], coords[2], world.getName());
 				}
 			} else {
 				return noOption();
@@ -848,10 +849,10 @@ public class CommandHandler {
 							who.setGameMode(set);
 							if (sender != who) {
 								who.sendMessage(
-									ColorUtil.replaceColors("&7Set gamemode to &e%s&7.", MktUtil.readableEnum(set)));
+										ColorUtil.replaceColors("&7Set gamemode to &e%s&7.", MktUtil.readableEnum(set)));
 							}
 							return ColorUtil.replaceColors("&7Set gamemode to &e%s&7 for &c%s&7.",
-								MktUtil.readableEnum(set), who.getName());
+									MktUtil.readableEnum(set), who.getName());
 						} else {
 							return ColorUtil.replaceColors("&cThere is no gamemode found with '&e%s&c'.", args[0]);
 						}
@@ -896,10 +897,10 @@ public class CommandHandler {
 					who.setGameMode(set);
 					if (who != sender) {
 						who.sendMessage(
-							ColorUtil.replaceColors("&7Set gamemode to &e%s&7.", MktUtil.readableEnum(set)));
+								ColorUtil.replaceColors("&7Set gamemode to &e%s&7.", MktUtil.readableEnum(set)));
 					}
 					return ColorUtil.replaceColors("&7Set gamemode to &e%s&7 for &c%s&7.", MktUtil.readableEnum(set),
-						who.getName());
+							who.getName());
 				} else {
 					return noOnline(args[0]);
 				}
@@ -1225,15 +1226,22 @@ public class CommandHandler {
 					Bukkit.getWorlds().stream()
 							.forEach(w -> player.sendMessage(ColorUtil.replaceColors("  &e%s", w.getName())));
 					return "";
-				} else if (args.length == 1) {
+				} else if (args.length == 1 || args.length == 2) {
 					World world;
 					try {
 						world = Bukkit.getWorlds().get(Integer.parseInt(args[0]));
 					} catch (NumberFormatException e) {
 						world = Bukkit.getWorld(args[0]);
 						if (world == null) {
+							System.out.println(new File(args[0], Bukkit.getWorldContainer().getPath()).getPath());
 							if (new File(args[0], Bukkit.getWorldContainer().getPath()).exists()) {
-								world = Bukkit.createWorld(new WorldCreator(args[0]));
+								if (args.length == 2) {
+									if (Environment.valueOf(args[1].toUpperCase()) != null) {
+										world = Bukkit.createWorld(new WorldCreator(args[0]).environment(Environment.valueOf(args[1].toUpperCase())));
+									} else {
+										world = Bukkit.createWorld(new WorldCreator(args[0]).environment(Environment.NORMAL));
+									}
+								}
 							}
 						}
 					}
@@ -1410,7 +1418,7 @@ public class CommandHandler {
 					return ColorUtil.replaceColors("&c  This player has no other names");
 				} else {
 					return ColorUtil.replaceColors("&7  Name: '&c%s&7' changed &e%s&7 ago.", name,
-						DateUtil.timeUntilNow(d, true));
+							DateUtil.timeUntilNow(d, true));
 				}
 			} else {
 				return ColorUtil.replaceColors("&7Getting al old playernames from '&c%s&7'.", name);
@@ -1429,7 +1437,7 @@ public class CommandHandler {
 				sender.sendMessage(String.format(format, "Overriding to new plugins"));
 				Bukkit.getPluginManager().disablePlugin(pl);
 				sender.sendMessage(String.format(format,
-					pl.getName() + " is now disabled [" + pl.getDescription().getVersion() + "]"));
+						pl.getName() + " is now disabled [" + pl.getDescription().getVersion() + "]"));
 				try {
 					Thread.sleep(1500L);
 					Method m = JavaPlugin.class.getDeclaredMethod("getFile");
@@ -1439,17 +1447,17 @@ public class CommandHandler {
 					Thread.sleep(1500L);
 					pl = Bukkit.getPluginManager().loadPlugin(new File(f.getAbsolutePath()));
 					sender.sendMessage(String.format(format,
-						pl.getName() + " is now reloaded! [" + pl.getDescription().getVersion() + "]"));
+							pl.getName() + " is now reloaded! [" + pl.getDescription().getVersion() + "]"));
 				} catch (UnknownDependencyException ex) {
 					sender.sendMessage(
-						ColorUtil.replaceColors("&cPlugin Dependency not correctly: " + ex.getMessage()));
+							ColorUtil.replaceColors("&cPlugin Dependency not correctly: " + ex.getMessage()));
 					ex.printStackTrace();
 				} catch (InvalidPluginException ex) {
 					sender.sendMessage(ColorUtil.replaceColors("&cPlugin invalid. because: " + ex.getMessage()));
 					ex.printStackTrace();
 				} catch (InvalidDescriptionException ex) {
 					sender.sendMessage(
-						ColorUtil.replaceColors("&cPlugin invalid description. because: " + ex.getMessage()));
+							ColorUtil.replaceColors("&cPlugin invalid description. because: " + ex.getMessage()));
 					ex.printStackTrace();
 				} catch (Exception ex) {
 					sender.sendMessage(ColorUtil.replaceColors("&cYou just fucked-up: " + ex.getMessage()));
@@ -1537,7 +1545,7 @@ public class CommandHandler {
 				 */
 				/**
 				 * Lief dagboek, Tim is dik, hihi
-				 * 
+				 *
 				 * Groetjes Sander
 				 */
 				// newestversion: %gitshort% [RELOAD SERVER]
@@ -1550,8 +1558,8 @@ public class CommandHandler {
 				extra.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, git.getWebUrl()));
 				extra.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
 						new ComponentBuilder(git.getDescription())
-								.append("\n\nCreated at: " + GitLabAPI.NL_DATE_FORMAT.format(git.getCreateDate()))
-								.create()));
+						.append("\n\nCreated at: " + GitLabAPI.NL_DATE_FORMAT.format(git.getCreateDate()))
+						.create()));
 				message.addExtra(extra);
 				// current verion:
 				extra = new TextComponent(ColorUtil.replaceColors("&7current version: "));
@@ -1572,17 +1580,17 @@ public class CommandHandler {
 					extra.setColor(net.md_5.bungee.api.ChatColor.RED);
 					extra.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
 							new ComponentBuilder(ColorUtil.replaceColors("&c%s -comit not found"))
-									.append("\n\nPushed at: ~").create()));
+							.append("\n\nPushed at: ~").create()));
 				} else {
 					extra = new TextComponent(
 							ColorUtil.replaceColors("&e%s ", current.getTitle().replaceAll(" ", " &e")));
 					extra.setColor(net.md_5.bungee.api.ChatColor.YELLOW);
 					extra.setHoverEvent(
-						new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-								new ComponentBuilder(ColorUtil.replaceColors("&7id:&e%s&7", current.getShortId()))
-										.append(
+							new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+									new ComponentBuilder(ColorUtil.replaceColors("&7id:&e%s&7", current.getShortId()))
+									.append(
 											"\n\n&7Pushed at: &c" + GitLabAPI.NL_DATE_FORMAT.format(current.getWhen()))
-										.create()));
+									.create()));
 				}
 				extra.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, git.getWebUrl() + "/commit/"
 						+ (current == null ? "master" : current.getLongId()) + "?view=parallel"));
@@ -1606,10 +1614,10 @@ public class CommandHandler {
 					hoverBuilder.append("\nMissing Versions:");
 					for (Commit commit : commits) {
 						hoverBuilder.append(ColorUtil.replaceColors("\n&7 ^&e%s &7[&c%s&7]", commit.getTitle(),
-							GitLabAPI.NL_DATE_FORMAT.format(commit.getWhen())));
+								GitLabAPI.NL_DATE_FORMAT.format(commit.getWhen())));
 					}
 					hoverBuilder.append(
-						"\n\n&7Pushed at: &c" + GitLabAPI.NL_DATE_FORMAT.format(git.getCommits()[0].getWhen()));
+							"\n\n&7Pushed at: &c" + GitLabAPI.NL_DATE_FORMAT.format(git.getCommits()[0].getWhen()));
 					extra.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverBuilder.create()));
 					message.addExtra(extra);
 					// versions behind [#]:
@@ -1683,10 +1691,10 @@ public class CommandHandler {
 						ColorUtil.replaceColors(" &r&l[&c%sReload server&r&l]&r ", (updates == 0 ? "&m" : "")));
 				extra.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/restart"));
 				extra.setHoverEvent(
-					new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-							new ComponentBuilder(ColorUtil
-									.replaceColors("&cWARNING, will shutdown server!\n&rClick to reboot server"))
-											.create()));
+						new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+								new ComponentBuilder(ColorUtil
+										.replaceColors("&cWARNING, will shutdown server!\n&rClick to reboot server"))
+								.create()));
 				message.addExtra(extra);
 				sendTextComponent(message);
 			} else {
