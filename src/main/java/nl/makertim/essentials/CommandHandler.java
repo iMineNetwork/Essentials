@@ -28,6 +28,7 @@ import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Statistic;
 import org.bukkit.World;
+import org.bukkit.World.Environment;
 import org.bukkit.WorldCreator;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
@@ -63,7 +64,6 @@ import nl.imine.api.util.PlayerUtil;
 import nl.imine.api.util.WebUtil;
 import nl.makertim.essentials.GitLabAPI.Commit;
 import nl.makertim.essentials.GitLabAPI.GitProject;
-import org.bukkit.World.Environment;
 
 public class CommandHandler {
 
