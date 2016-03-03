@@ -14,6 +14,9 @@ commands:
   dev:
     description: DEVMODE = kick everyone now!
     usage: /dev
+  flycheck:
+    description: check his flypaths
+    usage: /flycheck <player>
   tab:
     description: Change tablist
     usage: /tab <message>

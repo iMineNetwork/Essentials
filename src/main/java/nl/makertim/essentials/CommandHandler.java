@@ -7,6 +7,7 @@ import java.net.URL;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -31,9 +32,14 @@ import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.WorldCreator;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.plugin.InvalidDescriptionException;
 import org.bukkit.plugin.InvalidPluginException;
@@ -58,7 +64,10 @@ import nl.imine.api.sorters.MapCountSorter.Sort;
 import nl.imine.api.sorters.StringSearchSorter;
 import nl.imine.api.util.ColorUtil;
 import nl.imine.api.util.DateUtil;
+import nl.imine.api.util.FlyUtil;
+import nl.imine.api.util.FlyUtil.Path;
 import nl.imine.api.util.ItemUtil;
+import nl.imine.api.util.LocationUtil.Position;
 import nl.imine.api.util.MktUtil;
 import nl.imine.api.util.PlayerUtil;
 import nl.imine.api.util.WebUtil;
@@ -116,6 +125,8 @@ public class CommandHandler {
 			finalAwsner = invsee();
 		} else if (command.equalsIgnoreCase("endersee")) {
 			finalAwsner = endersee();
+		} else if (command.equalsIgnoreCase("flycheck")) {
+			finalAwsner = flycheck();
 		} else if (command.equalsIgnoreCase("mchistory")) {
 			finalAwsner = mchistory();
 		} else if (command.equalsIgnoreCase("git")) {
@@ -156,6 +167,35 @@ public class CommandHandler {
 			}
 			return true;
 		}
+	}
+
+	private String flycheck() {
+		if (args.length == 0) {
+			return noOption();
+		}
+		if (!(sender instanceof Player)) {
+			return noPlayer();
+		}
+		if (!sender.hasPermission("iMine.flycheck")) {
+			return noPermission();
+		}
+
+		Bukkit.getScheduler().runTaskAsynchronously(BukkitStarter.plugin, () -> {
+			UUID uuid = PlayerUtil.getUUID(args[0], false);
+			if (uuid == null) {
+				sender.sendMessage(noOnline(args[0]));
+			}
+			Container ui = GuiManager.getInstance().createContainer(
+				ColorUtil.replaceColors("&4Last 9 events of 'flying' of " + args[0]), 9, false, false);
+			List<Path> paths = FlyUtil.getPathsOf(uuid);
+			int i = 0;
+			for (Path path : paths) {
+				if (i < 8) {
+					ui.addButton(new FlyCheckButton(ui, path, i++));
+				}
+			}
+		});
+		return ColorUtil.replaceColors("&7Checking '&c%s&7' for the last 9 fly possibilities.", args[0]);
 	}
 
 	private String whois() {
@@ -1466,6 +1506,53 @@ public class CommandHandler {
 				}
 			} else {
 				sender.sendMessage("No plugin with that name.");
+			}
+		}
+	}
+
+	private class FlyCheckButton extends Button {
+
+		private Path path;
+
+		public FlyCheckButton(Container container, Path path, int slot) {
+			super(container, new ItemStack(Material.FEATHER), slot);
+			this.path = path;
+		}
+
+		@Override
+		public ItemStack getItemStack() {
+			ItemStack is = super.getItemStack();
+			ItemMeta im = is.getItemMeta();
+			im.setLore(Arrays.asList(new String[]{path.getFirstPosition().toString(),
+					ColorUtil.replaceColors("&elClick &8teleport to start position."),
+					ColorUtil.replaceColors("&erClick &8to visualize event.")}));
+			is.setItemMeta(im);
+			return is;
+		}
+
+		@Override
+		public void doAction(Player player, ClickType clickType) {
+			if (clickType.isLeftClick()) {
+				player.teleport(path.getFirstPosition().toLocation());
+			} else if (clickType.isRightClick()) {
+				Bukkit.getScheduler().runTaskAsynchronously(BukkitStarter.plugin, () -> {
+					try {
+						World w = Bukkit.getWorld(path.getFirstPosition().getWorld());
+						ArmorStand as = (ArmorStand) w.spawnEntity(path.getFirstPosition().toLocation(),
+							EntityType.ARMOR_STAND);
+						as.setArms(true);
+						as.setBasePlate(false);
+						as.setHelmet(new ItemStack(Material.LEATHER_HELMET));
+						getContainer().close();
+						for (Position pos : path.getPositions()) {
+							as.teleport(pos.toLocation());
+							Thread.sleep(500L);
+						}
+						as.remove();
+					} catch (Exception ex) {
+						player.sendMessage(ex.toString());
+					}
+				});
 			}
 		}
 	}
