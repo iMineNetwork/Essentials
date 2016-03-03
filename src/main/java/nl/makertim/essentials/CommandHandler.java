@@ -1241,7 +1241,7 @@ public class CommandHandler {
 						player.teleport(world.getSpawnLocation(), PlayerTeleportEvent.TeleportCause.COMMAND);
 						return ColorUtil.replaceColors("&7Teleported to world &e%s&7.", world.getName());
 					} else {
-						return ColorUtil.replaceColors("&cNo world with the name '&e%s&6' exists.", args[0]);
+						return ColorUtil.replaceColors("&cNo world with the name '&e%s&c' exists.", args[0]);
 					}
 				} else {
 					return noOption();
