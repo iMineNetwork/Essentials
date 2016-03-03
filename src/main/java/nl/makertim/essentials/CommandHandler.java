@@ -1226,7 +1226,7 @@ public class CommandHandler {
 					Bukkit.getWorlds().stream()
 							.forEach(w -> player.sendMessage(ColorUtil.replaceColors("  &e%s", w.getName())));
 					return "";
-				} else if (args.length == 1) {
+				} else if (args.length == 1 || args.length == 2) {
 					World world;
 					try {
 						world = Bukkit.getWorlds().get(Integer.parseInt(args[0]));
