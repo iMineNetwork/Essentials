@@ -37,6 +37,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.plugin.InvalidDescriptionException;
 import org.bukkit.plugin.InvalidPluginException;
@@ -1534,6 +1535,16 @@ public class CommandHandler {
 							.build(),
 					slot);
 			this.path = path;
+		}
+
+		@Override
+		public ItemStack getItemStack() {
+			World w = Bukkit.getWorld(path.getFirstPosition().getWorld());
+			if (w == null) {
+				return ItemUtil.getBuilder(Material.BARRIER).setName(ColorUtil.replaceColors("&cWrong server."))
+						.build();
+			}
+			return super.getItemStack();
 		}
 
 		@Override
