@@ -1554,8 +1554,8 @@ public class CommandHandler {
 						as.setHelmet(new ItemStack(Material.LEATHER_HELMET));
 						Bukkit.getScheduler().scheduleSyncDelayedTask(BukkitStarter.plugin, () -> {
 							as.remove();
-						} , 600);
-					} , i * 500);
+						} , 35);
+					} , i * 20);
 				}
 			}
 		}
