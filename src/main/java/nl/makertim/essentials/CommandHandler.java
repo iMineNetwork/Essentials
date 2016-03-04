@@ -1524,8 +1524,6 @@ public class CommandHandler {
 
 	private class FlyCheckButton extends Button {
 
-		private final int delay = 10;
-
 		private Path path;
 
 		public FlyCheckButton(Container container, Path path, int slot) {
@@ -1557,12 +1555,12 @@ public class CommandHandler {
 						as.setHelmet(new ItemStack(Material.LEATHER_HELMET));
 						Bukkit.getScheduler().scheduleSyncDelayedTask(BukkitStarter.plugin, () -> {
 							as.remove();
-						} , delay + 5);
-					} , i * delay);
+						} , FlyUtil.getCheckTickDelay() + 2);
+					} , i * FlyUtil.getCheckTickDelay());
 				}
 				Bukkit.getScheduler().scheduleSyncDelayedTask(BukkitStarter.plugin, () -> {
 					player.sendMessage(ColorUtil.replaceColors(" &7Animation done."));
-				} , (path.getPositions().length + 1) * delay);
+				} , (path.getPositions().length + 1) * FlyUtil.getCheckTickDelay());
 			}
 		}
 	}
