@@ -187,6 +187,7 @@ public class CommandHandler {
 			}
 			Container ui = GuiManager.getInstance().createContainer(
 				ColorUtil.replaceColors("&4Last 9 events of 'flying' of " + args[0]), 9, false, false);
+			ui.open((Player) sender);
 			List<Path> paths = FlyUtil.getPathsOf(uuid);
 			int i = 0;
 			for (Path path : paths) {
@@ -194,7 +195,6 @@ public class CommandHandler {
 					ui.addButton(new FlyCheckButton(ui, path, i++));
 				}
 			}
-			ui.open((Player) sender);
 		});
 		return ColorUtil.replaceColors("&7Checking '&c%s&7' for the last 9 fly possibilities.", args[0]);
 	}
@@ -1377,7 +1377,8 @@ public class CommandHandler {
 			// Online names
 			ret.addAll(PlayerUtil.getAllOnlineNames(args[args.length - 1], sender));
 		} else if ((command.equalsIgnoreCase("mchistory") && args.length == 1)
-				|| (command.equalsIgnoreCase("whois") && args.length == 1) || command.equalsIgnoreCase("reply")
+				|| (command.equalsIgnoreCase("whois") && args.length == 1)
+				|| (command.equalsIgnoreCase("flycheck") && args.length == 1) || command.equalsIgnoreCase("reply")
 				|| command.equalsIgnoreCase("me") || command.equalsIgnoreCase("msg")) {
 			// All names
 			List<String> names = PlayerUtil.getAllOnlineNames(args[args.length - 1], sender);
