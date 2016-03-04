@@ -1538,10 +1538,18 @@ public class CommandHandler {
 
 		@Override
 		public void doAction(Player player, ClickType clickType) {
+			World w = Bukkit.getWorld(path.getFirstPosition().getWorld());
+			if (w == null) {
+				player.sendMessage(ColorUtil.replaceColors("&cThis is not the same world/server as it happend from!"));
+				return;
+			}
+			if (!w.equals(player.getWorld())) {
+				player.sendMessage(ColorUtil.replaceColors("&cYou are not in the same world as it happend in!"));
+				return;
+			}
 			if (clickType.isLeftClick()) {
 				player.teleport(path.getFirstPosition().toLocation());
 			} else if (clickType.isRightClick()) {
-				World w = Bukkit.getWorld(path.getFirstPosition().getWorld());
 				getContainer().close();
 				for (int i = 0; i < path.getPositions().length; i++) {
 					final int index = i;
