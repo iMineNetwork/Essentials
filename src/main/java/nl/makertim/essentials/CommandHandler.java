@@ -65,7 +65,6 @@ import nl.imine.api.util.DateUtil;
 import nl.imine.api.util.FlyUtil;
 import nl.imine.api.util.FlyUtil.Path;
 import nl.imine.api.util.ItemUtil;
-import nl.imine.api.util.LocationUtil.Position;
 import nl.imine.api.util.MktUtil;
 import nl.imine.api.util.PlayerUtil;
 import nl.imine.api.util.WebUtil;
@@ -1544,24 +1543,20 @@ public class CommandHandler {
 				player.teleport(path.getFirstPosition().toLocation());
 			} else if (clickType.isRightClick()) {
 				World w = Bukkit.getWorld(path.getFirstPosition().getWorld());
-				ArmorStand as = (ArmorStand) w.spawnEntity(path.getFirstPosition().toLocation(),
-					EntityType.ARMOR_STAND);
-				as.setArms(true);
-				as.setBasePlate(false);
-				as.setHelmet(new ItemStack(Material.LEATHER_HELMET));
 				getContainer().close();
-				Bukkit.getScheduler().runTaskAsynchronously(BukkitStarter.plugin, () -> {
-					try {
-						for (Position pos : path.getPositions()) {
-							as.teleport(pos.toLocation());
-							Thread.sleep(500L);
-						}
-						as.remove();
-					} catch (Exception ex) {
-						ex.printStackTrace();
-						player.sendMessage(ex.toString());
-					}
-				});
+				for (int i = 0; i < path.getPositions().length; i++) {
+					final int index = i;
+					Bukkit.getScheduler().scheduleSyncDelayedTask(BukkitStarter.plugin, () -> {
+						ArmorStand as = (ArmorStand) w.spawnEntity(path.getPosition(index).toLocation(),
+							EntityType.ARMOR_STAND);
+						as.setArms(true);
+						as.setBasePlate(false);
+						as.setHelmet(new ItemStack(Material.LEATHER_HELMET));
+						Bukkit.getScheduler().scheduleSyncDelayedTask(BukkitStarter.plugin, () -> {
+							as.remove();
+						} , 600);
+					} , i * 500);
+				}
 			}
 		}
 	}
