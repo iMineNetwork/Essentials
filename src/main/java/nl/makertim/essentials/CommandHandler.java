@@ -7,7 +7,6 @@ import java.net.URL;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -39,7 +38,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.plugin.InvalidDescriptionException;
 import org.bukkit.plugin.InvalidPluginException;
@@ -1530,19 +1528,14 @@ public class CommandHandler {
 		private Path path;
 
 		public FlyCheckButton(Container container, Path path, int slot) {
-			super(container, null, slot);
+			super(container,
+					ItemUtil.getBuilder(Material.EYE_OF_ENDER)
+							.setLore(path.getFirstPosition().toString(),
+								ColorUtil.replaceColors("&elClick &8teleport to start position."),
+								ColorUtil.replaceColors("&erClick &8to visualize event."))
+							.build(),
+					slot);
 			this.path = path;
-		}
-
-		@Override
-		public ItemStack getItemStack() {
-			ItemStack is = new ItemStack(Material.FEATHER);
-			ItemMeta im = is.getItemMeta();
-			im.setLore(Arrays.asList(new String[]{path.getFirstPosition().toString(),
-					ColorUtil.replaceColors("&elClick &8teleport to start position."),
-					ColorUtil.replaceColors("&erClick &8to visualize event.")}));
-			is.setItemMeta(im);
-			return is;
 		}
 
 		@Override
@@ -1565,6 +1558,7 @@ public class CommandHandler {
 						}
 						as.remove();
 					} catch (Exception ex) {
+						ex.printStackTrace();
 						player.sendMessage(ex.toString());
 					}
 				});
