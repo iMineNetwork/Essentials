@@ -1530,13 +1530,13 @@ public class CommandHandler {
 		private Path path;
 
 		public FlyCheckButton(Container container, Path path, int slot) {
-			super(container, new ItemStack(Material.FEATHER), slot);
+			super(container, null, slot);
 			this.path = path;
 		}
 
 		@Override
 		public ItemStack getItemStack() {
-			ItemStack is = super.getItemStack();
+			ItemStack is = new ItemStack(Material.FEATHER);
 			ItemMeta im = is.getItemMeta();
 			im.setLore(Arrays.asList(new String[]{path.getFirstPosition().toString(),
 					ColorUtil.replaceColors("&elClick &8teleport to start position."),
@@ -1550,15 +1550,15 @@ public class CommandHandler {
 			if (clickType.isLeftClick()) {
 				player.teleport(path.getFirstPosition().toLocation());
 			} else if (clickType.isRightClick()) {
+				World w = Bukkit.getWorld(path.getFirstPosition().getWorld());
+				ArmorStand as = (ArmorStand) w.spawnEntity(path.getFirstPosition().toLocation(),
+					EntityType.ARMOR_STAND);
+				as.setArms(true);
+				as.setBasePlate(false);
+				as.setHelmet(new ItemStack(Material.LEATHER_HELMET));
+				getContainer().close();
 				Bukkit.getScheduler().runTaskAsynchronously(BukkitStarter.plugin, () -> {
 					try {
-						World w = Bukkit.getWorld(path.getFirstPosition().getWorld());
-						ArmorStand as = (ArmorStand) w.spawnEntity(path.getFirstPosition().toLocation(),
-							EntityType.ARMOR_STAND);
-						as.setArms(true);
-						as.setBasePlate(false);
-						as.setHelmet(new ItemStack(Material.LEATHER_HELMET));
-						getContainer().close();
 						for (Position pos : path.getPositions()) {
 							as.teleport(pos.toLocation());
 							Thread.sleep(500L);
