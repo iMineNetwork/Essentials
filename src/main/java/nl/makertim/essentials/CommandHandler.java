@@ -183,9 +183,8 @@ public class CommandHandler {
 			if (uuid == null) {
 				sender.sendMessage(noOnline(args[0]));
 			}
-			Container ui = GuiManager.getInstance().createContainer(
-				ColorUtil.replaceColors("&4Last 9 events of 'flying' of " + args[0]), 9, false, false);
-			ui.open((Player) sender);
+			Container ui = GuiManager.getInstance()
+					.createContainer(ColorUtil.replaceColors("&4Last 'flying' events " + args[0]), 9, false, false);
 			List<Path> paths = FlyUtil.getPathsOf(uuid);
 			int i = 0;
 			for (Path path : paths) {
@@ -193,6 +192,7 @@ public class CommandHandler {
 					ui.addButton(new FlyCheckButton(ui, path, i++));
 				}
 			}
+			ui.open((Player) sender);
 		});
 		return ColorUtil.replaceColors("&7Checking '&c%s&7' for the last 9 fly possibilities.", args[0]);
 	}
