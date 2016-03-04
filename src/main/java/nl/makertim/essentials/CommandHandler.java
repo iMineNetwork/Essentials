@@ -194,6 +194,7 @@ public class CommandHandler {
 					ui.addButton(new FlyCheckButton(ui, path, i++));
 				}
 			}
+			ui.open((Player) sender);
 		});
 		return ColorUtil.replaceColors("&7Checking '&c%s&7' for the last 9 fly possibilities.", args[0]);
 	}
@@ -1341,8 +1342,6 @@ public class CommandHandler {
 				}
 			}
 			Collections.sort(ret, new StringSearchSorter(args[args.length - 1]));
-		} else if (command.equalsIgnoreCase("mchistory") && args.length == 1) {
-			ret.addAll(PlayerUtil.getNamesLike(args[args.length - 1]));
 		} else if (command.equalsIgnoreCase("git")) {
 			String[] argumenten = {"-v", "-q", "projects"};
 			for (String arg : argumenten) {
@@ -1369,14 +1368,29 @@ public class CommandHandler {
 				|| (command.equalsIgnoreCase("gm") && args.length == 2)
 				|| (command.equalsIgnoreCase("mute") && args.length == 1)
 				|| (command.equalsIgnoreCase("fly") && args.length == 1)
-				|| (command.equalsIgnoreCase("whois") && args.length == 1)
 				|| (command.equalsIgnoreCase("invsee") && args.length == 1)
 				|| (command.equalsIgnoreCase("vanish") && args.length == 1) || (command.equalsIgnoreCase("report"))
 				|| (command.equalsIgnoreCase("tp") && (args.length == 1 || args.length == 2))
-				|| (command.equalsIgnoreCase("kill") && args.length == 1) || (command.equalsIgnoreCase("reply"))
-				|| (command.equalsIgnoreCase("endersee") && args.length == 1) || (command.equalsIgnoreCase("msg"))
-				|| (command.equalsIgnoreCase("speed") && args.length > 1) || (command.equalsIgnoreCase("me"))) {
+				|| (command.equalsIgnoreCase("kill") && args.length == 1)
+				|| (command.equalsIgnoreCase("endersee") && args.length == 1)
+				|| (command.equalsIgnoreCase("speed") && args.length > 1)) {
+			// Online names
 			ret.addAll(PlayerUtil.getAllOnlineNames(args[args.length - 1], sender));
+		} else if ((command.equalsIgnoreCase("mchistory") && args.length == 1)
+				|| (command.equalsIgnoreCase("whois") && args.length == 1) || command.equalsIgnoreCase("reply")
+				|| command.equalsIgnoreCase("me") || command.equalsIgnoreCase("msg")) {
+			// All names
+			List<String> names = PlayerUtil.getAllOnlineNames(args[args.length - 1], sender);
+			Collections.sort(names, new StringSearchSorter(args[args.length - 1]));
+			List<String> offline = new ArrayList<>();
+			for (String offlineName : PlayerUtil.getAllOfflineNames(args[args.length - 1])) {
+				if (!names.contains(offlineName)) {
+					offline.add(offlineName);
+				}
+			}
+			Collections.sort(offline, new StringSearchSorter(args[args.length - 1]));
+			names.addAll(offline);
+			ret.addAll(names.subList(0, Math.min(names.size(), 10)));
 		} else if (command.equalsIgnoreCase("update")) {
 		} else if (command.equalsIgnoreCase("lagdebug")) {
 			if ("players".contains(args[args.length - 1])) {
