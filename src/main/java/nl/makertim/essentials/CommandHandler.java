@@ -1551,6 +1551,7 @@ public class CommandHandler {
 							EntityType.ARMOR_STAND);
 						as.setArms(true);
 						as.setBasePlate(false);
+						as.setGravity(false);
 						as.setHelmet(new ItemStack(Material.LEATHER_HELMET));
 						Bukkit.getScheduler().scheduleSyncDelayedTask(BukkitStarter.plugin, () -> {
 							as.remove();
