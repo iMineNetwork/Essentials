@@ -1547,14 +1547,14 @@ public class CommandHandler {
 				for (int i = 0; i < path.getPositions().length; i++) {
 					final int index = i;
 					Bukkit.getScheduler().scheduleSyncDelayedTask(BukkitStarter.plugin, () -> {
-						ArmorStand as = (ArmorStand) w.spawnEntity(path.getPosition(index).toLocation(),
+						final ArmorStand as = (ArmorStand) w.spawnEntity(path.getPosition(index).toLocation(),
 							EntityType.ARMOR_STAND);
 						as.setArms(true);
 						as.setBasePlate(false);
 						as.setHelmet(new ItemStack(Material.LEATHER_HELMET));
 						Bukkit.getScheduler().scheduleSyncDelayedTask(BukkitStarter.plugin, () -> {
 							as.remove();
-						} , 35);
+						} , 25);
 					} , i * 20);
 				}
 			}
