@@ -37,7 +37,6 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.player.PlayerTeleportEvent;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.plugin.InvalidDescriptionException;
 import org.bukkit.plugin.InvalidPluginException;
@@ -1552,7 +1551,6 @@ public class CommandHandler {
 						as.setArms(true);
 						as.setBasePlate(false);
 						as.setGravity(false);
-						as.setHelmet(new ItemStack(Material.LEATHER_HELMET));
 						Bukkit.getScheduler().scheduleSyncDelayedTask(BukkitStarter.plugin, () -> {
 							as.remove();
 						} , FlyUtil.getCheckTickDelay() + 2);
