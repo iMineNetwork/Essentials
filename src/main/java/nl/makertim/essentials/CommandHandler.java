@@ -7,6 +7,7 @@ import java.net.URL;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -65,8 +66,8 @@ import nl.imine.api.util.DateUtil;
 import nl.imine.api.util.FlyUtil;
 import nl.imine.api.util.FlyUtil.Path;
 import nl.imine.api.util.ItemUtil;
-import nl.imine.api.util.MktUtil;
 import nl.imine.api.util.PlayerUtil;
+import nl.imine.api.util.StringUtil;
 import nl.imine.api.util.WebUtil;
 import nl.makertim.essentials.GitLabAPI.Commit;
 import nl.makertim.essentials.GitLabAPI.GitProject;
@@ -237,23 +238,23 @@ public class CommandHandler {
 							Boolean.toString(BukkitListener.VANISH.contains(target.getUniqueId()))));
 						online.add(ColorUtil.replaceColors("&7Speed &eWalking: &c%d&7, &eFlying: &c%d&7.",
 							(int) (target.getWalkSpeed() * 10), (int) (target.getFlySpeed() * 10)));
-						online.add(
-							ColorUtil.replaceColors("&7Gamemode: &e%s&7.", MktUtil.readableEnum(target.getGameMode())));
+						online.add(ColorUtil.replaceColors("&7Gamemode: &e%s&7.",
+							StringUtil.readableEnum(target.getGameMode())));
 						online.add(ColorUtil.replaceColors("&7Health: &c%d&7/&c%d&7.", (int) target.getHealth(),
 							(int) target.getMaxHealth()));
 						online.add(ColorUtil.replaceColors("&7UUID: &e%s&7.", target.getUniqueId()));
 						for (Statistic stat : Statistic.values()) {
 							try {
-								stats.add(ColorUtil.replaceColors("&7%s: &c%s&7.", MktUtil.readableEnum(stat),
+								stats.add(ColorUtil.replaceColors("&7%s: &c%s&7.", StringUtil.readableEnum(stat),
 									target.getStatistic(stat)));
 							} catch (Exception ex) {
 							}
 						}
 						for (Achievement achievement : Achievement.values()) {
 							try {
-								achievements
-										.add(ColorUtil.replaceColors("&7%s: &e%s&7.", MktUtil.readableEnum(achievement),
-											Boolean.toString(target.hasAchievement(achievement))));
+								achievements.add(
+									ColorUtil.replaceColors("&7%s: &e%s&7.", StringUtil.readableEnum(achievement),
+										Boolean.toString(target.hasAchievement(achievement))));
 							} catch (Exception ex) {
 							}
 						}
@@ -873,7 +874,7 @@ public class CommandHandler {
 					if (sender instanceof Player) {
 						if (set != null) {
 							((Player) sender).setGameMode(set);
-							return ColorUtil.replaceColors("&7Set gamemode to &e%s&7.", MktUtil.readableEnum(set));
+							return ColorUtil.replaceColors("&7Set gamemode to &e%s&7.", StringUtil.readableEnum(set));
 						} else {
 							return ColorUtil.replaceColors("&cThere is no gamemode found with '&e%s&c'.", args[0]);
 						}
@@ -887,10 +888,10 @@ public class CommandHandler {
 							who.setGameMode(set);
 							if (sender != who) {
 								who.sendMessage(
-									ColorUtil.replaceColors("&7Set gamemode to &e%s&7.", MktUtil.readableEnum(set)));
+									ColorUtil.replaceColors("&7Set gamemode to &e%s&7.", StringUtil.readableEnum(set)));
 							}
 							return ColorUtil.replaceColors("&7Set gamemode to &e%s&7 for &c%s&7.",
-								MktUtil.readableEnum(set), who.getName());
+								StringUtil.readableEnum(set), who.getName());
 						} else {
 							return ColorUtil.replaceColors("&cThere is no gamemode found with '&e%s&c'.", args[0]);
 						}
@@ -925,7 +926,7 @@ public class CommandHandler {
 			if (args.length == 0) {
 				if (sender instanceof Player) {
 					((Player) sender).setGameMode(set);
-					return ColorUtil.replaceColors("&7Set gamemode to &e%s&7.", MktUtil.readableEnum(set));
+					return ColorUtil.replaceColors("&7Set gamemode to &e%s&7.", StringUtil.readableEnum(set));
 				} else {
 					return noPlayer();
 				}
@@ -935,9 +936,9 @@ public class CommandHandler {
 					who.setGameMode(set);
 					if (who != sender) {
 						who.sendMessage(
-							ColorUtil.replaceColors("&7Set gamemode to &e%s&7.", MktUtil.readableEnum(set)));
+							ColorUtil.replaceColors("&7Set gamemode to &e%s&7.", StringUtil.readableEnum(set)));
 					}
-					return ColorUtil.replaceColors("&7Set gamemode to &e%s&7 for &c%s&7.", MktUtil.readableEnum(set),
+					return ColorUtil.replaceColors("&7Set gamemode to &e%s&7 for &c%s&7.", StringUtil.readableEnum(set),
 						who.getName());
 				} else {
 					return noOnline(args[0]);
@@ -1763,7 +1764,7 @@ public class CommandHandler {
 				extra = new TextComponent(ColorUtil.replaceColors("&eFiles to update: %s", updates));
 				extra.setColor(net.md_5.bungee.api.ChatColor.YELLOW);
 				ComponentBuilder cb = new ComponentBuilder("");
-				Iterator<File> newFileI = MktUtil.toList(BukkitStarter.UPDATE_DIR.listFiles()).iterator();
+				Iterator<File> newFileI = Arrays.asList(BukkitStarter.UPDATE_DIR.listFiles()).iterator();
 				while (newFileI.hasNext()) {
 					File newFile = newFileI.next();
 					String append = ColorUtil.replaceColors("&6%s", newFile.getName());
