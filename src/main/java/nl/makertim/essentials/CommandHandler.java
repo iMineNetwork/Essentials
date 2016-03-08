@@ -217,6 +217,7 @@ public class CommandHandler {
 					.createContainer(ColorUtil.replaceColors("&7Who is: &c%s&7.", ipl.getName()), 36, false, false);
 			// Skull & Stats
 			Bukkit.getScheduler().runTaskAsynchronously(BukkitStarter.plugin, () -> {
+				// TODO: playerbuttons -> for refreshing
 				List<String> online = new ArrayList<>();
 				List<String> stats = new ArrayList<>();
 				List<String> achievements = new ArrayList<>();
@@ -411,6 +412,7 @@ public class CommandHandler {
 						.setDurability((short) (problem == null ? 5 : problem == false ? 4 : 14))
 						.setName(ColorUtil.replaceColors("&4Ban log")).build(), lore, 3));
 			});
+			// Commands
 			Bukkit.getScheduler().runTaskAsynchronously(BukkitStarter.plugin, () -> {
 				ui.addButton(
 					new ButtonCommand(
@@ -442,6 +444,7 @@ public class CommandHandler {
 									.setName(ColorUtil.replaceColors("&bFlycheck.")).build(),
 							35, "flycheck " + ipl.getName()));
 			});
+			ui.setRefreshRate(20L);
 			ui.open((Player) sender);
 		});
 		return ColorUtil.replaceColors("&7Getting data for player &c%s&7.", args[0]);
