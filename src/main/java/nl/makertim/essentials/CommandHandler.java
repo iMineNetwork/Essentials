@@ -189,7 +189,7 @@ public class CommandHandler {
 			int i = 0;
 			for (Path path : paths) {
 				if (i < 8) {
-					ui.addButton(new FlyCheckButton(ui, path, i++));
+					ui.addButton(new FlyCheckButton(path, i++));
 				}
 			}
 			ui.open((Player) sender);
@@ -267,17 +267,17 @@ public class CommandHandler {
 				SkullMeta meta = (SkullMeta) Bukkit.getItemFactory().getItemMeta(Material.SKULL_ITEM);
 				meta.setOwner(ipl.getName());
 				ui.addButton(
-					new Button(ui,
+					new Button(
 							ItemUtil.getBuilder(Material.SKULL_ITEM, meta).setDurability((short) 3)
 									.setName(ColorUtil.replaceColors("&6%s", ipl.getName())).setLore(online).build(),
 							4));
 				if (!stats.isEmpty()) {
-					ui.addButton(new ButtonList(ui,
+					ui.addButton(new ButtonList(
 							ItemUtil.getBuilder(Material.PAPER).setName(ColorUtil.replaceColors("&aStats")).build(),
 							stats, 5));
 				}
 				if (!achievements.isEmpty()) {
-					ui.addButton(new ButtonList(ui, ItemUtil.getBuilder(Material.PAPER)
+					ui.addButton(new ButtonList(ItemUtil.getBuilder(Material.PAPER)
 							.setName(ColorUtil.replaceColors("&aAchievements")).build(), achievements, 6));
 				}
 			});
@@ -286,10 +286,10 @@ public class CommandHandler {
 				NameLookup nl = new NameLookup(uuid, false);
 				nl.run();
 				List<String> names = nl.getNames();
-				ui.addButton(new Button(ui, ItemUtil.getBuilder(Material.BOOK_AND_QUILL)
+				ui.addButton(new Button(ItemUtil.getBuilder(Material.BOOK_AND_QUILL)
 						.setName(ColorUtil.replaceColors("&bName history")).setLore(names).build(), 9));
 				ui.addButton(
-					new Button(ui, ItemUtil.getBuilder(Material.SIGN).setName(ColorUtil.replaceColors("&bLast seen"))
+					new Button(ItemUtil.getBuilder(Material.SIGN).setName(ColorUtil.replaceColors("&bLast seen"))
 							.setLore(new String[]{
 									ColorUtil.replaceColors("&7Last seen: &c%s&7.", dateFormat.format(ipl.getDate()))})
 						.build(), 10));
@@ -339,11 +339,11 @@ public class CommandHandler {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				ui.addButton(new ButtonListed(ui,
+				ui.addButton(new ButtonListed(
 						ItemUtil.getBuilder(Material.GLASS_BOTTLE).setName(ColorUtil.replaceColors("&bIP's")).build(),
 						ips, 11));
 				ui.addButton(
-					new ButtonList(ui,
+					new ButtonList(
 							ItemUtil.getBuilder(Material.EXP_BOTTLE)
 									.setName(ColorUtil.replaceColors("&bLinked users grouped by IP.")).build(),
 							lore, 12));
@@ -407,44 +407,40 @@ public class CommandHandler {
 				}
 				List<String> lore = new ArrayList<String>(bans);
 				lore.addAll(pardons);
-				ui.addButton(new ButtonList(ui,
-						ItemUtil.getBuilder(Material.STAINED_GLASS_PANE)
-								.setDurability((short) (problem == null ? 5 : problem == false ? 4 : 14))
-								.setName(ColorUtil.replaceColors("&4Ban log")).build(),
-						lore, 3));
+				ui.addButton(new ButtonList(ItemUtil.getBuilder(Material.STAINED_GLASS_PANE)
+						.setDurability((short) (problem == null ? 5 : problem == false ? 4 : 14))
+						.setName(ColorUtil.replaceColors("&4Ban log")).build(), lore, 3));
 			});
 			Bukkit.getScheduler().runTaskAsynchronously(BukkitStarter.plugin, () -> {
-				ui.addButton(new ButtonCommand(
-						ui, ItemUtil.getBuilder(Material.COMPASS)
-								.setName(ColorUtil.replaceColors("&bTeleport to other.")).build(),
-						27, "tp " + ipl.getName()));
 				ui.addButton(
 					new ButtonCommand(
-							ui, ItemUtil.getBuilder(Material.COMPASS)
-									.setName(ColorUtil.replaceColors("&bTeleport to you.")).build(),
-							28, "tp " + ipl.getName() + " " + sender.getName()));
-				ui.addButton(new ButtonCommand(ui,
+							ItemUtil.getBuilder(Material.COMPASS)
+									.setName(ColorUtil.replaceColors("&bTeleport to other.")).build(),
+							27, "tp " + ipl.getName()));
+				ui.addButton(new ButtonCommand(ItemUtil.getBuilder(Material.COMPASS)
+						.setName(ColorUtil.replaceColors("&bTeleport to you.")).build(), 28,
+						"tp " + ipl.getName() + " " + sender.getName()));
+				ui.addButton(new ButtonCommand(
 						ItemUtil.getBuilder(Material.CHEST).setName(ColorUtil.replaceColors("&bInvsee.")).build(), 29,
 						"invsee " + ipl.getName()));
-				ui.addButton(
-					new ButtonCommand(
-							ui, ItemUtil.getBuilder(Material.ENDER_CHEST)
-									.setName(ColorUtil.replaceColors("&bEndersee.")).build(),
-							30, "endersee " + ipl.getName()));
-				ui.addButton(new ButtonCommand(ui,
+				ui.addButton(new ButtonCommand(ItemUtil.getBuilder(Material.ENDER_CHEST)
+						.setName(ColorUtil.replaceColors("&bEndersee.")).build(), 30, "endersee " + ipl.getName()));
+				ui.addButton(new ButtonCommand(
 						ItemUtil.getBuilder(Material.FEATHER).setName(ColorUtil.replaceColors("&bToggle Fly.")).build(),
 						31, "fly " + ipl.getName()));
-				ui.addButton(new ButtonCommand(ui,
+				ui.addButton(new ButtonCommand(
 						ItemUtil.getBuilder(Material.POTION).setName(ColorUtil.replaceColors("&bVanish.")).build(), 32,
 						"vanish " + ipl.getName()));
-				ui.addButton(
-					new ButtonCommand(
-							ui, ItemUtil.getBuilder(Material.MOB_SPAWNER)
-									.setName(ColorUtil.replaceColors("&bMobcount.")).build(),
-							33, "mobcount " + ipl.getName()));
-				ui.addButton(new ButtonCommand(ui,
+				ui.addButton(new ButtonCommand(ItemUtil.getBuilder(Material.MOB_SPAWNER)
+						.setName(ColorUtil.replaceColors("&bMobcount.")).build(), 33, "mobcount " + ipl.getName()));
+				ui.addButton(new ButtonCommand(
 						ItemUtil.getBuilder(Material.BARRIER).setName(ColorUtil.replaceColors("&bKill.")).build(), 34,
 						"kill " + ipl.getName()));
+				ui.addButton(
+					new ButtonCommand(
+							ItemUtil.getBuilder(Material.CHAINMAIL_BOOTS)
+									.setName(ColorUtil.replaceColors("&bFlycheck.")).build(),
+							35, "flycheck " + ipl.getName()));
 			});
 			ui.open((Player) sender);
 		});
@@ -1527,14 +1523,12 @@ public class CommandHandler {
 
 		private Path path;
 
-		public FlyCheckButton(Container container, Path path, int slot) {
-			super(container,
-					ItemUtil.getBuilder(Material.EYE_OF_ENDER)
-							.setLore(path.getFirstPosition().toString(),
-								ColorUtil.replaceColors("&elClick &8teleport to start position."),
-								ColorUtil.replaceColors("&erClick &8to visualize event."))
-							.build(),
-					slot);
+		public FlyCheckButton(Path path, int slot) {
+			super(ItemUtil.getBuilder(Material.EYE_OF_ENDER)
+					.setLore(path.getFirstPosition().toString(),
+						ColorUtil.replaceColors("&elClick &8teleport to start position."),
+						ColorUtil.replaceColors("&erClick &8to visualize event."))
+					.build(), slot);
 			this.path = path;
 		}
 
@@ -1549,7 +1543,7 @@ public class CommandHandler {
 		}
 
 		@Override
-		public void doAction(Player player, ClickType clickType) {
+		public void doAction(Player player, Container container, ClickType clickType) {
 			World w = Bukkit.getWorld(path.getFirstPosition().getWorld());
 			if (w == null) {
 				player.sendMessage(ColorUtil.replaceColors("&cThis is not the same world/server as it happend from!"));
@@ -1562,7 +1556,7 @@ public class CommandHandler {
 			if (clickType.isLeftClick()) {
 				player.teleport(path.getFirstPosition().toLocation());
 			} else if (clickType.isRightClick()) {
-				getContainer().close();
+				container.close();
 				for (int i = 0; i < path.getPositions().length; i++) {
 					final int index = i;
 					Bukkit.getScheduler().scheduleSyncDelayedTask(BukkitStarter.plugin, () -> {
