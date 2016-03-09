@@ -632,24 +632,20 @@ public class CommandHandler {
 			} else {
 				return noPlayer();
 			}
-		} else if (sender.hasPermission("iMine.hub")) {
-			if (args.length == 1) {
-				if (sender instanceof Player) {
-					PlayerUtil.sendPlayerToServer((Player) sender, args[0]);
-					return ColorUtil.replaceColors("&7To the %s!", args[0]);
-				} else {
-					return noPlayer();
-				}
-			} else if (args.length == 2) {
-				Player pl = PlayerUtil.getOnline(args[1]);
-				if (pl != null) {
-					PlayerUtil.sendPlayerToServer(pl, args[0]);
-					return ColorUtil.replaceColors("&7Sended '&c%s&7' to %s!", pl.getName(), args[0]);
-				} else {
-					return noOnline(args[1]);
-				}
+		} else if (args.length == 1 && sender.hasPermission("iMine.hub." + args[0])) {
+			if (sender instanceof Player) {
+				PlayerUtil.sendPlayerToServer((Player) sender, args[0]);
+				return ColorUtil.replaceColors("&7To the %s!", args[0]);
 			} else {
-				return noOption();
+				return noPlayer();
+			}
+		} else if (args.length == 2 && sender.hasPermission("iMine.hub." + args[0] + ".other")) {
+			Player pl = PlayerUtil.getOnline(args[1]);
+			if (pl != null) {
+				PlayerUtil.sendPlayerToServer(pl, args[0]);
+				return ColorUtil.replaceColors("&7Sended '&c%s&7' to %s!", pl.getName(), args[0]);
+			} else {
+				return noOnline(args[1]);
 			}
 		} else {
 			return noPermission();
