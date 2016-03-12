@@ -11,6 +11,9 @@ commands:
   git:
     description: Git checker - are you up to date?
     usage: /git to see if everything is up to date
+  skull:
+    description: give skull of douchebagg
+    usage: /skull <player>
   dev:
     description: DEVMODE = kick everyone now!
     usage: /dev

@@ -97,6 +97,8 @@ public class CommandHandler {
 			finalAwsner = hub();
 		} else if (command.equalsIgnoreCase("dev")) {
 			finalAwsner = dev();
+		} else if (command.equalsIgnoreCase("skull")) {
+			finalAwsner = skull();
 		} else if (command.equalsIgnoreCase("mute")) {
 			finalAwsner = mute();
 		} else if (command.equalsIgnoreCase("tp")) {
@@ -165,6 +167,23 @@ public class CommandHandler {
 			}
 			return true;
 		}
+	}
+
+	private String skull() {
+		if (args.length == 0) {
+			return noOption();
+		}
+		if (!(sender instanceof Player)) {
+			return noPlayer();
+		}
+		if (!sender.hasPermission("iMine.skull")) {
+			return noPermission();
+		}
+		SkullMeta meta = (SkullMeta) Bukkit.getItemFactory().getItemMeta(Material.SKULL_ITEM);
+		meta.setOwner(args[0]);
+		Player pl = (Player) sender;
+		pl.getInventory().addItem(ItemUtil.getBuilder(Material.SKULL_ITEM, meta).setDurability((short) 3).build());
+		return ColorUtil.replaceColors("&7Gave skull of &c%s&7.", args[0]);
 	}
 
 	private String flycheck() {
