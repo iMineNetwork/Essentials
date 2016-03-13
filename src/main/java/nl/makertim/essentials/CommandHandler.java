@@ -1396,7 +1396,7 @@ public class CommandHandler {
 			List<String> names = PlayerUtil.getAllOnlineNames(args[args.length - 1], sender);
 			Collections.sort(names, new StringSearchSorter(args[args.length - 1]));
 			List<String> offline = new ArrayList<>();
-			for (String offlineName : PlayerUtil.getAllOfflineNames(args[args.length - 1])) {
+			for (String offlineName : PlayerUtil.getAllOfflineNames(args[args.length - 1], sender)) {
 				if (!names.contains(offlineName)) {
 					offline.add(offlineName);
 				}
