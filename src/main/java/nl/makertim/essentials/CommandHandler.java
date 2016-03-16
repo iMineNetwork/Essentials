@@ -348,12 +348,10 @@ public class CommandHandler {
 						ips[3].add(ColorUtil.replaceColors("&e%s&7.", ipInfo.get("country").getAsString()));
 						ips[4].add(ColorUtil.replaceColors("&e%s&7.", ipInfo.get("isp").getAsString()));
 						ResultSet usersIp = BukkitStarter.plugin.getDB()
-								.selectQuery(String.format(
-									"SELECT u.LastName FROM ipLookup i, UUID_Table u WHERE i.ip LIKE '%s' AND u.UUID = i.uuid;",
-									ip));
+								.selectQuery(String.format("SELECT i.uuid FROM ipLookup i WHERE i.ip LIKE '%s';", ip));
 						lore.add(ColorUtil.replaceColors("&e%s", ip));
 						while (usersIp.next()) {
-							lore.add(ColorUtil.replaceColors("  &c%s", usersIp.getString("LastName")));
+							lore.add(ColorUtil.replaceColors("  &c%s", ipl.getName()));
 						}
 					}
 				} catch (Exception e) {
@@ -374,31 +372,27 @@ public class CommandHandler {
 				List<String> pardons = new ArrayList<>();
 				Boolean problem = null;
 				ResultSet rs = BukkitStarter.plugin.getDB()
-						.selectQuery(String.format(
-							"SELECT b.*, u.LastName  FROM ban b, UUID_Table u WHERE b.UUID LIKE '%s' AND b.FromUUID = u.UUID;",
-							uuid.toString()));
+						.selectQuery(String.format("SELECT b.* FROM ban b WHERE b.UUID LIKE '%s';", uuid.toString()));
 				try {
 					while (rs.next()) {
 						bans.add(
 							ColorUtil.replaceColors("&7Banned since &e%s", dateFormat.format(rs.getDate("Timestamp"))));
 						bans.add(ColorUtil.replaceColors("   &7for &e%s &7by &c%s&7.", rs.getString("Reason"),
-							rs.getString("LastName")));
+							iMinePlayer.findPlayer(UUID.fromString(rs.getString("UUID"))).getName()));
 						problem = true;
 					}
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
-				rs = BukkitStarter.plugin.getDB()
-						.selectQuery(String.format(
-							"SELECT b.*, u.LastName  FROM temp_ban b, UUID_Table u WHERE b.UUID LIKE '%s' AND b.FromUUID = u.UUID",
-							uuid.toString()));
+				rs = BukkitStarter.plugin.getDB().selectQuery(
+					String.format("SELECT b.* FROM temp_ban b WHERE b.UUID LIKE '%s';", uuid.toString()));
 				try {
 					while (rs.next()) {
 						if (rs.getTimestamp("UnbanTimestamp").before(new Date())) {
 							bans.add(ColorUtil.replaceColors("&7&mTempban until &e%s",
 								dateFormat.format(rs.getTimestamp("UnbanTimestamp"))));
 							bans.add(ColorUtil.replaceColors("   &7&mfor &e%s&7&m by &c%s&7&m.", rs.getString("Reason"),
-								rs.getString("LastName")));
+								ipl.getName()));
 							if (problem == null) {
 								problem = false;
 							}
@@ -406,21 +400,20 @@ public class CommandHandler {
 							bans.add(ColorUtil.replaceColors("&7Tempban until &e%s",
 								DateUtil.timeUntilNow(rs.getTimestamp("UnbanTimestamp"), false)));
 							bans.add(ColorUtil.replaceColors("   &7for &e%s&7 by &c%s&7.", rs.getString("Reason"),
-								rs.getString("LastName")));
+								iMinePlayer.findPlayer(UUID.fromString(rs.getString("UUID"))).getName()));
 							problem = true;
 						}
 					}
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
-				rs = BukkitStarter.plugin.getDB()
-						.selectQuery(String.format(
-							"SELECT b.*, u.LastName  FROM unban_log b, UUID_Table u WHERE b.who LIKE '%s' AND u.UUID = b.from;",
-							uuid.toString()));
+				rs = BukkitStarter.plugin.getDB().selectQuery(
+					String.format("SELECT b.* FROM unban_log b WHERE b.who LIKE '%s';", uuid.toString()));
 				try {
 					while (rs.next()) {
 						pardons.add(ColorUtil.replaceColors("&7Got unbanned by &c%s &7at &e%s&7.",
-							rs.getString("LastName"), dateFormat.format(rs.getDate("when"))));
+							iMinePlayer.findPlayer(UUID.fromString(rs.getString("UUID"))).getName(),
+							dateFormat.format(rs.getDate("when"))));
 					}
 				} catch (Exception ex) {
 					ex.printStackTrace();
