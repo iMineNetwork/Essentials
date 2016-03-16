@@ -11,6 +11,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import nl.imine.api.iMineAPI;
 import nl.imine.api.db.DatabaseManager;
+import nl.imine.api.event.VanishUpdateEvent;
 
 public class BukkitStarter extends JavaPlugin {
 
@@ -34,6 +35,7 @@ public class BukkitStarter extends JavaPlugin {
 		Bukkit.getPluginManager().registerEvents(new Profiler(), this);
 		Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new PexReloader(), PEX_DELAY, PEX_DELAY);
 		tlh = new TabListHandler();
+		Bukkit.getPluginManager().callEvent(new VanishUpdateEvent());
 	}
 
 	@Override

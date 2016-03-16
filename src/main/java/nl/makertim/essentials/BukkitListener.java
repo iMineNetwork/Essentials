@@ -20,6 +20,7 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
 import nl.imine.api.db.iMinePlayer;
@@ -44,6 +45,16 @@ public class BukkitListener implements Listener {
 		if (str != null && !str.trim().isEmpty()) {
 			pje.setJoinMessage(null);
 			Bukkit.getOnlinePlayers().stream().filter(opl -> opl.canSee(pje.getPlayer()))
+					.forEach(opl -> opl.sendMessage(str));
+		}
+	}
+
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void leaveMessage(PlayerQuitEvent pqe) {
+		String str = pqe.getQuitMessage();
+		if (str != null && !str.trim().isEmpty()) {
+			pqe.setQuitMessage(null);
+			Bukkit.getOnlinePlayers().stream().filter(opl -> opl.canSee(pqe.getPlayer()))
 					.forEach(opl -> opl.sendMessage(str));
 		}
 	}
