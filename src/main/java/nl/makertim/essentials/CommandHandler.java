@@ -254,8 +254,7 @@ public class CommandHandler {
 							Boolean.toString(target.getAllowFlight())));
 						online.add(
 							ColorUtil.replaceColors("&7Is Flying? &e%s&7.", Boolean.toString(target.isFlying())));
-						online.add(ColorUtil.replaceColors("&7Is Vanish? &e%s&7.",
-							Boolean.toString(BukkitListener.VANISH.contains(target.getUniqueId()))));
+						online.add(ColorUtil.replaceColors("&7Is Vanish? &e%s&7.", Boolean.toString(ipl.isVanished())));
 						online.add(ColorUtil.replaceColors("&7Speed &eWalking: &c%d&7, &eFlying: &c%d&7.",
 							(int) (target.getWalkSpeed() * 10), (int) (target.getFlySpeed() * 10)));
 						online.add(ColorUtil.replaceColors("&7Gamemode: &e%s&7.",
@@ -1164,14 +1163,12 @@ public class CommandHandler {
 			if (args.length == 0) {
 				if (sender instanceof Player) {
 					Player sender = (Player) this.sender;
-					if (BukkitListener.VANISH.contains(sender.getUniqueId())) {
-						BukkitListener.VANISH.remove(sender.getUniqueId());
-						BukkitListener.updateVanish();
-						return ColorUtil.replaceColors("&7You are visible again!");
+					iMinePlayer ipl = iMinePlayer.findPlayer(sender);
+					boolean newVanish = ipl.setVanish(!ipl.isVanished());
+					if (newVanish) {
+						return ColorUtil.replaceColors("&7You are now vanished.");
 					} else {
-						BukkitListener.VANISH.add(sender.getUniqueId());
-						BukkitListener.updateVanish();
-						return ColorUtil.replaceColors("&7GhostMode!");
+						return ColorUtil.replaceColors("&7You are now visible.");
 					}
 				} else {
 					return noPlayer();
@@ -1179,19 +1176,15 @@ public class CommandHandler {
 			} else {
 				Player target = PlayerUtil.getOnline(args[0]);
 				if (target != null) {
-					if (BukkitListener.VANISH.contains(target.getUniqueId())) {
-						BukkitListener.VANISH.remove(target.getUniqueId());
-						if (target != sender) {
-							target.sendMessage(ColorUtil.replaceColors("&7You are visible again!"));
-						}
+					iMinePlayer ipl = iMinePlayer.findPlayer(target);
+					boolean newVanish = ipl.setVanish(!ipl.isVanished());
+					if (newVanish) {
+						target.sendMessage(ColorUtil.replaceColors("&7You are now vanished."));
+						return ColorUtil.replaceColors("&c%s &7is now vanished.", target.getDisplayName());
 					} else {
-						BukkitListener.VANISH.add(target.getUniqueId());
-						if (target != sender) {
-							target.sendMessage(ColorUtil.replaceColors("&7GhostMode!"));
-						}
+						target.sendMessage(ColorUtil.replaceColors("&7You are now visible."));
+						return ColorUtil.replaceColors("&c%s &7is now visible.", target.getDisplayName());
 					}
-					BukkitListener.updateVanish();
-					return (ColorUtil.replaceColors("&7Toggled vanish for &c%s&7.", target.getName()));
 				} else {
 					return noOnline(args[0]);
 				}

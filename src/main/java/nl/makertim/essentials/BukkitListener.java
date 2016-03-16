@@ -22,6 +22,8 @@ import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
+import nl.imine.api.db.iMinePlayer;
+import nl.imine.api.event.VanishUpdateEvent;
 import nl.imine.api.util.ColorUtil;
 
 public class BukkitListener implements Listener {
@@ -32,7 +34,6 @@ public class BukkitListener implements Listener {
 	private static final String[] REPORT_FORMAT = {"hax", "hack", "hex", "h@x", "h3x", "hAck", "h3ck", "flyh", "cheat"};
 	private static final Set<UUID> MUTED = new HashSet<>();
 	public static final Map<UUID, List<Location>> TP_HISTORY = new HashMap<>();
-	public static final List<UUID> VANISH = new ArrayList<>();
 
 	public static boolean vanishAble = true;
 
@@ -93,30 +94,30 @@ public class BukkitListener implements Listener {
 		return MUTED.contains(pl.getUniqueId());
 	}
 
-	public static void updateVanish() {
+	@EventHandler
+	public void updateVanish(VanishUpdateEvent vue) {
 		if (!vanishAble) {
 			return;
 		}
-		List<Player> nonHidden = new ArrayList<Player>(Bukkit.getOnlinePlayers());
-		for (Player pl : Bukkit.getOnlinePlayers()) {
-			for (UUID vanished : VANISH) {
-				Player vanish = Bukkit.getPlayer(vanished);
-				if (vanish != null) {
-					pl.hidePlayer(vanish);
-					nonHidden.remove(vanish);
-				}
+		List<Player> nonHidden = new ArrayList<>();
+		List<Player> hidden = new ArrayList<>();
+		Bukkit.getOnlinePlayers().forEach(pl -> {
+			iMinePlayer ipl = iMinePlayer.findPlayer(pl);
+			if (ipl.isVanished()) {
+				hidden.add(pl);
+			} else {
+				nonHidden.add(pl);
 			}
-			for (Player nonVanish : nonHidden) {
-				pl.showPlayer(nonVanish);
-			}
-		}
+		});
+		Bukkit.getOnlinePlayers().forEach(pl -> {
+			nonHidden.forEach(visible -> pl.showPlayer(visible));
+			hidden.forEach(hide -> pl.hidePlayer(hide));
+		});
 	}
 
 	@EventHandler
 	public void updateVanish(PlayerJoinEvent pje) {
-		if (vanishAble) {
-			updateVanish();
-		}
+		updateVanish((VanishUpdateEvent) null);
 	}
 
 	@EventHandler
