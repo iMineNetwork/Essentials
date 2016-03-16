@@ -378,7 +378,7 @@ public class CommandHandler {
 						bans.add(
 							ColorUtil.replaceColors("&7Banned since &e%s", dateFormat.format(rs.getDate("Timestamp"))));
 						bans.add(ColorUtil.replaceColors("   &7for &e%s &7by &c%s&7.", rs.getString("Reason"),
-							iMinePlayer.findPlayer(UUID.fromString(rs.getString("UUID"))).getName()));
+							iMinePlayer.findPlayer(UUID.fromString(rs.getString("FromUUID"))).getName()));
 						problem = true;
 					}
 				} catch (Exception ex) {
@@ -400,7 +400,7 @@ public class CommandHandler {
 							bans.add(ColorUtil.replaceColors("&7Tempban until &e%s",
 								DateUtil.timeUntilNow(rs.getTimestamp("UnbanTimestamp"), false)));
 							bans.add(ColorUtil.replaceColors("   &7for &e%s&7 by &c%s&7.", rs.getString("Reason"),
-								iMinePlayer.findPlayer(UUID.fromString(rs.getString("UUID"))).getName()));
+								iMinePlayer.findPlayer(UUID.fromString(rs.getString("FromUUID"))).getName()));
 							problem = true;
 						}
 					}
@@ -412,7 +412,7 @@ public class CommandHandler {
 				try {
 					while (rs.next()) {
 						pardons.add(ColorUtil.replaceColors("&7Got unbanned by &c%s &7at &e%s&7.",
-							iMinePlayer.findPlayer(UUID.fromString(rs.getString("UUID"))).getName(),
+							iMinePlayer.findPlayer(UUID.fromString(rs.getString("who"))).getName(),
 							dateFormat.format(rs.getDate("when"))));
 					}
 				} catch (Exception ex) {
