@@ -350,7 +350,8 @@ public class CommandHandler {
 								.selectQuery(String.format("SELECT i.uuid FROM ipLookup i WHERE i.ip LIKE '%s';", ip));
 						lore.add(ColorUtil.replaceColors("&e%s", ip));
 						while (usersIp.next()) {
-							lore.add(ColorUtil.replaceColors("  &c%s", ipl.getName()));
+							lore.add(ColorUtil.replaceColors("  &c%s",
+								iMinePlayer.findPlayer(UUID.fromString(usersIp.getString("uuid"))).getName()));
 						}
 					}
 				} catch (Exception e) {
