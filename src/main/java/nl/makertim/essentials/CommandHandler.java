@@ -78,7 +78,8 @@ public class CommandHandler {
 	private final String adminChatFormat = ColorUtil.replaceColors("&r&l[&a&lADMIN&r&l] &r&7%s &r&l\u00BB &r%s");
 	private final String reportChatFormat = ColorUtil.replaceColors("&r&l[&c&lREPORT&r&l] &r&7%s &r&l\u00BB &r%s");
 	private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-
+	private static final String[] SERVERS = {"creative", "uhc", "hub", "survival", "outlaws", "testserver", "outlawsB",
+			"pixelmon"};
 	private static final Map<CommandSender, CommandSender> LAST_SPOKE = new HashMap<>();
 
 	private final CommandSender sender;
@@ -202,8 +203,9 @@ public class CommandHandler {
 			if (uuid == null) {
 				sender.sendMessage(noOnline(args[0]));
 			}
-			Container ui = GuiManager.getInstance()
-					.createContainer(ColorUtil.replaceColors("&4Last 'flying' events " + args[0]), 9, false, false);
+			Container ui = GuiManager.getInstance().createContainer(
+				ColorUtil.replaceColors("&4Last 'flying' events " + iMinePlayer.findPlayer(uuid).getName()), 9, false,
+				false);
 			List<Path> paths = FlyUtil.getPathsOf(uuid);
 			int i = 0;
 			for (Path path : paths) {
@@ -213,7 +215,7 @@ public class CommandHandler {
 			}
 			ui.open((Player) sender);
 		});
-		return ColorUtil.replaceColors("&7Checking '&c%s&7' for the last 9 fly possibilities.", args[0]);
+		return ColorUtil.replaceColors("&7Checking '&c%s&7' for the last &c9 &7fly possibilities.", args[0]);
 	}
 
 	private String whois() {
@@ -255,7 +257,7 @@ public class CommandHandler {
 						online.add(
 							ColorUtil.replaceColors("&7Is Flying? &e%s&7.", Boolean.toString(target.isFlying())));
 						online.add(ColorUtil.replaceColors("&7Is Vanish? &e%s&7.", Boolean.toString(ipl.isVanished())));
-						online.add(ColorUtil.replaceColors("&7Speed &eWalking: &c%d&7, &eFlying: &c%d&7.",
+						online.add(ColorUtil.replaceColors("&7Speed &eWalking&7: &c%d&7, &eFlying&7: &c%d&7.",
 							(int) (target.getWalkSpeed() * 10), (int) (target.getFlySpeed() * 10)));
 						online.add(ColorUtil.replaceColors("&7Gamemode: &e%s&7.",
 							StringUtil.readableEnum(target.getGameMode())));
@@ -264,8 +266,27 @@ public class CommandHandler {
 						online.add(ColorUtil.replaceColors("&7UUID: &e%s&7.", target.getUniqueId()));
 						for (Statistic stat : Statistic.values()) {
 							try {
-								stats.add(ColorUtil.replaceColors("&7%s: &c%s&7.", StringUtil.readableEnum(stat),
-									target.getStatistic(stat)));
+								switch (stat.getType()) {
+								case BLOCK:
+								case ITEM:
+									for (Material mat : Material.values()) {
+										stats.add(
+											ColorUtil.replaceColors("&7%s&e%s: &c%s&7.", StringUtil.readableEnum(stat),
+												StringUtil.readableEnum(mat), target.getStatistic(stat, mat)));
+									}
+									break;
+								case ENTITY:
+									for (EntityType enity : EntityType.values()) {
+										stats.add(
+											ColorUtil.replaceColors("&7%s&e%s: &c%s&7.", StringUtil.readableEnum(stat),
+												StringUtil.readableEnum(enity), target.getStatistic(stat, enity)));
+									}
+									break;
+								default:
+									stats.add(ColorUtil.replaceColors("&7%s: &c%s&7.", StringUtil.readableEnum(stat),
+										target.getStatistic(stat)));
+									break;
+								}
 							} catch (Exception ex) {
 							}
 						}
@@ -392,7 +413,7 @@ public class CommandHandler {
 							bans.add(ColorUtil.replaceColors("&7&mTempban until &e%s",
 								dateFormat.format(rs.getTimestamp("UnbanTimestamp"))));
 							bans.add(ColorUtil.replaceColors("   &7&mfor &e%s&7&m by &c%s&7&m.", rs.getString("Reason"),
-								ipl.getName()));
+								iMinePlayer.findPlayer(UUID.fromString(rs.getString("FromUUID"))).getName()));
 							if (problem == null) {
 								problem = false;
 							}
@@ -412,7 +433,7 @@ public class CommandHandler {
 				try {
 					while (rs.next()) {
 						pardons.add(ColorUtil.replaceColors("&7Got unbanned by &c%s &7at &e%s&7.",
-							iMinePlayer.findPlayer(UUID.fromString(rs.getString("who"))).getName(),
+							iMinePlayer.findPlayer(UUID.fromString(rs.getString("from"))).getName(),
 							dateFormat.format(rs.getDate("when"))));
 					}
 				} catch (Exception ex) {
@@ -480,7 +501,7 @@ public class CommandHandler {
 
 	private String adminChat() {
 		if (!sender.hasPermission("iMine.adminChat")) {
-			return ColorUtil.replaceColors("&cUse /report for contacting admins");
+			return ColorUtil.replaceColors("&cUse &e/report &cfor contacting admins");
 		}
 		if (args.length == 0) {
 			return ColorUtil.replaceColors("&c/Admin [Message]");
@@ -510,8 +531,7 @@ public class CommandHandler {
 		sender.sendMessage(ColorUtil.replaceColors("&cSpam &6- &aWaarschuwing (kick), daarna 2-4 uur ban"));
 		sender.sendMessage("   ");
 		sender.sendMessage(ColorUtil.replaceColors("&eBedenk je ban verstandig en zet er een DUIDELIJKE reden bij."));
-		sender.sendMessage(ColorUtil.replaceColors("&7Mocht je dit niet kunnen, geef dit door aan je leidinggevende!"));
-		return "";
+		return ColorUtil.replaceColors("&7Mocht je dit niet kunnen, geef dit door aan je leidinggevende!");
 	}
 
 	private String mchistory() {
@@ -523,7 +543,7 @@ public class CommandHandler {
 				}
 				return "";
 			} else {
-				return ColorUtil.replaceColors("&cNeed player to lookup");
+				return noOption();
 			}
 		} else {
 			return noPermission();
@@ -545,9 +565,9 @@ public class CommandHandler {
 				} else if (args[0].equalsIgnoreCase("bottom")) {
 					tlh.updateBottom(msg);
 				} else {
-					return ColorUtil.replaceColors("&cCant update '%s' to %s", args[0], args[1]);
+					return ColorUtil.replaceColors("&cCant update '&e%s&c' to &e%s&c.", args[0], args[1]);
 				}
-				return ColorUtil.replaceColors("&6Tab %s updated to &r%s", args[0], msg);
+				return ColorUtil.replaceColors("&7Tab &e%s &7updated to &e%s&7.", args[0], msg);
 			} else if (args.length == 1 && args[0].equalsIgnoreCase("update")) {
 				tlh.updateAll();
 				return ColorUtil.replaceColors("&7Tab updated!");
@@ -576,10 +596,10 @@ public class CommandHandler {
 				pl.setFlying(pl.getAllowFlight());
 				if (sender != pl) {
 					pl.sendMessage(
-						ColorUtil.replaceColors("&7You %s&7 fly now.", (pl.getAllowFlight() ? "&6can" : "&4can't")));
+						ColorUtil.replaceColors("&7You &e%s&7 fly now.", (pl.getAllowFlight() ? "can" : "can't")));
 				}
-				return ColorUtil.replaceColors("&7Player &c%s&7 %s&7 fly now.", pl.getName(),
-					(pl.getAllowFlight() ? "&6can" : "&4can't"));
+				return ColorUtil.replaceColors("&7Player &c%s&7 &e%s&7 fly now.", pl.getName(),
+					(pl.getAllowFlight() ? "can" : "can't"));
 			} else {
 				return noOnline(args[0]);
 			}
@@ -626,8 +646,8 @@ public class CommandHandler {
 			OfflinePlayer pl = PlayerUtil.getOflline(args[0]);
 			if (pl != null) {
 				BukkitListener.toggleMuted(pl);
-				return ColorUtil.replaceColors("&c%s&7 is now %s&7.", pl.getName(),
-					(BukkitListener.isMuted(pl) ? "&cmuted." : "&6unmuted."));
+				return ColorUtil.replaceColors("&c%s&7 is now &e%s&7.", pl.getName(),
+					(BukkitListener.isMuted(pl) ? "muted" : "unmuted"));
 			} else {
 				return noOnline(args[0]);
 			}
@@ -646,16 +666,20 @@ public class CommandHandler {
 			}
 		} else if (args.length == 1 && sender.hasPermission("iMine.hub." + args[0])) {
 			if (sender instanceof Player) {
-				PlayerUtil.sendPlayerToServer((Player) sender, args[0]);
-				return ColorUtil.replaceColors("&7To the %s!", args[0]);
+				List<String> servers = Arrays.asList(SERVERS);
+				servers.sort(new StringSearchSorter(args[0]));
+				PlayerUtil.sendPlayerToServer((Player) sender, servers.get(0));
+				return ColorUtil.replaceColors("&7To the %s!", servers.get(0));
 			} else {
 				return noPlayer();
 			}
 		} else if (args.length == 2 && sender.hasPermission("iMine.hub." + args[0] + ".other")) {
 			Player pl = PlayerUtil.getOnline(args[1]);
 			if (pl != null) {
-				PlayerUtil.sendPlayerToServer(pl, args[0]);
-				return ColorUtil.replaceColors("&7Sended '&c%s&7' to %s!", pl.getName(), args[0]);
+				List<String> servers = Arrays.asList(SERVERS);
+				servers.sort(new StringSearchSorter(args[0]));
+				PlayerUtil.sendPlayerToServer(pl, servers.get(0));
+				return ColorUtil.replaceColors("&7Sended '&c%s&7' to %s!", pl.getName(), servers.get(0));
 			} else {
 				return noOnline(args[1]);
 			}
@@ -674,9 +698,9 @@ public class CommandHandler {
 						PlayerUtil.sendPlayerToServer(pl, "hub");
 					}
 				}
-				return ColorUtil.replaceColors("&7The server is now &cprivate&7.");
+				return ColorUtil.replaceColors("&7The server is now &eprivate&7.");
 			} else {
-				return ColorUtil.replaceColors("&7The server is now &6public&7.");
+				return ColorUtil.replaceColors("&7The server is now &epublic&7.");
 			}
 		} else {
 			return noPermission();
@@ -729,7 +753,7 @@ public class CommandHandler {
 					}
 					for (String plName : MapCountSorter.getOrder(countMap, Sort.DESC)) {
 						sender.sendMessage(
-							ColorUtil.replaceColors("  &c%d &7- &e%ss", countMap.get(plName).size(), plName));
+							ColorUtil.replaceColors("  &c%d &7- &c%ss", countMap.get(plName).size(), plName));
 					}
 					return ColorUtil.replaceColors("&7 ---------------");
 				} else {
@@ -842,12 +866,12 @@ public class CommandHandler {
 				who.sendMessage(ColorUtil.replaceColors("&7Teleporting"));
 				if (who == sender) {
 					who.teleport(new Location(world, coords[0], coords[1], coords[2]));
-					return ColorUtil.replaceColors("&7Teleported to &e%f,%f,%f&7 in World &e%s&7.", coords[0],
-						coords[1], coords[2], world.getName());
+					return ColorUtil.replaceColors("&7Teleported to &e%d,%d,%d&7 in World &e%s&7.", (int) coords[0],
+						(int) coords[1], (int) coords[2], world.getName());
 				} else {
 					who.teleport(new Location(world, coords[1], coords[2], coords[3]));
-					return ColorUtil.replaceColors("&7Teleported &c%s&7 to &e%f,%f,%f&7 in World &e%s&7.",
-						who.getName(), coords[0], coords[1], coords[2], world.getName());
+					return ColorUtil.replaceColors("&7Teleported &c%s&7 to &e%d,%d,%d&7 in World &e%s&7.",
+						who.getName(), (int) coords[0], (int) coords[1], (int) coords[2], world.getName());
 				}
 			} else {
 				return noOption();
@@ -963,19 +987,19 @@ public class CommandHandler {
 			if (args.length > 0) {
 				float speed = 0;
 				try {
-					speed = Math.min(Math.abs(Float.parseFloat(args[0]) * 0.1F), 1F);
+					speed = Math.min(Math.abs(Float.parseFloat(args[0]) * 0.2F), 1F);
 				} catch (Exception ex) {
-					return ColorUtil.replaceColors("&c%s is not a number.", args[0]);
+					return ColorUtil.replaceColors("&e%s &cis not a number.", args[0]);
 				}
 				if (args.length == 1) {
 					if (sender instanceof Player) {
 						Player pl = ((Player) sender);
 						if (pl.isFlying()) {
 							pl.setFlySpeed(speed);
-							return ColorUtil.replaceColors("&7Fly speed set to %s&7.", args[0]);
+							return ColorUtil.replaceColors("&7Fly speed set to &c%s&7.", args[0]);
 						} else {
 							pl.setWalkSpeed(speed);
-							return ColorUtil.replaceColors("&7Walk speed set to %s&7.", args[0]);
+							return ColorUtil.replaceColors("&7Walk speed set to &c%s&7.", args[0]);
 						}
 					} else {
 						return noPlayer();
@@ -985,10 +1009,10 @@ public class CommandHandler {
 						Player pl = ((Player) sender);
 						if (args[1].toLowerCase().contains("f")) {
 							pl.setFlySpeed(speed);
-							return ColorUtil.replaceColors("&7Fly speed set to %s&7.", args[0]);
+							return ColorUtil.replaceColors("&7Fly speed set to &c%s&7.", args[0]);
 						} else {
 							pl.setWalkSpeed(speed);
-							return ColorUtil.replaceColors("&7Walk speed set to %s&7.", args[0]);
+							return ColorUtil.replaceColors("&7Walk speed set to &c%s&7.", args[0]);
 						}
 					} else {
 						return noPlayer();
@@ -998,12 +1022,12 @@ public class CommandHandler {
 					if (who != null) {
 						if (args[1].toLowerCase().contains("f")) {
 							who.setFlySpeed(speed);
-							who.sendMessage(ColorUtil.replaceColors("&7Speed set."));
-							return ColorUtil.replaceColors("&7Fly speed set to %s&7.", args[0]);
+							who.sendMessage(ColorUtil.replaceColors("&7Fly speed set to &c%s&7.", args[0]));
+							return ColorUtil.replaceColors("&7Speed set.");
 						} else {
 							who.setWalkSpeed(speed);
-							who.sendMessage(ColorUtil.replaceColors("&7Speed set."));
-							return ColorUtil.replaceColors("&7Walk speed set to %s&7.", args[0]);
+							who.sendMessage(ColorUtil.replaceColors("&7Walk speed set to &c%s&7.", args[0]));
+							return ColorUtil.replaceColors("&7Speed set.");
 						}
 					} else {
 						return noOnline(args[2]);
@@ -1147,12 +1171,12 @@ public class CommandHandler {
 				if (BukkitListener.TP_HISTORY.containsKey(sender.getUniqueId())) {
 					List<Location> locs = BukkitListener.TP_HISTORY.get(sender.getUniqueId());
 					sender.teleport(locs.get(locs.size() - 1));
-					return ColorUtil.replaceColors("&7Back to previous location.");
+					return ColorUtil.replaceColors("&7Teleported.");
 				} else {
-					return ColorUtil.replaceColors("&cNo history.");
+					return ColorUtil.replaceColors("&cNo back place found.");
 				}
 			} else {
-				return ColorUtil.replaceColors("&cPlayer only.");
+				return noPlayer();
 			}
 		} else {
 			return noPermission();
@@ -1167,9 +1191,9 @@ public class CommandHandler {
 					iMinePlayer ipl = iMinePlayer.findPlayer(sender);
 					boolean newVanish = ipl.setVanish(!ipl.isVanished());
 					if (newVanish) {
-						return ColorUtil.replaceColors("&7You are now vanished.");
+						return ColorUtil.replaceColors("&7You are now &evanished&7.");
 					} else {
-						return ColorUtil.replaceColors("&7You are now visible.");
+						return ColorUtil.replaceColors("&7You are now &evisible&7.");
 					}
 				} else {
 					return noPlayer();
@@ -1201,7 +1225,7 @@ public class CommandHandler {
 				if (sender instanceof Player) {
 					Player sender = (Player) this.sender;
 					sender.setHealth(0D);
-					return ColorUtil.replaceColors("&7Committed suicide,");
+					return ColorUtil.replaceColors("&7Committed suicide.");
 				} else {
 					return noPlayer();
 				}
@@ -1227,7 +1251,7 @@ public class CommandHandler {
 					args = (String[]) ArrayUtils.addAll(new String[]{target.getName()}, args);
 					return msg();
 				} else {
-					return ColorUtil.replaceColors("&cNobody to reply to");
+					return ColorUtil.replaceColors("&cNobody to reply to.");
 				}
 			} else {
 				return noOption();
@@ -1304,27 +1328,26 @@ public class CommandHandler {
 	}
 
 	private String noPermission() {
-		return ColorUtil.replaceColors("&cYou do not have permission to execute '&e%s&c' command!", command);
+		return ColorUtil.replaceColors("&cYou do not have permission to execute &e%s&c!", command);
 	}
 
 	private String noOption() {
-		return ColorUtil.replaceColors("&cThere is no command with this argument.");
+		return ColorUtil.replaceColors("&c&e%s&c is not possible with &e%d&c arguments.", command, args.length);
 	}
 
 	private String noPlayer() {
-		return ColorUtil.replaceColors("&cPlayer-command only.");
+		return ColorUtil.replaceColors("&cPlayer only.");
 	}
 
 	private String noOnline(String arg) {
-		return ColorUtil.replaceColors("&cPlayer '&e%s&c' is not online.", arg);
+		return ColorUtil.replaceColors("&cPlayer &e%s &cis not online / not found.", arg);
 	}
 
 	public static List<String> onTabComplete(Player sender, String command, String[] args) {
 		List<String> ret = new ArrayList<>();
 		if (command.equalsIgnoreCase("hub")) {
-			String[] servers = {"creative", "uhc", "hub", "survival", "outlaws", "testserver", "outlawsB", "pixelmon"};
 			if (args.length == 1) {
-				for (String server : servers) {
+				for (String server : SERVERS) {
 					if (server.toLowerCase().contains(args[args.length - 1].toLowerCase())) {
 						ret.add(server);
 					}
@@ -1377,6 +1400,7 @@ public class CommandHandler {
 			ret.addAll(PlayerUtil.getAllOnlineNames(args[args.length - 1], sender));
 		} else if ((command.equalsIgnoreCase("mchistory") && args.length == 1)
 				|| (command.equalsIgnoreCase("whois") && args.length == 1)
+				|| (command.equalsIgnoreCase("skull") && args.length == 1)
 				|| (command.equalsIgnoreCase("flycheck") && args.length == 1) || command.equalsIgnoreCase("reply")
 				|| command.equalsIgnoreCase("me") || command.equalsIgnoreCase("msg")) {
 			// All names
