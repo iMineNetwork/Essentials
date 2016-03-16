@@ -37,6 +37,16 @@ public class BukkitListener implements Listener {
 
 	public static boolean vanishAble = true;
 
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void joinMessage(PlayerJoinEvent pje) {
+		String str = pje.getJoinMessage();
+		if (str != null && !str.trim().isEmpty()) {
+			pje.setJoinMessage(null);
+			Bukkit.getOnlinePlayers().stream().filter(opl -> opl.canSee(pje.getPlayer()))
+					.forEach(opl -> opl.sendMessage(str));
+		}
+	}
+
 	@EventHandler
 	public void onJoin(PlayerLoginEvent ple) {
 		if (BukkitStarter.plugin.devMode && !ple.getPlayer().hasPermission("iMine.devOverride")) {
