@@ -672,14 +672,14 @@ public class CommandHandler {
 				}
 			}
 			servers.sort(new StringSearchSorter(args[0]));
-			if (args.length == 1 && sender.hasPermission("iMine.hub." + args[0])) {
+			if (args.length == 1 && sender.hasPermission("iMine.hub." + servers.get(0))) {
 				if (sender instanceof Player) {
 					PlayerUtil.sendPlayerToServer((Player) sender, servers.get(0));
 					return ColorUtil.replaceColors("&7To the %s!", servers.get(0));
 				} else {
 					return noPlayer();
 				}
-			} else if (args.length == 2 && sender.hasPermission("iMine.hub." + args[0] + ".other")) {
+			} else if (args.length == 2 && sender.hasPermission("iMine.hub." + servers.get(0) + ".other")) {
 				Player pl = PlayerUtil.getOnline(args[1]);
 				if (pl != null) {
 					PlayerUtil.sendPlayerToServer(pl, servers.get(0));
