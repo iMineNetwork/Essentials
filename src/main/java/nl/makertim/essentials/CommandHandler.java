@@ -665,25 +665,19 @@ public class CommandHandler {
 				return noPlayer();
 			}
 		} else {
-			List<String> servers = new ArrayList<>();
-			for (String server : SERVERS) {
-				if (server.contains(args[0])) {
-					servers.add(server);
-				}
-			}
-			servers.sort(new StringSearchSorter(args[0]));
-			if (args.length == 1 && sender.hasPermission("iMine.hub." + servers.get(0))) {
+			Arrays.sort(SERVERS, new StringSearchSorter(args[0]));
+			if (args.length == 1 && sender.hasPermission("iMine.hub." + SERVERS[0])) {
 				if (sender instanceof Player) {
-					PlayerUtil.sendPlayerToServer((Player) sender, servers.get(0));
-					return ColorUtil.replaceColors("&7To the %s!", servers.get(0));
+					PlayerUtil.sendPlayerToServer((Player) sender, SERVERS[0]);
+					return ColorUtil.replaceColors("&7To the %s!", SERVERS[0]);
 				} else {
 					return noPlayer();
 				}
-			} else if (args.length == 2 && sender.hasPermission("iMine.hub." + servers.get(0) + ".other")) {
+			} else if (args.length == 2 && sender.hasPermission("iMine.hub." + SERVERS[0] + ".other")) {
 				Player pl = PlayerUtil.getOnline(args[1]);
 				if (pl != null) {
-					PlayerUtil.sendPlayerToServer(pl, servers.get(0));
-					return ColorUtil.replaceColors("&7Sended '&c%s&7' to %s!", pl.getName(), servers.get(0));
+					PlayerUtil.sendPlayerToServer(pl, SERVERS[0]);
+					return ColorUtil.replaceColors("&7Sended '&c%s&7' to %s!", pl.getName(), SERVERS[0]);
 				} else {
 					return noOnline(args[1]);
 				}
