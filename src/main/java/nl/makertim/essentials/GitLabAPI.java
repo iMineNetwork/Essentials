@@ -100,7 +100,7 @@ public class GitLabAPI {
 		try {
 			ret = DATE_FORMAT.parse(str);
 		} catch (Exception ex) {
-			System.out.println("Couldnt get date");
+			System.err.println("Couldnt get date");
 		}
 		return ret;
 	}
