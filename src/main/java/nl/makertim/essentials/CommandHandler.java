@@ -1694,7 +1694,8 @@ public class CommandHandler {
 				extra.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, git.getWebUrl()));
 				extra.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
 						new ComponentBuilder(git.getDescription())
-								.append("\n\nCreated at: " + GitLabAPI.NL_DATE_FORMAT.format(git.getCreateDate()))
+								.append(ColorUtil.replaceColors(
+									"\n\n&7Created at: &c" + GitLabAPI.NL_DATE_FORMAT.format(git.getCreateDate())))
 								.create()));
 				message.addExtra(extra);
 				// current verion:
@@ -1721,12 +1722,11 @@ public class CommandHandler {
 					extra = new TextComponent(
 							ColorUtil.replaceColors("&e%s ", current.getTitle().replaceAll(" ", " &e")));
 					extra.setColor(net.md_5.bungee.api.ChatColor.YELLOW);
-					extra.setHoverEvent(
-						new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-								new ComponentBuilder(ColorUtil.replaceColors("&7id:&e%s&7", current.getShortId()))
-										.append(
-											"\n\n&7Pushed at: &c" + GitLabAPI.NL_DATE_FORMAT.format(current.getWhen()))
-										.create()));
+					extra.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+							new ComponentBuilder(ColorUtil.replaceColors("&7id:&e%s&7", current.getShortId()))
+									.append(ColorUtil.replaceColors(
+										"\n\n&7Pushed at: &c" + GitLabAPI.NL_DATE_FORMAT.format(current.getWhen())))
+									.create()));
 				}
 				extra.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, git.getWebUrl() + "/commit/"
 						+ (current == null ? "master" : current.getLongId()) + "?view=parallel"));
@@ -1746,14 +1746,14 @@ public class CommandHandler {
 					extra.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, git.getWebUrl() + "/compare/"
 							+ (current == null ? "master" : current.getShortId()) + "...master?view=parallel"));
 					ComponentBuilder hoverBuilder = new ComponentBuilder(
-							"&7version id: &e" + git.getCommits()[0].getShortId());
+							ColorUtil.replaceColors("&7version id: &e" + git.getCommits()[0].getShortId()));
 					hoverBuilder.append("\nMissing Versions:");
 					for (Commit commit : commits) {
 						hoverBuilder.append(ColorUtil.replaceColors("\n&7 ^&e%s &7[&c%s&7]", commit.getTitle(),
 							GitLabAPI.NL_DATE_FORMAT.format(commit.getWhen())));
 					}
-					hoverBuilder.append(
-						"\n\n&7Pushed at: &c" + GitLabAPI.NL_DATE_FORMAT.format(git.getCommits()[0].getWhen()));
+					hoverBuilder.append(ColorUtil.replaceColors(
+						"\n\n&7Pushed at: &c" + GitLabAPI.NL_DATE_FORMAT.format(git.getCommits()[0].getWhen())));
 					extra.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverBuilder.create()));
 					message.addExtra(extra);
 					// versions behind [#]:
