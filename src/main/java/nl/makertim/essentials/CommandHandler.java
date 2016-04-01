@@ -38,6 +38,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.plugin.InvalidDescriptionException;
@@ -803,7 +804,7 @@ public class CommandHandler {
 				if (sender instanceof Player) {
 					Player pl = PlayerUtil.getOnline(args[0]);
 					if (pl != null) {
-						((Player) sender).teleport(pl);
+						((Player) sender).teleport(pl, TeleportCause.COMMAND);
 						return ColorUtil.replaceColors("&7Teleporting to &c%s&7.", pl.getName());
 					} else {
 						return noOnline(args[0]);
@@ -816,7 +817,7 @@ public class CommandHandler {
 				Player target = PlayerUtil.getOnline(args[1]);
 				if (who != null) {
 					if (target != null) {
-						who.teleport(target);
+						who.teleport(target, TeleportCause.COMMAND);
 						who.sendMessage(ColorUtil.replaceColors("&7Teleporting"));
 						return ColorUtil.replaceColors("&7Teleported &c%s&7 to &c%s&7.", who.getName(),
 							target.getName());
@@ -864,11 +865,11 @@ public class CommandHandler {
 				}
 				who.sendMessage(ColorUtil.replaceColors("&7Teleporting"));
 				if (who == sender) {
-					who.teleport(new Location(world, coords[0], coords[1], coords[2]));
+					who.teleport(new Location(world, coords[0], coords[1], coords[2]), TeleportCause.COMMAND);
 					return ColorUtil.replaceColors("&7Teleported to &e%d,%d,%d&7 in World &e%s&7.", (int) coords[0],
 						(int) coords[1], (int) coords[2], world.getName());
 				} else {
-					who.teleport(new Location(world, coords[1], coords[2], coords[3]));
+					who.teleport(new Location(world, coords[1], coords[2], coords[3]), TeleportCause.COMMAND);
 					return ColorUtil.replaceColors("&7Teleported &c%s&7 to &e%d,%d,%d&7 in World &e%s&7.",
 						who.getName(), (int) coords[0], (int) coords[1], (int) coords[2], world.getName());
 				}
