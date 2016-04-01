@@ -79,7 +79,7 @@ public class CommandHandler {
 	private final String reportChatFormat = ColorUtil.replaceColors("&r&l[&c&lREPORT&r&l] &r&7%s &r&l\u00BB &r%s");
 	private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 	private static final String[] SERVERS = {"uhc", "hub", "survival", "outlaws", "outlawsB", "testserver", "creative",
-			"pixelmon"};
+			"pixelmon", "minigame"};
 	private static final Map<CommandSender, CommandSender> LAST_SPOKE = new HashMap<>();
 
 	private final CommandSender sender;
