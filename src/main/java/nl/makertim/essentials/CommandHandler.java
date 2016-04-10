@@ -63,6 +63,7 @@ import nl.imine.api.sorters.MapCountSorter;
 import nl.imine.api.sorters.MapCountSorter.Sort;
 import nl.imine.api.sorters.StringSearchSorter;
 import nl.imine.api.util.ColorUtil;
+import nl.imine.api.util.CommandUtil;
 import nl.imine.api.util.DateUtil;
 import nl.imine.api.util.FlyUtil;
 import nl.imine.api.util.FlyUtil.Path;
@@ -173,13 +174,13 @@ public class CommandHandler {
 
 	private String skull() {
 		if (args.length == 0) {
-			return noOption();
+			return CommandUtil.noOption(command, args);
 		}
 		if (!(sender instanceof Player)) {
-			return noPlayer();
+			return CommandUtil.noPlayer();
 		}
 		if (!sender.hasPermission("iMine.skull")) {
-			return noPermission();
+			return CommandUtil.noPermission(command);
 		}
 		SkullMeta meta = (SkullMeta) Bukkit.getItemFactory().getItemMeta(Material.SKULL_ITEM);
 		meta.setOwner(args[0]);
@@ -190,19 +191,19 @@ public class CommandHandler {
 
 	private String flycheck() {
 		if (args.length == 0) {
-			return noOption();
+			return CommandUtil.noOption(command, args);
 		}
 		if (!(sender instanceof Player)) {
-			return noPlayer();
+			return CommandUtil.noPlayer();
 		}
 		if (!sender.hasPermission("iMine.flycheck")) {
-			return noPermission();
+			return CommandUtil.noPermission(command);
 		}
 
 		Bukkit.getScheduler().runTaskAsynchronously(BukkitStarter.plugin, () -> {
 			UUID uuid = PlayerUtil.getUUID(args[0], false);
 			if (uuid == null) {
-				sender.sendMessage(noOnline(args[0]));
+				sender.sendMessage(CommandUtil.noOnline(args[0]));
 			}
 			Container ui = GuiManager.getInstance().createContainer(
 				ColorUtil.replaceColors("&4Last 'flying' events " + iMinePlayer.findPlayer(uuid).getName()), 9, false,
@@ -221,18 +222,18 @@ public class CommandHandler {
 
 	private String whois() {
 		if (args.length == 0) {
-			return noOption();
+			return CommandUtil.noOption(command, args);
 		}
 		if (!(sender instanceof Player)) {
-			return noPlayer();
+			return CommandUtil.noPlayer();
 		}
 		if (!sender.hasPermission("iMine.whois")) {
-			return noPermission();
+			return CommandUtil.noPermission(command);
 		}
 		Bukkit.getScheduler().runTaskAsynchronously(BukkitStarter.plugin, () -> {
 			UUID uuid = PlayerUtil.getUUID(args[0], false);
 			if (uuid == null) {
-				sender.sendMessage(noOnline(args[0]));
+				sender.sendMessage(CommandUtil.noOnline(args[0]));
 			}
 			final iMinePlayer ipl = iMinePlayer.findPlayer(uuid);
 			final Container ui = GuiManager.getInstance()
@@ -544,10 +545,10 @@ public class CommandHandler {
 				}
 				return "";
 			} else {
-				return noOption();
+				return CommandUtil.noOption(command, args);
 			}
 		} else {
-			return noPermission();
+			return CommandUtil.noPermission(command);
 		}
 	}
 
@@ -573,10 +574,10 @@ public class CommandHandler {
 				tlh.updateAll();
 				return ColorUtil.replaceColors("&7Tab updated!");
 			} else {
-				return noOption();
+				return CommandUtil.noOption(command, args);
 			}
 		} else {
-			return noPermission();
+			return CommandUtil.noPermission(command);
 		}
 	}
 
@@ -587,7 +588,7 @@ public class CommandHandler {
 				if (sender instanceof Player) {
 					pl = (Player) sender;
 				} else {
-					return noPlayer();
+					return CommandUtil.noPlayer();
 				}
 			} else {
 				pl = PlayerUtil.getOnline(args[0]);
@@ -602,10 +603,10 @@ public class CommandHandler {
 				return ColorUtil.replaceColors("&7Player &c%s&7 &e%s&7 fly now.", pl.getName(),
 					(pl.getAllowFlight() ? "can" : "can't"));
 			} else {
-				return noOnline(args[0]);
+				return CommandUtil.noOnline(args[0]);
 			}
 		} else {
-			return noPermission();
+			return CommandUtil.noPermission(command);
 		}
 	}
 
@@ -650,10 +651,10 @@ public class CommandHandler {
 				return ColorUtil.replaceColors("&c%s&7 is now &e%s&7.", pl.getName(),
 					(BukkitListener.isMuted(pl) ? "muted" : "unmuted"));
 			} else {
-				return noOnline(args[0]);
+				return CommandUtil.noOnline(args[0]);
 			}
 		} else {
-			return noPermission();
+			return CommandUtil.noPermission(command);
 		}
 	}
 
@@ -663,7 +664,7 @@ public class CommandHandler {
 				PlayerUtil.sendPlayerToServer((Player) sender, "hub");
 				return ColorUtil.replaceColors("&7To the hub!");
 			} else {
-				return noPlayer();
+				return CommandUtil.noPlayer();
 			}
 		} else {
 			Arrays.sort(SERVERS, new StringSearchSorter(args[0]));
@@ -672,7 +673,7 @@ public class CommandHandler {
 					PlayerUtil.sendPlayerToServer((Player) sender, SERVERS[0]);
 					return ColorUtil.replaceColors("&7To the %s!", SERVERS[0]);
 				} else {
-					return noPlayer();
+					return CommandUtil.noPlayer();
 				}
 			} else if (args.length == 2 && sender.hasPermission("iMine.hub." + SERVERS[0] + ".other")) {
 				Player pl = PlayerUtil.getOnline(args[1]);
@@ -680,10 +681,10 @@ public class CommandHandler {
 					PlayerUtil.sendPlayerToServer(pl, SERVERS[0]);
 					return ColorUtil.replaceColors("&7Sended '&c%s&7' to %s!", pl.getName(), SERVERS[0]);
 				} else {
-					return noOnline(args[1]);
+					return CommandUtil.noOnline(args[1]);
 				}
 			} else {
-				return noPermission();
+				return CommandUtil.noPermission(command);
 			}
 		}
 	}
@@ -703,7 +704,7 @@ public class CommandHandler {
 				return ColorUtil.replaceColors("&7The server is now &epublic&7.");
 			}
 		} else {
-			return noPermission();
+			return CommandUtil.noPermission(command);
 		}
 	}
 
@@ -794,7 +795,7 @@ public class CommandHandler {
 				}
 			}
 		} else {
-			return noPermission();
+			return CommandUtil.noPermission(command);
 		}
 	}
 
@@ -807,10 +808,10 @@ public class CommandHandler {
 						((Player) sender).teleport(pl, TeleportCause.COMMAND);
 						return ColorUtil.replaceColors("&7Teleporting to &c%s&7.", pl.getName());
 					} else {
-						return noOnline(args[0]);
+						return CommandUtil.noOnline(args[0]);
 					}
 				} else {
-					return noPlayer();
+					return CommandUtil.noPlayer();
 				}
 			} else if (args.length == 2) {
 				Player who = PlayerUtil.getOnline(args[0]);
@@ -822,10 +823,10 @@ public class CommandHandler {
 						return ColorUtil.replaceColors("&7Teleported &c%s&7 to &c%s&7.", who.getName(),
 							target.getName());
 					} else {
-						return noOnline(args[1]);
+						return CommandUtil.noOnline(args[1]);
 					}
 				} else {
-					return noOnline(args[0]);
+					return CommandUtil.noOnline(args[0]);
 				}
 			} else if (args.length == 3 || args.length == 4) {
 				int faultArg = -1;
@@ -842,13 +843,13 @@ public class CommandHandler {
 					if (sender instanceof Player) {
 						who = (Player) sender;
 					} else {
-						return noPlayer();
+						return CommandUtil.noPlayer();
 					}
 				} else if (faultArg == 0) {
 					who = PlayerUtil.getOnline(args[0]);
 				}
 				if (who == null) {
-					return noOnline(args[0]);
+					return CommandUtil.noOnline(args[0]);
 				}
 				World world = who.getWorld();
 				if ((args.length == 4 && faultArg == -1) || (args.length == 5 && faultArg == 0)) {
@@ -874,10 +875,10 @@ public class CommandHandler {
 						who.getName(), (int) coords[0], (int) coords[1], (int) coords[2], world.getName());
 				}
 			} else {
-				return noOption();
+				return CommandUtil.noOption(command, args);
 			}
 		} else {
-			return noPermission();
+			return CommandUtil.noPermission(command);
 		}
 	}
 
@@ -910,7 +911,7 @@ public class CommandHandler {
 							return ColorUtil.replaceColors("&cThere is no gamemode found with '&e%s&c'.", args[0]);
 						}
 					} else {
-						return noPlayer();
+						return CommandUtil.noPlayer();
 					}
 				} else if (args.length == 2) {
 					Player who = PlayerUtil.getOnline(args[1]);
@@ -927,16 +928,16 @@ public class CommandHandler {
 							return ColorUtil.replaceColors("&cThere is no gamemode found with '&e%s&c'.", args[0]);
 						}
 					} else {
-						return noOnline(args[0]);
+						return CommandUtil.noOnline(args[0]);
 					}
 				} else {
-					return noOption();
+					return CommandUtil.noOption(command, args);
 				}
 			} else {
-				return noOption();
+				return CommandUtil.noOption(command, args);
 			}
 		} else {
-			return noPermission();
+			return CommandUtil.noPermission(command);
 		}
 	}
 
@@ -959,7 +960,7 @@ public class CommandHandler {
 					((Player) sender).setGameMode(set);
 					return ColorUtil.replaceColors("&7Set gamemode to &e%s&7.", StringUtil.readableEnum(set));
 				} else {
-					return noPlayer();
+					return CommandUtil.noPlayer();
 				}
 			} else if (args.length == 1) {
 				Player who = PlayerUtil.getOnline(args[0]);
@@ -972,13 +973,13 @@ public class CommandHandler {
 					return ColorUtil.replaceColors("&7Set gamemode to &e%s&7 for &c%s&7.", StringUtil.readableEnum(set),
 						who.getName());
 				} else {
-					return noOnline(args[0]);
+					return CommandUtil.noOnline(args[0]);
 				}
 			} else {
-				return noOption();
+				return CommandUtil.noOption(command, args);
 			}
 		} else {
-			return noPermission();
+			return CommandUtil.noPermission(command);
 		}
 	}
 
@@ -1002,7 +1003,7 @@ public class CommandHandler {
 							return ColorUtil.replaceColors("&7Walk speed set to &c%s&7.", args[0]);
 						}
 					} else {
-						return noPlayer();
+						return CommandUtil.noPlayer();
 					}
 				} else if (args.length == 2) {
 					if (sender instanceof Player) {
@@ -1015,7 +1016,7 @@ public class CommandHandler {
 							return ColorUtil.replaceColors("&7Walk speed set to &c%s&7.", args[0]);
 						}
 					} else {
-						return noPlayer();
+						return CommandUtil.noPlayer();
 					}
 				} else if (args.length == 3) {
 					Player who = PlayerUtil.getOnline(args[2]);
@@ -1030,16 +1031,16 @@ public class CommandHandler {
 							return ColorUtil.replaceColors("&7Speed set.");
 						}
 					} else {
-						return noOnline(args[2]);
+						return CommandUtil.noOnline(args[2]);
 					}
 				} else {
-					return noOption();
+					return CommandUtil.noOption(command, args);
 				}
 			} else {
-				return noOption();
+				return CommandUtil.noOption(command, args);
 			}
 		} else {
-			return noPermission();
+			return CommandUtil.noPermission(command);
 		}
 	}
 
@@ -1048,7 +1049,7 @@ public class CommandHandler {
 			if (args.length > 1) {
 				String target = PlayerUtil.getNameLike(args[0]);
 				if (target == null) {
-					return noOnline(args[0]);
+					return CommandUtil.noOnline(args[0]);
 				}
 				String msg = "";
 				for (int i = 1; i < args.length; i++) {
@@ -1072,10 +1073,10 @@ public class CommandHandler {
 						.replaceColors("&8&oReceived message from &c%s&8&l \u00BB &r&7%s.", sender.getName(), msg));
 				return ColorUtil.replaceColors("&8&oSend message to &c%s&8&l \u00BB &r&7%s.", target, msg);
 			} else {
-				return noOption();
+				return CommandUtil.noOption(command, args);
 			}
 		} else {
-			return noPermission();
+			return CommandUtil.noPermission(command);
 		}
 	}
 
@@ -1092,16 +1093,16 @@ public class CommandHandler {
 						pl.openInventory(target.getInventory());
 						return ColorUtil.replaceColors("&7Opend inventory of &c%s&7.", pl.getName());
 					} else {
-						return noOnline(args[0]);
+						return CommandUtil.noOnline(args[0]);
 					}
 				} else {
-					return noOption();
+					return CommandUtil.noOption(command, args);
 				}
 			} else {
-				return noPlayer();
+				return CommandUtil.noPlayer();
 			}
 		} else {
-			return noPermission();
+			return CommandUtil.noPermission(command);
 		}
 	}
 
@@ -1118,16 +1119,16 @@ public class CommandHandler {
 						pl.openInventory(target.getEnderChest());
 						return ColorUtil.replaceColors("&7Opend enderchest of &c%s&7.", pl.getName());
 					} else {
-						return noOnline(args[0]);
+						return CommandUtil.noOnline(args[0]);
 					}
 				} else {
-					return noOption();
+					return CommandUtil.noOption(command, args);
 				}
 			} else {
-				return noPlayer();
+				return CommandUtil.noPlayer();
 			}
 		} else {
-			return noPermission();
+			return CommandUtil.noPermission(command);
 		}
 	}
 
@@ -1160,7 +1161,7 @@ public class CommandHandler {
 			Bukkit.getScheduler().runTaskAsynchronously(BukkitStarter.plugin, new ReloadPlugin());
 			return ColorUtil.replaceColors("&7Reloading plugin &e%s&7.", args[0]);
 		} else {
-			return noPermission();
+			return CommandUtil.noPermission(command);
 		}
 	}
 
@@ -1176,10 +1177,10 @@ public class CommandHandler {
 					return ColorUtil.replaceColors("&cNo back place found.");
 				}
 			} else {
-				return noPlayer();
+				return CommandUtil.noPlayer();
 			}
 		} else {
-			return noPermission();
+			return CommandUtil.noPermission(command);
 		}
 	}
 
@@ -1196,7 +1197,7 @@ public class CommandHandler {
 						return ColorUtil.replaceColors("&7You are now &evisible&7.");
 					}
 				} else {
-					return noPlayer();
+					return CommandUtil.noPlayer();
 				}
 			} else {
 				Player target = PlayerUtil.getOnline(args[0]);
@@ -1211,11 +1212,11 @@ public class CommandHandler {
 						return ColorUtil.replaceColors("&c%s &7is now visible.", target.getDisplayName());
 					}
 				} else {
-					return noOnline(args[0]);
+					return CommandUtil.noOnline(args[0]);
 				}
 			}
 		} else {
-			return noPermission();
+			return CommandUtil.noPermission(command);
 		}
 	}
 
@@ -1227,7 +1228,7 @@ public class CommandHandler {
 					sender.setHealth(0D);
 					return ColorUtil.replaceColors("&7Committed suicide.");
 				} else {
-					return noPlayer();
+					return CommandUtil.noPlayer();
 				}
 			} else {
 				Player target = PlayerUtil.getOnline(args[0]);
@@ -1235,11 +1236,11 @@ public class CommandHandler {
 					target.setHealth(0D);
 					return ColorUtil.replaceColors("&7Assassinated &c%s&7!", target.getName());
 				} else {
-					return noOnline(args[0]);
+					return CommandUtil.noOnline(args[0]);
 				}
 			}
 		} else {
-			return noPermission();
+			return CommandUtil.noPermission(command);
 		}
 	}
 
@@ -1254,10 +1255,10 @@ public class CommandHandler {
 					return ColorUtil.replaceColors("&cNobody to reply to.");
 				}
 			} else {
-				return noOption();
+				return CommandUtil.noOption(command, args);
 			}
 		} else {
-			return noPermission();
+			return CommandUtil.noPermission(command);
 		}
 	}
 
@@ -1276,7 +1277,7 @@ public class CommandHandler {
 				return ColorUtil.replaceColors("&cNeed a message to tell.");
 			}
 		} else {
-			return noPermission();
+			return CommandUtil.noPermission(command);
 		}
 	}
 
@@ -1317,30 +1318,14 @@ public class CommandHandler {
 						return ColorUtil.replaceColors("&cNo world with the name '&e%s&c' exists.", args[0]);
 					}
 				} else {
-					return noOption();
+					return CommandUtil.noOption(command, args);
 				}
 			} else {
-				return noPlayer();
+				return CommandUtil.noPlayer();
 			}
 		} else {
-			return noPermission();
+			return CommandUtil.noPermission(command);
 		}
-	}
-
-	private String noPermission() {
-		return ColorUtil.replaceColors("&cYou do not have permission to execute &e%s&c!", command);
-	}
-
-	private String noOption() {
-		return ColorUtil.replaceColors("&c&e%s&c is not possible with &e%d&c arguments.", command, args.length);
-	}
-
-	private String noPlayer() {
-		return ColorUtil.replaceColors("&cPlayer only.");
-	}
-
-	private String noOnline(String arg) {
-		return ColorUtil.replaceColors("&cPlayer &e%s &cis not online / not found.", arg);
 	}
 
 	public static List<String> onTabComplete(Player sender, String command, String[] args) {
