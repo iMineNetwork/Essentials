@@ -56,6 +56,7 @@ import nl.imine.api.db.iMinePlayer;
 import nl.imine.api.gui.Button;
 import nl.imine.api.gui.Container;
 import nl.imine.api.gui.GuiManager;
+import nl.imine.api.gui.button.ButtonBrowse;
 import nl.imine.api.gui.button.ButtonCommand;
 import nl.imine.api.gui.button.ButtonList;
 import nl.imine.api.gui.button.ButtonListed;
@@ -205,19 +206,24 @@ public class CommandHandler {
 			if (uuid == null) {
 				sender.sendMessage(CommandUtil.noOnline(args[0]));
 			}
-			Container ui = GuiManager.getInstance().createContainer(
-				ColorUtil.replaceColors("&4Last 'flying' events " + iMinePlayer.findPlayer(uuid).getName()), 9, false,
-				false);
-			List<Path> paths = FlyUtil.getPathsOf(uuid);
-			int i = 0;
-			for (Path path : paths) {
-				if (i < 8) {
-					ui.addButton(new FlyCheckButton(path, i++));
-				}
-			}
+			Container ui = getFlightContainer(uuid);
 			ui.open((Player) sender);
 		});
 		return ColorUtil.replaceColors("&7Checking '&c%s&7' for the last &c9 &7fly possibilities.", args[0]);
+	}
+
+	private Container getFlightContainer(UUID uuid) {
+		Container ui = GuiManager.getInstance().createContainer(
+			ColorUtil.replaceColors("&4Last 'flying' events " + iMinePlayer.findPlayer(uuid).getName()), 9, false,
+			false);
+		List<Path> paths = FlyUtil.getPathsOf(uuid);
+		int i = 0;
+		for (Path path : paths) {
+			if (i < 8) {
+				ui.addButton(new FlyCheckButton(path, i++));
+			}
+		}
+		return ui;
 	}
 
 	private String whois() {
@@ -474,10 +480,10 @@ public class CommandHandler {
 						ItemUtil.getBuilder(Material.BARRIER).setName(ColorUtil.replaceColors("&bKill.")).build(), 34,
 						"kill " + ipl.getName()));
 				ui.addButton(
-					new ButtonCommand(
+					new ButtonBrowse(
 							ItemUtil.getBuilder(Material.CHAINMAIL_BOOTS)
 									.setName(ColorUtil.replaceColors("&bFlycheck.")).build(),
-							35, "flycheck " + ipl.getName()));
+							35, getFlightContainer(ipl.getUuid())));
 			});
 			ui.setRefreshRate(20L);
 			ui.open((Player) sender);
