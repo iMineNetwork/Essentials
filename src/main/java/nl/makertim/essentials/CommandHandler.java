@@ -278,16 +278,22 @@ public class CommandHandler {
 								case BLOCK:
 								case ITEM:
 									for (Material mat : Material.values()) {
-										stats.add(
-											ColorUtil.replaceColors("&7%s&e%s: &c%s&7.", StringUtil.readableEnum(stat),
-												StringUtil.readableEnum(mat), target.getStatistic(stat, mat)));
+										try {
+											stats.add(ColorUtil.replaceColors("&7%s&e%s: &c%s&7.",
+												StringUtil.readableEnum(stat), StringUtil.readableEnum(mat),
+												target.getStatistic(stat, mat)));
+										} catch (Exception ex) {
+										}
 									}
 									break;
 								case ENTITY:
 									for (EntityType enity : EntityType.values()) {
-										stats.add(
-											ColorUtil.replaceColors("&7%s&e%s: &c%s&7.", StringUtil.readableEnum(stat),
-												StringUtil.readableEnum(enity), target.getStatistic(stat, enity)));
+										try {
+											stats.add(ColorUtil.replaceColors("&7%s&e%s: &c%s&7.",
+												StringUtil.readableEnum(stat), StringUtil.readableEnum(enity),
+												target.getStatistic(stat, enity)));
+										} catch (Exception ex) {
+										}
 									}
 									break;
 								default:
