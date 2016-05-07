@@ -60,6 +60,7 @@ import nl.imine.api.gui.button.ButtonBrowse;
 import nl.imine.api.gui.button.ButtonCommand;
 import nl.imine.api.gui.button.ButtonList;
 import nl.imine.api.gui.button.ButtonListed;
+import nl.imine.api.reflection.PluginReflection;
 import nl.imine.api.sorters.MapCountSorter;
 import nl.imine.api.sorters.MapCountSorter.Sort;
 import nl.imine.api.sorters.StringSearchSorter;
@@ -1508,22 +1509,21 @@ public class CommandHandler {
 
 		@Override
 		public void run() {
-			Plugin pl = Bukkit.getPluginManager().getPlugin(args[0]);
-			if (pl != null) {
+			Plugin plb = Bukkit.getPluginManager().getPlugin(args[0]);
+			if (plb instanceof JavaPlugin) {
+				JavaPlugin pl = (JavaPlugin) plb;
 				sender.sendMessage(String.format(format, "Overriding to new plugins"));
 				Bukkit.getPluginManager().disablePlugin(pl);
 				sender.sendMessage(String.format(format,
 					pl.getName() + " is now disabled [" + pl.getDescription().getVersion() + "]"));
 				try {
 					Thread.sleep(1500L);
-					Method m = JavaPlugin.class.getDeclaredMethod("getFile");
-					m.setAccessible(true);
-					File f = (File) m.invoke(pl);
+					File f = PluginReflection.getFile(pl);
 					BukkitStarter.plugin.updatePlugins();
 					Thread.sleep(1500L);
-					pl = Bukkit.getPluginManager().loadPlugin(new File(f.getAbsolutePath()));
+					plb = Bukkit.getPluginManager().loadPlugin(new File(f.getAbsolutePath()));
 					sender.sendMessage(String.format(format,
-						pl.getName() + " is now reloaded! [" + pl.getDescription().getVersion() + "]"));
+						plb.getName() + " is now reloaded! [" + plb.getDescription().getVersion() + "]"));
 				} catch (UnknownDependencyException ex) {
 					sender.sendMessage(
 						ColorUtil.replaceColors("&cPlugin Dependency not correctly: " + ex.getMessage()));
