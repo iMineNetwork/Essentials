@@ -1300,7 +1300,7 @@ public class CommandHandler {
 				Player player = (Player) sender;
 				if (args.length == 0) {
 					player.sendMessage(ColorUtil.replaceColors("&7Current World: &e%s", player.getWorld().getName()));
-					player.sendMessage(ColorUtil.replaceColors("&7Availible worlds:"));
+					player.sendMessage(ColorUtil.replaceColors("&7Available worlds:"));
 					Bukkit.getWorlds().stream()
 							.forEach(w -> player.sendMessage(ColorUtil.replaceColors("  &e%s", w.getName())));
 					return "";
