@@ -26,13 +26,6 @@
 		</repository>
 	</repositories>
 
-	<distributionManagement>
-		<repository>
-			<id>iMine-Repository</id>
-			<url>ftp://mvn.imine.nl:2100/mvn</url>
-		</repository>
-	</distributionManagement>
-
 	<properties>
 		<jdk.version>1.8</jdk.version>
 	</properties>
