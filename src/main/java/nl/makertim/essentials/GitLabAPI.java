@@ -20,7 +20,7 @@ import nl.imine.api.util.WebUtil;
 
 public class GitLabAPI {
 
-	private static final String PRIVATE_TOKEN = "f1r_tSSXTUsUAvMzrj5F";
+	private static final String PRIVATE_TOKEN = "EesDuvoCmxZiwksbUoY1";
 	private static final String URL_PROJECTS = "http://git.imine.nl/api/v3/projects?private_token=%s&sudo=%s";
 	private static final String URL_USERS = "http://git.imine.nl/api/v3/users?private_token=%s";
 	private static final String URL_COMMITS = "http://git.imine.nl/api/v3/projects/%d/repository/commits?private_token=%s";
