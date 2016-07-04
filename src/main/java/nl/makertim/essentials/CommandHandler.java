@@ -65,7 +65,6 @@ import nl.imine.api.sorters.MapCountSorter;
 import nl.imine.api.sorters.MapCountSorter.Sort;
 import nl.imine.api.sorters.StringSearchSorter;
 import nl.imine.api.util.ColorUtil;
-import nl.imine.api.util.CommandUtil;
 import nl.imine.api.util.DateUtil;
 import nl.imine.api.util.FlyUtil;
 import nl.imine.api.util.FlyUtil.Path;
@@ -73,6 +72,7 @@ import nl.imine.api.util.ItemUtil;
 import nl.imine.api.util.PlayerUtil;
 import nl.imine.api.util.StringUtil;
 import nl.imine.api.util.WebUtil;
+import nl.imine.api.util.command.CommandUtil;
 import nl.makertim.essentials.GitLabAPI.Commit;
 import nl.makertim.essentials.GitLabAPI.GitProject;
 
@@ -343,11 +343,12 @@ public class CommandHandler {
 				List<String> names = nl.getNames();
 				ui.addButton(new Button(ItemUtil.getBuilder(Material.BOOK_AND_QUILL)
 						.setName(ColorUtil.replaceColors("&bName history")).setLore(names).build(), 9));
-				ui.addButton(
-					new Button(ItemUtil.getBuilder(Material.SIGN).setName(ColorUtil.replaceColors("&bLast seen"))
-							.setLore(new String[]{
-									ColorUtil.replaceColors("&7Last seen: &c%s&7.", dateFormat.format(ipl.getDate()))})
-						.build(), 10));
+				ui.addButton(new Button(
+						ItemUtil.getBuilder(Material.SIGN)
+								.setName(ColorUtil.replaceColors("&bLast seen")).setLore(new String[]{ColorUtil
+										.replaceColors("&7Last seen: &c%s&7.", dateFormat.format(ipl.getDate()))})
+								.build(),
+						10));
 			});
 			// Ip & Ip info
 			Bukkit.getScheduler().runTaskAsynchronously(BukkitStarter.plugin, () -> {
@@ -1593,12 +1594,12 @@ public class CommandHandler {
 						as.setGravity(false);
 						Bukkit.getScheduler().scheduleSyncDelayedTask(BukkitStarter.plugin, () -> {
 							as.remove();
-						} , FlyUtil.getCheckTickDelay() + 2);
-					} , i * FlyUtil.getCheckTickDelay());
+						}, FlyUtil.getCheckTickDelay() + 2);
+					}, i * FlyUtil.getCheckTickDelay());
 				}
 				Bukkit.getScheduler().scheduleSyncDelayedTask(BukkitStarter.plugin, () -> {
 					player.sendMessage(ColorUtil.replaceColors(" &7Animation done."));
-				} , (path.getPositions().length + 1) * FlyUtil.getCheckTickDelay());
+				}, (path.getPositions().length + 1) * FlyUtil.getCheckTickDelay());
 			}
 		}
 	}
