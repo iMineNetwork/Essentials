@@ -206,6 +206,12 @@ public class CommandHandler {
                 while (rs.next()) {
                     TextComponent message = new TextComponent(" - " + rs.getString("LastName"));
                     message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/flycheck " + rs.getString("LastName")));
+                    if (sender instanceof Player) {
+                        Player pl = (Player) sender;
+                        pl.spigot().sendMessage(message);
+                    } else {
+                        sender.sendMessage(message.toPlainText());
+                    }
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
