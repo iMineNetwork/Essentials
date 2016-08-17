@@ -200,13 +200,7 @@ public class CommandHandler {
         }
         if (args.length == 0) {
             ResultSet rs = BukkitStarter.plugin.getDB().selectQuery(
-                    "SELECT DISTINCT iMinePlayer.LastName, MAX(FlyReports.Time) AS TIME " +
-                            "FROM iMinePlayer " +
-                            "RIGHT JOIN FlyReports " +
-                            "ON iMinePlayer.UUID = FlyReports.UUID " +
-                            "GROUP BY iMinePlayer.LastName " +
-                            "ORDER BY TIME DESC " +
-                            "LIMIT 10");
+                    "SELECT DISTINCT `iMinePlayer`.`LastName`, MAX(FlyReports.Time) AS TIME FROM `iMinePlayer` RIGHT JOIN `FlyReports` ON `iMinePlayer`.`UUID` = `FlyReports`.`UUID` GROUP BY `iMinePlayer`.`LastName` ORDER BY TIME DESC LIMIT 10");
             try {
                 sender.sendMessage("Checking all flys");
                 while (rs.next()) {
