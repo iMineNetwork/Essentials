@@ -204,8 +204,9 @@ public class CommandHandler {
             try {
                 sender.sendMessage("Checking all flys");
                 while (rs.next()) {
-                    TextComponent message = new TextComponent(" - " + rs.getString("LastName"));
+                    TextComponent message = new TextComponent(ColorUtil.replaceColors(" - &c%s", rs.getString("LastName")));
                     message.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/flycheck " + rs.getString("LastName")));
+                    message.setHoverEvent(new HoverEvent(Action.SHOW_TEXT, new ComponentBuilder("Click to check").create()));
                     if (sender instanceof Player) {
                         Player pl = (Player) sender;
                         pl.spigot().sendMessage(message);
