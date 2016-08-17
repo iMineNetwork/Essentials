@@ -216,6 +216,7 @@ public class CommandHandler {
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
+            return "";
         }
         Bukkit.getScheduler().runTaskAsynchronously(BukkitStarter.plugin, () -> {
             UUID uuid = PlayerUtil.getUUID(args[0], false);
