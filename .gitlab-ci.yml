@@ -7,7 +7,6 @@ buildfase:
     - mvn clean install
     - curl -T target/$1.jar ftp://Deploy.3:$ftppass@localhost/plugins/update/
     - curl -T target/$1.jar ftp://Deploy.5:$ftppass@localhost/plugins/update/
-    - curl -T target/$1.jar ftp://Deploy.8:$ftppass@localhost/plugins/update/
     - curl -T target/$1.jar ftp://Deploy.9:$ftppass@localhost/plugins/update/
     - curl -T target/$1.jar ftp://Deploy.10:$ftppass@localhost/plugins/update/
     - curl -T target/$1.jar ftp://Deploy.14:$ftppass@localhost/plugins/update/
