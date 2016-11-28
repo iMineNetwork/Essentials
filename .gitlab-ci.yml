@@ -6,7 +6,6 @@ buildfase:
     - set $(git remote show -n origin | grep Fetch | sed 's%^.*/\([^/]*\)\.git$%\1%g')
     - mvn clean install
     - curl -T target/$1.jar ftp://Deploy.3:$ftppass@localhost/plugins/update/
-    - curl -T target/$1.jar ftp://Deploy.4:$ftppass@localhost/plugins/update/
     - curl -T target/$1.jar ftp://Deploy.5:$ftppass@localhost/plugins/update/
     - curl -T target/$1.jar ftp://Deploy.8:$ftppass@localhost/plugins/update/
     - curl -T target/$1.jar ftp://Deploy.9:$ftppass@localhost/plugins/update/
