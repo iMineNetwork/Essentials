@@ -16,7 +16,6 @@ import nl.imine.api.event.VanishUpdateEvent;
 public class BukkitStarter extends JavaPlugin {
 
 	public static final File UPDATE_DIR = new File("plugins/update/");
-	private static final Long PEX_DELAY = 20L * 60L * 4L; // Try to random
 
 	public static BukkitStarter plugin;
 
@@ -33,7 +32,6 @@ public class BukkitStarter extends JavaPlugin {
 		getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 		Bukkit.getPluginManager().registerEvents(new BukkitListener(), this);
 		Bukkit.getPluginManager().registerEvents(new Profiler(), this);
-		Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new PexReloader(), PEX_DELAY, PEX_DELAY);
 		tlh = new TabListHandler();
 		Bukkit.getPluginManager().callEvent(new VanishUpdateEvent());
 	}
