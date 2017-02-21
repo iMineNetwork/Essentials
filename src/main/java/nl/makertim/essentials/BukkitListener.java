@@ -186,11 +186,4 @@ public class BukkitListener implements Listener {
 			}
 		}
 	}
-
-	@EventHandler
-	public void onJoining(PlayerJoinEvent pje) {
-		if (pje.getPlayer().hasPermission("iMine.autoGit")) {
-			pje.getPlayer().performCommand("git -q");
-		}
-	}
 }
