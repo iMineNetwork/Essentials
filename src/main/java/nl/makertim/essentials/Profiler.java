@@ -16,7 +16,7 @@ public class Profiler implements Listener, Runnable {
 	private double memUsed, memMax, memFree, memPercentageFree;
 
 	public Profiler() {
-		Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(BukkitStarter.plugin, new Lagg(), 100L, 1L);
+		Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(BukkitStarter.plugin, new LagProfiler(), 100L, 1L);
 		Bukkit.getScheduler().scheduleSyncRepeatingTask(BukkitStarter.plugin, this, 200L, DELAY);
 		db = BukkitStarter.plugin.getDB();
 		serverName = BukkitStarter.plugin.getConfig().getString("ServerName", "unknown");
@@ -44,11 +44,11 @@ public class Profiler implements Listener, Runnable {
 			"INSERT IGNORE INTO ServerLog (TimeChecked, ServerName, PlayerCount, TPS, RamUsage) VALUES ('%s', '%s', '%s', '%s', '%s');",
 			DatabaseManager.prepareString(String.format("%d-%d-%d %d:%d:00", year, month, day, hour, minute)),
 			DatabaseManager.prepareString(serverName), DatabaseManager.prepareString(Bukkit.getOnlinePlayers().size()),
-			DatabaseManager.prepareString(Math.round(Lagg.getTPS())),
+			DatabaseManager.prepareString(Math.round(LagProfiler.getTPS())),
 			DatabaseManager.prepareString(Math.round(memPercentageFree))));
 	}
 
-	private static class Lagg implements Runnable {
+	private static class LagProfiler implements Runnable {
 		public final static long[] TICKS = new long[600];
 		public static int TICK_COUNT = 0;
 

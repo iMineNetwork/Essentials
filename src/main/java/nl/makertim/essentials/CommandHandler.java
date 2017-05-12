@@ -97,66 +97,66 @@ public class CommandHandler {
     }
 
     public boolean onCommand() {
-        String finalAwsner = null;
+        String finalAwnser = null;
         if (command.equalsIgnoreCase("hub")) {
-            finalAwsner = hub();
+            finalAwnser = hub();
         } else if (command.equalsIgnoreCase("dev")) {
-            finalAwsner = dev();
+            finalAwnser = dev();
         } else if (command.equalsIgnoreCase("skull")) {
-            finalAwsner = skull();
+            finalAwnser = skull();
         } else if (command.equalsIgnoreCase("mute")) {
-            finalAwsner = mute();
+            finalAwnser = mute();
         } else if (command.equalsIgnoreCase("tp")) {
-            finalAwsner = tp();
+            finalAwnser = tp();
         } else if (command.equalsIgnoreCase("fly")) {
-            finalAwsner = fly();
+            finalAwnser = fly();
         } else if (command.equalsIgnoreCase("tab")) {
-            finalAwsner = tab();
+            finalAwnser = tab();
         } else if (command.equalsIgnoreCase("lagdebug")) {
-            finalAwsner = lagdebug();
+            finalAwnser = lagdebug();
         } else if (command.equalsIgnoreCase("gm")) {
-            finalAwsner = gm();
+            finalAwnser = gm();
         } else if (command.startsWith("gm") && command.length() == 3) {
-            finalAwsner = gmx();
+            finalAwnser = gmx();
         } else if (command.equalsIgnoreCase("speed")) {
-            finalAwsner = speed();
+            finalAwnser = speed();
         } else if (command.equalsIgnoreCase("whois")) {
-            finalAwsner = whois();
+            finalAwnser = whois();
         } else if (command.equalsIgnoreCase("banrichtlijn")) {
-            finalAwsner = banrichtlijn();
+            finalAwnser = banrichtlijn();
         } else if (command.equalsIgnoreCase("msg")) {
-            finalAwsner = msg();
+            finalAwnser = msg();
         } else if (command.equalsIgnoreCase("invsee")) {
-            finalAwsner = invsee();
+            finalAwnser = invsee();
         } else if (command.equalsIgnoreCase("endersee")) {
-            finalAwsner = endersee();
+            finalAwnser = endersee();
         } else if (command.equalsIgnoreCase("flycheck")) {
-            finalAwsner = flycheck();
+            finalAwnser = flycheck();
         } else if (command.equalsIgnoreCase("mchistory")) {
-            finalAwsner = mchistory();
+            finalAwnser = mchistory();
         } else if (command.equalsIgnoreCase("git")) {
-            finalAwsner = git();
+            finalAwnser = git();
         } else if (command.equalsIgnoreCase("plr")) {
-            finalAwsner = plr();
+            finalAwnser = plr();
         } else if (command.equalsIgnoreCase("return")) {
-            finalAwsner = returnTP();
+            finalAwnser = returnTP();
         } else if (command.equalsIgnoreCase("vanish")) {
-            finalAwsner = vanish();
+            finalAwnser = vanish();
         } else if (command.equalsIgnoreCase("kill")) {
-            finalAwsner = kill();
+            finalAwnser = kill();
         } else if (command.equalsIgnoreCase("reply")) {
-            finalAwsner = reply();
+            finalAwnser = reply();
         } else if (command.equalsIgnoreCase("me")) {
-            finalAwsner = me();
+            finalAwnser = me();
         } else if (command.equalsIgnoreCase("pl") || command.equalsIgnoreCase("plugin")
                 || command.equalsIgnoreCase("plugins")) {
-            finalAwsner = plugin();
+            finalAwnser = plugin();
         } else if (command.equalsIgnoreCase("world")) {
-            finalAwsner = world();
+            finalAwnser = world();
         } else if (command.equalsIgnoreCase("report")) {
-            finalAwsner = reportChat();
+            finalAwnser = reportChat();
         } else if (command.equalsIgnoreCase("admin")) {
-            finalAwsner = adminChat();
+            finalAwnser = adminChat();
         } else if (command.equalsIgnoreCase("update")) {
             if (sender instanceof Player) {
                 ((Player) sender).performCommand("reload");
@@ -164,11 +164,11 @@ public class CommandHandler {
                 Bukkit.reload();
             }
         }
-        if (finalAwsner == null) {
+        if (finalAwnser == null) {
             return false;
         } else {
-            if (!finalAwsner.trim().isEmpty()) {
-                sender.sendMessage(finalAwsner);
+            if (!finalAwnser.trim().isEmpty()) {
+                sender.sendMessage(finalAwnser);
             }
             return true;
         }

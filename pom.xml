@@ -16,6 +16,11 @@
 			<name>Tim B</name>
 			<email>MakerTim96@gmail.com</email>
 		</developer>
+		<developer>
+			<id>Sansko1337</id>
+			<name>Sander K</name>
+			<email>sansko1337@gmail.com</email>
+		</developer>
 	</developers>
 
 	<repositories>
