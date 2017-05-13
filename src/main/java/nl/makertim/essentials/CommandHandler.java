@@ -73,12 +73,9 @@ import nl.imine.api.util.PlayerUtil;
 import nl.imine.api.util.StringUtil;
 import nl.imine.api.util.WebUtil;
 import nl.imine.api.util.command.CommandUtil;
-import nl.makertim.essentials.GitLabAPI.Commit;
-import nl.makertim.essentials.GitLabAPI.GitProject;
 
 public class CommandHandler {
 
-    private static final GitLabAPI API = new GitLabAPI();
     private final String adminChatFormat = ColorUtil.replaceColors("&r&l[&a&lADMIN&r&l] &r&7%s &r&l\u00BB &r%s");
     private final String reportChatFormat = ColorUtil.replaceColors("&r&l[&c&lREPORT&r&l] &r&7%s &r&l\u00BB &r%s");
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
@@ -134,8 +131,6 @@ public class CommandHandler {
             finalAwnser = flycheck();
         } else if (command.equalsIgnoreCase("mchistory")) {
             finalAwnser = mchistory();
-        } else if (command.equalsIgnoreCase("git")) {
-            finalAwnser = git();
         } else if (command.equalsIgnoreCase("plr")) {
             finalAwnser = plr();
         } else if (command.equalsIgnoreCase("return")) {
@@ -1163,30 +1158,6 @@ public class CommandHandler {
         }
     }
 
-    private String git() {
-        byte b = 0b00;
-        if (args.length > 0) {
-            if (args[0].equalsIgnoreCase("projects") && sender.hasPermission("iMine.git")) {
-                Set<String> projects = CommandHandler.API.getProjects();
-                sender.sendMessage(ColorUtil.replaceColors("&7Listing all git projects"));
-                for (String project : projects) {
-                    sender.sendMessage(ColorUtil.replaceColors("  &6- &e%s", project));
-                }
-                return "";
-            }
-            for (int i = 0; i < args.length; i++) {
-                if (args[i].equalsIgnoreCase("-v")) {
-                    b = (byte) (b | (1 << 0));
-                }
-                if (args[i].equalsIgnoreCase("-q")) {
-                    b = (byte) (b | (1 << 1));
-                }
-            }
-        }
-        Bukkit.getScheduler().runTaskLaterAsynchronously(BukkitStarter.plugin, new GitCheckRunnalbe(sender, b), 1L);
-        return ColorUtil.replaceColors("&r&l[&6&lGIT&r&l]&7 Checking all git repos...");
-    }
-
     private String plr() {
         if ((sender.hasPermission("iMine.dev")) && args.length > 0) {
             Bukkit.getScheduler().runTaskAsynchronously(BukkitStarter.plugin, new ReloadPlugin());
@@ -1374,14 +1345,6 @@ public class CommandHandler {
             }
         } else if (command.equalsIgnoreCase("tab") && args.length == 1) {
             String[] argumenten = {"top", "bottom", "update"};
-            for (String arg : argumenten) {
-                if (arg.toLowerCase().contains(args[args.length - 1].toLowerCase())) {
-                    ret.add(arg);
-                }
-            }
-            Collections.sort(ret, new StringSearchSorter(args[args.length - 1]));
-        } else if (command.equalsIgnoreCase("git")) {
-            String[] argumenten = {"-v", "-q", "projects"};
             for (String arg : argumenten) {
                 if (arg.toLowerCase().contains(args[args.length - 1].toLowerCase())) {
                     ret.add(arg);
@@ -1617,256 +1580,6 @@ public class CommandHandler {
                 Bukkit.getScheduler().scheduleSyncDelayedTask(BukkitStarter.plugin, () -> {
                     player.sendMessage(ColorUtil.replaceColors(" &7Animation done."));
                 }, (path.getPositions().length + 1) * FlyUtil.getCheckTickDelay());
-            }
-        }
-    }
-
-    private class GitCheckRunnalbe implements Runnable {
-
-        // 01 = debug, 10 = stil
-        private final byte quietVerbose;
-        private final List<Plugin> toUpdate;
-
-        public GitCheckRunnalbe(CommandSender sender, byte verbose) {
-            this.quietVerbose = verbose;
-            this.toUpdate = new ArrayList<>();
-        }
-
-        private void verboseMessage(String msg) {
-            if ((quietVerbose & 0b01) == 1) {
-                sender.sendMessage(ColorUtil.replaceColors("  &7%s", msg));
-            }
-        }
-
-        private boolean quietSend() {
-            return (quietVerbose & 0b10) == 0;
-        }
-
-        private void message(String msg) {
-            sender.sendMessage(msg);
-        }
-
-        private void sendTextComponent(TextComponent text) {
-            if (sender instanceof Player) {
-                ((Player) sender).spigot().sendMessage(text);
-            } else {
-                sender.sendMessage(text.toPlainText());
-            }
-        }
-
-        private void checkPlugin(Plugin plugin) {
-            verboseMessage("Checking plugin " + plugin.getName());
-            String version = plugin.getDescription().getVersion();
-            version = version.substring(0, Math.min(7, version.length()));
-            Pattern p = Pattern.compile("\\b([0-9a-f]{5,40})\\b");
-            Matcher match = p.matcher(version);
-            if (match.find()) {
-                verboseMessage("plugin " + plugin.getName() + " is a GIT project!");
-                GitProject git = CommandHandler.API.getProjectData(plugin.getName());
-                if (git == null) {
-                    verboseMessage("but i couldnt find it our system");
-                    return;
-                }
-                /**
-                 * Lief dagboek,
-                 *
-                 * Een mooie message maakt lelijke code. Mocht je hier onder nog
-                 * iets nuttigs mee willen doen, im sorry
-                 *
-                 * groetjes Tim
-                 */
-
-                /**
-                 * Lief dagboek,
-                 *
-                 * Ik zag dat Tim iets had gemaakt waar hij zelf een mooiere
-                 * manier voor heeft geschreven. Zonde als dat niet gebruitk zou
-                 * worden hè? ;)
-                 *
-                 * groetjes Sander
-                 */
-                /**
-                 * Lief dagboek,
-                 *
-                 * het scheen dat ik soms dingen gebruikte en soms ook niet na
-                 * veel moeite gebruik ik het nu overal
-                 *
-                 * hoop dat toekomst zelf het nu makkelijker kan terug lezen
-                 *
-                 * Groetjes Tim
-                 */
-                /**
-                 * Lief dagboek, Tim is dik, hihi
-                 *
-                 * Groetjes Sander
-                 */
-                // newestversion: %gitshort% [RELOAD SERVER]
-                TextComponent extra, message = new TextComponent("");
-                // [GIT]
-                extra = new TextComponent(ColorUtil.replaceColors("&r&l[&6&lGIT&r&l]&7 "));
-                message.addExtra(extra);
-                // %plugin naam%
-                extra = new TextComponent(ColorUtil.replaceColors("&e%s&7 ", plugin.getName()));
-                extra.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, git.getWebUrl()));
-                extra.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-                        new ComponentBuilder(git.getDescription())
-                                .append(ColorUtil.replaceColors(
-                                        "\n\n&7Created at: &c" + GitLabAPI.NL_DATE_FORMAT.format(git.getCreateDate())))
-                                .create()));
-                message.addExtra(extra);
-                // current verion:
-                extra = new TextComponent(ColorUtil.replaceColors("&7current version: "));
-                message.addExtra(extra);
-                // %git short this version%
-                Commit current = null;
-                List<Commit> commits = new ArrayList<>();
-                for (Commit commit : git.getCommits()) {
-                    if (commit.getShortId().toLowerCase().contains(match.group(0).toLowerCase())) {
-                        current = commit;
-                        verboseMessage("current commit found: " + commit.getMessage());
-                        break;
-                    }
-                    commits.add(commit);
-                }
-                if (current == null) {
-                    extra = new TextComponent(ColorUtil.replaceColors("&cnot found"));
-                    extra.setColor(net.md_5.bungee.api.ChatColor.RED);
-                    extra.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-                            new ComponentBuilder(ColorUtil.replaceColors("&c%s -comit not found"))
-                                    .append("\n\nPushed at: ~").create()));
-                } else {
-                    extra = new TextComponent(
-                            ColorUtil.replaceColors("&e%s ", current.getTitle().replaceAll(" ", " &e")));
-                    extra.setColor(net.md_5.bungee.api.ChatColor.YELLOW);
-                    extra.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-                            new ComponentBuilder(ColorUtil.replaceColors("&7id:&e%s&7", current.getShortId()))
-                                    .append(ColorUtil.replaceColors(
-                                            "\n\n&7Pushed at: &c" + GitLabAPI.NL_DATE_FORMAT.format(current.getWhen())))
-                                    .create()));
-                }
-                extra.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, git.getWebUrl() + "/commit/"
-                        + (current == null ? "master" : current.getLongId()) + "?view=parallel"));
-
-                message.addExtra(extra);
-                if (commits.isEmpty()) {
-                    verboseMessage("no current commit found!");
-                } else {
-                    toUpdate.add(plugin);
-                    // newest verion:
-                    extra = new TextComponent(ColorUtil.replaceColors("&7newest version: "));
-                    message.addExtra(extra);
-                    // %git short new version%
-                    extra = new TextComponent(
-                            ColorUtil.replaceColors("&e%s&7 ", git.getCommits()[0].getTitle().replaceAll(" ", " &e")));
-                    extra.setColor(net.md_5.bungee.api.ChatColor.YELLOW);
-                    extra.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, git.getWebUrl() + "/compare/"
-                            + (current == null ? "master" : current.getShortId()) + "...master?view=parallel"));
-                    ComponentBuilder hoverBuilder = new ComponentBuilder(
-                            ColorUtil.replaceColors("&7version id: &e" + git.getCommits()[0].getShortId()));
-                    hoverBuilder.append("\nMissing Versions:");
-                    for (Commit commit : commits) {
-                        hoverBuilder.append(ColorUtil.replaceColors("\n&7 ^&e%s &7[&c%s&7]", commit.getTitle(),
-                                GitLabAPI.NL_DATE_FORMAT.format(commit.getWhen())));
-                    }
-                    hoverBuilder.append(ColorUtil.replaceColors(
-                            "\n\n&7Pushed at: &c" + GitLabAPI.NL_DATE_FORMAT.format(git.getCommits()[0].getWhen())));
-                    extra.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverBuilder.create()));
-                    message.addExtra(extra);
-                    // versions behind [#]:
-                    extra = new TextComponent(ColorUtil.replaceColors("&r[%d]&r ", commits.size()));
-                    message.addExtra(extra);
-                }
-                if (quietSend()) {
-                    sendTextComponent(message);
-                }
-            }
-        }
-
-        private void prosessData() {
-            for (final Plugin plugin : Bukkit.getPluginManager().getPlugins()) {
-                checkPlugin(plugin);
-            }
-            int gitUpdates = toUpdate.size();
-            int updates = BukkitStarter.UPDATE_DIR.listFiles().length;
-            if (gitUpdates > 0 || updates > 0) {
-                verboseMessage("Update found");
-                if (gitUpdates > 0) {
-                    verboseMessage("  - Git");
-                } else if (updates > 0) {
-                    verboseMessage("  - Random update");
-                } else {
-                    verboseMessage("  - No update");
-                }
-                TextComponent extra, message = new TextComponent("");
-                // Files to update: #
-                extra = new TextComponent(ColorUtil.replaceColors("&eFiles to update: %s", updates));
-                extra.setColor(net.md_5.bungee.api.ChatColor.YELLOW);
-                ComponentBuilder cb = new ComponentBuilder("");
-                Iterator<File> newFileI = Arrays.asList(BukkitStarter.UPDATE_DIR.listFiles()).iterator();
-                while (newFileI.hasNext()) {
-                    File newFile = newFileI.next();
-                    String append = ColorUtil.replaceColors("&6%s", newFile.getName());
-                    if (newFileI.hasNext()) {
-                        append += "\n";
-                    }
-                    cb.append(append);
-                }
-                extra.setHoverEvent(new HoverEvent(Action.SHOW_TEXT, cb.create()));
-                message.addExtra(extra);
-                // GitRepos to update: #
-                extra = new TextComponent(ColorUtil.replaceColors("  &bGitRepos to update: %s", gitUpdates));
-                extra.setColor(net.md_5.bungee.api.ChatColor.AQUA);
-                cb = new ComponentBuilder("");
-                Iterator<Plugin> toUpdateI = toUpdate.iterator();
-                while (toUpdateI.hasNext()) {
-                    Plugin plugin = toUpdateI.next();
-                    String append = ColorUtil.replaceColors("&3%s", plugin.getName());
-                    if (toUpdateI.hasNext()) {
-                        append += "\n";
-                    }
-                    cb.append(append);
-                }
-                extra.setHoverEvent(new HoverEvent(Action.SHOW_TEXT, cb.create()));
-                message.addExtra(extra);
-                sendTextComponent(message);
-
-                message = new TextComponent("");
-                // [RELOAD SERVER]
-                extra = new TextComponent(
-                        ColorUtil.replaceColors(" &r&l[&e%sReload server&r&l]&r ", (updates == 0 ? "&m" : "")));
-                extra.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/reload"));
-                extra.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-                        new ComponentBuilder("Click to reload server").create()));
-                message.addExtra(extra);
-                // [REBOOT SERVER]
-                extra = new TextComponent(
-                        ColorUtil.replaceColors(" &r&l[&c%sReload server&r&l]&r ", (updates == 0 ? "&m" : "")));
-                extra.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/restart"));
-                extra.setHoverEvent(
-                        new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-                                new ComponentBuilder(ColorUtil
-                                        .replaceColors("&cWARNING, will shutdown server!\n&rClick to reboot server"))
-                                        .create()));
-                message.addExtra(extra);
-                sendTextComponent(message);
-            } else {
-                message(ColorUtil.replaceColors("&7 No updates found!"));
-            }
-        }
-
-        @Override
-        public void run() {
-            if (sender.hasPermission("iMine.git")) {
-                CommandHandler.API.refreshData();
-                if (!CommandHandler.API.canWork()) {
-                    message("This server is outdated -> cant check on GitRepo's");
-                    return;
-                }
-                Bukkit.getScheduler().runTaskAsynchronously(BukkitStarter.plugin, () -> {
-                    prosessData();
-                });
-            } else {
-                sender.sendMessage(ColorUtil.replaceColors("&cNo permission."));
             }
         }
     }
