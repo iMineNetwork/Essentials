@@ -1111,13 +1111,13 @@ public class CommandHandler {
             if (sender instanceof Player) {
                 if (args.length == 0) {
                     ((Player) sender).openInventory(((Player) sender).getInventory());
-                    return ColorUtil.replaceColors("&7Opend inventory of &c%s&7.", sender.getName());
+                    return ColorUtil.replaceColors("&7Opened inventory of &c%s&7.", sender.getName());
                 } else if (args.length == 1) {
                     Player target = PlayerUtil.getOnline(args[0]);
                     if (target != null) {
                         Player pl = (Player) sender;
                         pl.openInventory(target.getInventory());
-                        return ColorUtil.replaceColors("&7Opend inventory of &c%s&7.", pl.getName());
+                        return ColorUtil.replaceColors("&7Opened inventory of &c%s&7.", target.getName());
                     } else {
                         return CommandUtil.noOnline(args[0]);
                     }
@@ -1137,13 +1137,13 @@ public class CommandHandler {
             if (sender instanceof Player) {
                 if (args.length == 0) {
                     ((Player) sender).openInventory(((Player) sender).getEnderChest());
-                    return ColorUtil.replaceColors("&7Opend enderchest of &c%s&7.", sender.getName());
+                    return ColorUtil.replaceColors("&7Opened enderchest of &c%s&7.", sender.getName());
                 } else if (args.length == 1) {
                     Player target = PlayerUtil.getOnline(args[0]);
                     if (target != null) {
                         Player pl = (Player) sender;
                         pl.openInventory(target.getEnderChest());
-                        return ColorUtil.replaceColors("&7Opend enderchest of &c%s&7.", pl.getName());
+                        return ColorUtil.replaceColors("&7Opened enderchest of &c%s&7.", target.getName());
                     } else {
                         return CommandUtil.noOnline(args[0]);
                     }
