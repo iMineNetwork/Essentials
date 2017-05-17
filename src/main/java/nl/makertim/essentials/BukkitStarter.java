@@ -32,7 +32,7 @@ public class BukkitStarter extends JavaPlugin {
 		getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 		Bukkit.getPluginManager().registerEvents(new BukkitListener(), this);
 		Bukkit.getPluginManager().registerEvents(new Profiler(), this);
-		tlh = new TabListHandler();
+//		tlh = new TabListHandler();
 		Bukkit.getPluginManager().callEvent(new VanishUpdateEvent());
 	}
 
