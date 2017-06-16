@@ -107,8 +107,6 @@ public class CommandHandler {
             finalAwnser = tp();
         } else if (command.equalsIgnoreCase("fly")) {
             finalAwnser = fly();
-        } else if (command.equalsIgnoreCase("tab")) {
-            finalAwnser = tab();
         } else if (command.equalsIgnoreCase("lagdebug")) {
             finalAwnser = lagdebug();
         } else if (command.equalsIgnoreCase("gm")) {
@@ -570,35 +568,6 @@ public class CommandHandler {
                     Bukkit.getScheduler().runTaskAsynchronously(BukkitStarter.plugin, new NameLookup(foundUUID, true));
                 }
                 return "";
-            } else {
-                return CommandUtil.noOption(command, args);
-            }
-        } else {
-            return CommandUtil.noPermission(command);
-        }
-    }
-
-    private String tab() {
-        if (sender.hasPermission("iMine.tabchange")) {
-            TabListHandler tlh = BukkitStarter.plugin.getTLH();
-            if (args.length > 1) {
-                String msg = "";
-                for (int i = 1; i < args.length; i++) {
-                    msg += args[i] + " ";
-                }
-                msg = msg.trim();
-                msg = ColorUtil.replaceColors(msg);
-                if (args[0].equalsIgnoreCase("top")) {
-                    tlh.updateTop(msg);
-                } else if (args[0].equalsIgnoreCase("bottom")) {
-                    tlh.updateBottom(msg);
-                } else {
-                    return ColorUtil.replaceColors("&cCant update '&e%s&c' to &e%s&c.", args[0], args[1]);
-                }
-                return ColorUtil.replaceColors("&7Tab &e%s &7updated to &e%s&7.", args[0], msg);
-            } else if (args.length == 1 && args[0].equalsIgnoreCase("update")) {
-                tlh.updateAll();
-                return ColorUtil.replaceColors("&7Tab updated!");
             } else {
                 return CommandUtil.noOption(command, args);
             }

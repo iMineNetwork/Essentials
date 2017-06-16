@@ -20,7 +20,6 @@ public class BukkitStarter extends JavaPlugin {
 	public static BukkitStarter plugin;
 
 	private DatabaseManager dm;
-	private TabListHandler tlh;
 	public boolean devMode = false;
 
 	@Override
@@ -95,9 +94,5 @@ public class BukkitStarter extends JavaPlugin {
 
 	public DatabaseManager getDB() {
 		return dm;
-	}
-
-	public TabListHandler getTLH() {
-		return tlh;
 	}
 }
